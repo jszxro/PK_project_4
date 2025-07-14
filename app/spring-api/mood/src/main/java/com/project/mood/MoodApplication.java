@@ -1,4 +1,4 @@
-package com.mood.mood;
+package com.project.mood;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
