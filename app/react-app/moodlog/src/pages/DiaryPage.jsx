@@ -24,31 +24,42 @@ const DiaryPage = () => {
       </div>
 
       {/* 중앙 + 우측 전체 wrapper */}
-      <div className="main-wrapper">
-        {/* 중앙 본문 */}
-        <div className="page-container">
-          <h2>Diary</h2>
-          <p>다이어리 페이지입니다.</p>
+      <div className="main-wrapper" style={{ display: 'flex', flex: 1 }}>
+      {/* 중앙 콘텐츠 영역 (ArchivePage의 playlist-main에 해당) */}
+      <div className="playlist-main">
+        <h2>Diary</h2>
+        <div>날짜 : 2025-07-15 </div>
+        <hr />
+        <div className='diary-emoji'>
+          <span>이모지 선택:</span>
+          <span>😊😒🤣😁😎🙄😣😮😴</span>
         </div>
-
-        {/* 우측 패널 */}
-        <div className="right-panel">
-          <div className="top-bar">
-            <div className="search-container">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="제목을 입력하세요"
-              />
-              <button className="search-btn">
-                <FaSearch />
-              </button>
-            </div>
-            <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
-            <div className="profile">👤</div>
-          </div>
+        <div className='diary-contents'>
+          <div className='diary-title'>일기 제목</div>
+          <div className='diary-img'>일기 이미지</div>
+          <div className='diary-content'>일기 내용</div>
         </div>
       </div>
+
+      {/* 우측 패널 (ArchivePage와 동일) */}
+      <div className="right-panel">
+        <div className="top-bar">
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="제목을 입력하세요"
+            />
+            <button className="search-btn">
+              <FaSearch />
+            </button>
+          </div>
+          <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
+          <div className="profile">👤</div>
+        </div>
+      </div>
+    </div>
+
 
       {/* 로그인 모달 */}
       {showModal && <LoginModal onClose={() => setShowModal(false)} />}
