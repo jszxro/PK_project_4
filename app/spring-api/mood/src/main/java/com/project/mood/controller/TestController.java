@@ -1,4 +1,4 @@
-package com.mood.mood.controller;
+package com.project.mood.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +26,9 @@ public class TestController {
     }
   }
 
-  // db 콘솔 테스트
+  // db 콘솔에 테스트ㄱㄱ
   // fetch('http://localhost:8080/test/db').then(r => r.text()).then(console.log)
+
   @GetMapping("/test/health")
   public String healthCheck() {
     return "Spring Boot 정상 실행 중";
