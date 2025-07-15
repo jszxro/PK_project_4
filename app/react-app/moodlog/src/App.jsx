@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MainPage from './pages/MainPage';
+import PlaylistPage from './pages/PlaylistPage';
+import ArchivePage from './pages/ArchivePage'; 
+import WritePost from './pages/WritePost';
+import MomentsPage from './pages/MomentsPage';  // ✅ 반드시 import
+import DiaryPage from './pages/DiaryPage';      // ✅ 반드시 import
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <BrowserRouter>
+        <Routes>
+           <Route path="/" element={<MainPage />} />
+          <Route path="/playlist" element={<PlaylistPage />} />
+          <Route path="/archive" element={<ArchivePage />} />
+          <Route path="/post" element={<WritePost/>} />
+          <Route path="/moments" element={<MomentsPage />} />   {/* ✅ 추가 */}
+          <Route path="/diary" element={<DiaryPage />} />       {/* ✅ 추가 */}
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
 
-export default App
+export default App;
