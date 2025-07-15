@@ -5,7 +5,9 @@
   border-radius: 12px;
   font-size: 18px;
   font-weight: bold;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   transition: background 0.2s ease;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
@@ -38,17 +40,21 @@
   border-radius: 10px;
   padding: 40px;
   margin-bottom: 30px;
-  color: white;
+  color: #bbb;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+  min-height: 60px; /* 필요 시 원하는 높이로 조정 */
+
+
 }
 
 .momentMeta {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
   font-size: 14px;
   color: #bbb;
-}
+} 
 
 .momentAuthor {
   font-weight: bold;
@@ -60,6 +66,8 @@
 
 .momentTime {
   font-style: italic;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .momentThumbnail {
@@ -75,19 +83,39 @@
 }
 
 .momentContentTitle{
-  display: inline-block;      /* 또는 block */
-  max-width: 160px;           /* 너비 지정 필수! 글자 수에 맞춰 조정 */
-  white-space: nowrap;        /* 줄 바꿈 안함 */
-  overflow: hidden;           /* 넘치는 텍스트 숨김 */
-  text-overflow: ellipsis;    /* ...으로 표시 */
-}
+  display: inline-block;      
+  max-width: 160px;           
+  white-space: nowrap;       
+  overflow: hidden;           
+  text-overflow: ellipsis;   
+} 
 .momentContent {
   font-size: 16px;
   margin-bottom: 14px;
 }
 
 .momentLikes {
-  text-align: right;
+  text-align: center;
   font-size: 16px;
   color: #ffd700;
+  white-space: nowrap;
 }
+
+.tagRanking{
+  color: #808080;
+  padding: 5px;
+}
+
+.textButton {
+  all: unset; /* 모든 기본 버튼 스타일 제거 */
+  color: #808080;
+  padding: 8px;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.textButton:hover {
+  text-decoration: underline;
+}
+
