@@ -215,26 +215,19 @@ body {
   color: #b5d3b0;
 }
 
-/* 태그 버튼 크기 */
-.tag-btn {
-  font-size: 33px;  /* 텍스트 크기 키움 */
-  padding: 10px 18px; /* 버튼 자체 크기 키움 */
-  margin: 10px;
-  border: none;
-  border-radius: 20px;
-  background-color: #444;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
+/* 태그 버튼 */
 
 .tag-btn {
-  background: #2a2a2a;
-  color: #b5d3b0;
+  font-size: 18px;  /* 텍스트 크기 키움 */
+  padding: 8px 14px; /* 버튼 자체 크기 키움 */
+  margin: 10px;
   border: none;
-  padding: 8px 14px;
   border-radius: 10px;
+  background: #2a2a2a;
+  background-color: #444;
+  color: #b5d3b0;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .tag-btn:hover {

@@ -64,7 +64,7 @@ const MomentsPage = () => {
       thumbnail: "https://img.youtube.com/vi/FepuXV72_hQ/hqdefault.jpg",
       likes: 96,
       time: "1초 전"
-    }
+    },
   ];
 
   // 선택된 태그만 필터링 
@@ -109,11 +109,11 @@ const MomentsPage = () => {
       <div className="main-wrapper" style={{ display: 'flex', flex: 1 }}>
         {/* 왼쪽 영역 */}
         <div className="moments-left" style={{ flex: 2, padding: '40px' }}>
-          <div className="tags">
-            {tagList.map(tag => (
-              <button key={tag} className="tag-btn" onClick={() => setSelectedTag(tag)}># {tag}</button>
-            ))}
-          </div>
+            <div className="tags">
+              {tagList.map(tag => (
+                <button key={tag} className="tag-btn" onClick={() => setSelectedTag(tag)}># {tag}</button>
+              ))}
+            </div>
 
           <div>
             <div className={styles.commentFeeling} onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
@@ -134,21 +134,25 @@ const MomentsPage = () => {
                 <p className={styles.sortLabel}>최신순</p>
               </div>
               <div className="moment-card">
-                {filteredPosts.map(post => (
-                  <div key={post.id} className={styles.momentCard}>
-                    <div className={styles.momentMeta}>
-                      <span className={styles.momentAuthor}>작성자: {post.author}</span>
-                      <span className={styles.momentTag}>#{post.tag}</span>
-                      <span className={styles.momentTime}>{post.time}</span>
+                <div className={styles.momentGrid}>
+                  {filteredPosts.map(post => (
+                    <div key={post.id} className={styles.postCard}>
+                      <div className={styles.momentMeta}>
+                        <span className={styles.momentAuthor}>작성자: {post.author}</span>
+                        <span className={styles.momentTag}>#{post.tag}</span>
+                        <span className={styles.momentTime}>{post.time}</span>
+                      </div>
+                      <img className={styles.momentThumbnail} src={post.thumbnail} alt="유튜브 썸네일" />
+                      <div className={styles.momentLink}>
+                        🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
+                      </div>
+                      <div className={styles.momentContentNLikes}>
+                      <span className={styles.momentContent}>{post.content}</span>
+                      <span className={styles.momentLikes}>💛 {post.likes}</span>
+                      </div>
                     </div>
-                    <img className={styles.momentThumbnail} src={post.thumbnail} alt="유튜브 썸네일" />
-                    <div className={styles.momentLink}>
-                      🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
-                    </div>
-                    <p className={styles.momentContent}>{post.content}</p>
-                    <div className={styles.momentLikes}>💛 {post.likes}</div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </>
           )}
@@ -168,19 +172,25 @@ const MomentsPage = () => {
           <h3>오늘의 인기 Moments 하이라이트</h3>
           <div className="moment-card">
             {sortedByLikes.map(post => (
-              <div key={post.id} className={styles.momentMeta}>
-                <span className={styles.momentContentTitle}>{post.content_title}</span>
-                <span>➡️ '{post.song_title} - {post.singer}'</span>
-                <span className={styles.momentLikes}>공감 💛 {post.likes}</span>
-                <span className={styles.momentTime}>{post.time}</span>
-                <span
-                  className={styles.momentShowAll}
-                  onClick={() => {
-                    setSelectedPost(post);
-                    setIsDetailModalOpen(true);
-                  }}
-                  style={{ cursor: 'pointer', color: '#A8C3A8', fontWeight: 'bold' }}
-                >[전체보기]</span>
+              <div key={post.id} className={styles.momentHighlight}>
+                <div className={styles.titleLine}>
+                  <span className={styles.momentContentTitle}>{post.content_title}</span>
+                </div>
+                <div className={styles.songLine}>
+                  <span>➡️ '{post.song_title} - {post.singer}'</span>
+                </div>
+                <div className={styles.infoLine}>
+                  <span className={styles.momentLikes}>공감 💛 {post.likes}</span>
+                  <span className={styles.momentTime}>{post.time}</span>
+                  <span
+                    className={styles.momentShowAll}
+                    onClick={() => {
+                      setSelectedPost(post);
+                      setIsDetailModalOpen(true);
+                    }}
+                    style={{ cursor: 'pointer', color: '#A8C3A8', fontWeight: 'bold' }}
+                  >[전체보기]</span>
+                </div>
               </div>
             ))}
 
@@ -209,7 +219,6 @@ const MomentsPage = () => {
           <h3>오늘의 감정 한 줄</h3>
           <div className={styles.momentCard}>
             <p>{feelingText || '아직 기록된 감정이 없어요 😶'}</p>
-            {/* {feelingText && <p>{feelingText}</p>} */}
           </div>
         </div>
       </div>
