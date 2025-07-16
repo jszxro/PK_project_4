@@ -3,7 +3,7 @@ FROM openjdk:17-jdk-slim
 
 # 시스템 패키지 설치 : maven, node, npm, nano
 RUN apt update && \
-    apt install -y curl nano maven && \
+    # apt install -y curl nano maven && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
