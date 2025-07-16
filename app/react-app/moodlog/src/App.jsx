@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import PlaylistPage from './pages/PlaylistPage';
 import ArchivePage from './pages/ArchivePage'; 
-import WritePost from './pages/WritePost';
+import MomentsPage from './pages/MomentsPage';  // ✅ 반드시 import
+import DiaryPage from './pages/DiaryPage';      // ✅ 반드시 import
 
 import './App.css'
 
@@ -14,7 +15,8 @@ function App() {
            <Route path="/" element={<MainPage />} />
           <Route path="/playlist" element={<PlaylistPage />} />
           <Route path="/archive" element={<ArchivePage />} />
-          <Route path="/post" element={<WritePost/>} />
+          <Route path="/moments" element={<MomentsPage />} />   {/* ✅ 추가 */}
+          <Route path="/diary" element={<DiaryPage />} />       {/* ✅ 추가 */}
         </Routes>
       </BrowserRouter>
     </>
