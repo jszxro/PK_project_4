@@ -6,6 +6,7 @@ import com.project.mood.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,14 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
+    }
+
+    public boolean signin(String userId, String rawPw) {
+        Optional<Member> optionalMember = memberRepository.findByUserId(userId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            return passwordEncoder.matches(rawPw, member.getUserPw());
+        }
+        return false;
     }
 }
