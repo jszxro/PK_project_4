@@ -17,4 +17,14 @@ public class MemberController {
         memberService.signup(dto);
         return ResponseEntity.ok("회원가입 성공");
     }
+
+    @PostMapping("/signin")
+    public ResponseEntity<String> signin(@RequestBody MemberDTO dto) {
+        boolean result = memberService.signin(dto.getUserId(), dto.getUserPw());
+        if (result) {
+            return ResponseEntity.ok("로그인 성공");
+        } else {
+            return ResponseEntity.status(401).body("아이디 또는 비밀번호가 틀렸습니다");
+        }
+    }
 }
