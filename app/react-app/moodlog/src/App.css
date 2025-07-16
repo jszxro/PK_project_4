@@ -16,7 +16,7 @@ body {
 
 .layout {
   display: flex;
-  height: 100vh;  /* ← 더 이상 고정 안 함 */
+  min-height: 100vh; 
 }
 
 .main-wrapper {
