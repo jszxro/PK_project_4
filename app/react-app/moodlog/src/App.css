@@ -16,8 +16,15 @@ body {
 
 .layout {
   display: flex;
-  height: auto;  /* ← 더 이상 고정 안 함 */
-  overflow: visible;  /* ← 숨기지 않음 */
+  height: 100vh;  /* ← 더 이상 고정 안 함 */
+}
+
+.main-wrapper {
+  flex: 1; /* 💡 남은 공간 전체 사용 */
+  padding: 24px;
+  color: white;
+  box-sizing: border-box;
+  min-height: 100vh;
 }
 
 /* 좌측 사이드바 */
@@ -26,6 +33,7 @@ body {
   background: #111;
   padding: 30px;
 }
+
 
 .logo {
   color: lightgreen;
