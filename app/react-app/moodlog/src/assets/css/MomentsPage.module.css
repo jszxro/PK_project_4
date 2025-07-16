@@ -1,3 +1,4 @@
+
 .commentFeeling {
   background: #1c1c1c;
   color: #707070;
@@ -38,14 +39,26 @@
 
 .momentCard {
   background-color: #2a2a2a;
-  border-radius: 10px;
-  padding: 40px;
+  border-radius: 8px;
+  padding: 10px;
   margin-bottom: 30px;
   color: #bbb;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
   min-height: 60px; /* 필요 시 원하는 높이로 조정 */
-
-
+}
+.momentsLayout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+.mainWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .momentMeta {
@@ -117,13 +130,18 @@
 
 .tagRanking{
   color: #808080;
-  padding: 5px;
+  padding: 10px;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+  min-height: 60px; 
 }
 
 .textButton {
   all: unset; /* 모든 기본 버튼 스타일 제거 */
   color: #808080;
-  padding: 8px;
+  padding: 2px;
   cursor: pointer;
   display: inline-block;
   margin-top: 8px;
@@ -133,10 +151,20 @@
   text-decoration: underline;
 }
 
-.momentHighlight {
-  margin-bottom: 20px;
+.highlightContainer {
+
   padding: 10px;
-  border-bottom: 1px solid #444;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+  min-height: 60px;
+}
+
+
+.momentHighlight {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-bottom: 1px solid #444; 
 }
 
 .titleLine {
@@ -168,12 +196,12 @@
 
 .momentGrid {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column; /* 한 줄씩 세로로 배치 */
+  gap: 20px; /* 게시글 사이 간격 */
 }
 
 .postCard {
-  width: 48%;
+  /* width: 48%; */
   background: #1e1e1e;
   padding: 16px;
   border-radius: 12px;
@@ -181,4 +209,27 @@
   margin-bottom: 16px;
   display: flex;
   flex-direction: column;
+  
+}
+
+
+.splitWrapper {
+  display: flex;
+  gap: 20px; /* 좌우 간격 */
+  margin-top: 0px;
+
+}
+
+.leftSection {
+  flex: 1; /* 좌측 좁게 */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rightSection {
+  flex: 1; /* 우측 좁게 */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
