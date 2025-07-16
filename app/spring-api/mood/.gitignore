@@ -42,4 +42,4 @@ application.yml
 
 *.pid                
 docker-compose.override.yml
-Thumbs.db    
+Thumbs.db     

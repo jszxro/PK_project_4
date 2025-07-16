@@ -122,24 +122,25 @@ const DiaryPage = () => {
 
       </div>
 
-      {/* 우측 패널 (ArchivePage와 동일) */}
-      <div className="right-panel">
-        <div className="top-bar">
-          <div className="search-container">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="제목을 입력하세요"
-            />
-            <button className="search-btn">
-              <FaSearch />
-            </button>
+
+        {/* 우측 패널 (ArchivePage와 동일) */}
+        <div className="right-panel">
+          <div className="top-bar">
+            <div className="search-container">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="제목을 입력하세요"
+              />
+              <button className="search-btn">
+                <FaSearch />
+              </button>
+            </div>
+            <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
+            <div className="profile">👤</div>
           </div>
-          <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
-          <div className="profile">👤</div>
         </div>
       </div>
-    </div>
 
 
       {/* 로그인 모달 */}
