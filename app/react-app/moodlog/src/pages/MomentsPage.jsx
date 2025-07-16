@@ -81,7 +81,9 @@ const MomentsPage = () => {
   };
 
   return (
-    <div className={styles.momentsLayout}>
+
+    <div className="layout">
+
       {/* 좌측 사이드바 */}
       <div className="sidebar">
         <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
@@ -96,7 +98,7 @@ const MomentsPage = () => {
       </div>
 
       {/* 우측 전체 영역 */}
-      <div className={styles.mainWrapper}>
+      <div className="main-wrapper">
         {/* 우측 상단 바 */}
         <div className="top-bar">
           <div className="search-container">

@@ -16,8 +16,15 @@ body {
 
 .layout {
   display: flex;
-  height: auto;  /* ← 더 이상 고정 안 함 */
-  overflow: visible;  /* ← 숨기지 않음 */
+  min-height: 100vh; 
+}
+
+.main-wrapper {
+  flex: 1; /* 💡 남은 공간 전체 사용 */
+  padding: 24px;
+  color: white;
+  box-sizing: border-box;
+  min-height: 100vh;
 }
 
 .playlist-layout .top-bar {
@@ -42,6 +49,7 @@ body {
   font-size: 15px;
   line-height: 0;
 }
+
 .logo {
   color: #A8C3A8;
   margin-bottom: 0px;
