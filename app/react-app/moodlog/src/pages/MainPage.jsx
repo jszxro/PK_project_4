@@ -21,6 +21,7 @@ function MainPage() {
           <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
           <li onClick={() => navigate('/archive')} style={{ cursor: 'pointer' }}>Archive</li>
           <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
+
         </ul>
         {showModal && <LoginModal onClose={() => setShowModal(false)} />}
       </div>
