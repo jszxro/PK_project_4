@@ -23,8 +23,10 @@ function ArchivePage() {
         <ul className="nav">
           <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
           <li onClick={() => navigate('/playlist')} className={location.pathname === '/playlist' ? 'active' : ''}>Playlist</li>
+          <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
           <li className="active">Archive</li>
-          <li onClick={() => navigate('/post')} className={location.pathname === '/post' ? 'active' : ''}>Post</li>
+          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
+          {/* <li onClick={() => navigate('/post')} className={location.pathname === '/post' ? 'active' : ''}>Post</li> */}
         </ul>
       </div>
 

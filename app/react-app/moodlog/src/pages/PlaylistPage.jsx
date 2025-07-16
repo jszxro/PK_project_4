@@ -17,7 +17,9 @@ function PlaylistPage() {
         <ul className="nav">
           <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
           <li className="active">Playlist</li>
+          <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
           <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
+          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
         </ul>
       </div>
 
