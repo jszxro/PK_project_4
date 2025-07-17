@@ -1,6 +1,5 @@
 import '../App.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaSearch } from 'react-icons/fa';
 import { useState } from 'react';
 import LoginModal from '../components/LoginModal';
 
@@ -20,28 +19,7 @@ function PlaylistPage() {
 
   return (
     <div className="layout playlist-layout">
-      <div className="sidebar">
-        <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
-        <p className="subtitle">당신의 감정을 이해하는 첫 번째 플레이리스트</p>
-        <ul className="nav">
-          <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
-          <li className="active">Playlist</li>
-          <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
-          <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
-          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
-        </ul>
-      </div>
-
       <div className="main-content">
-        <div className="top-bar">
-          <div className="search-container">
-            <input type="text" className="search-input" placeholder="제목을 입력하세요" />
-            <button className="search-btn"><FaSearch /></button>
-          </div>
-          <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
-          <div className="profile">👤</div>
-        </div>
-
         <h4 className="section-title"><span style={{ color: '#A8C3A8' }}>순간에 어울리는 노래</span> playlist</h4>
         <div className="mood-row">
           <div className="mood-card">

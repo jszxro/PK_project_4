@@ -1,0 +1,17 @@
+.app-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #262626;
+  color: white;
+  padding: 20px;
+}
+
+.page-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}

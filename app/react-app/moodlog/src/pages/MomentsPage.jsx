@@ -83,32 +83,8 @@ const MomentsPage = () => {
   return (
 
     <div className="layout">
-
-      {/* 좌측 사이드바 */}
-      <div className="sidebar">
-        <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
-        <p className="subtitle">당신의 감정을 이해하는 첫 번째 플레이리스트</p>
-        <ul className="nav">
-          <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
-          <li onClick={() => navigate('/playlist')} className={location.pathname === '/playlist' ? 'active' : ''}>Playlist</li>
-          <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
-          <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
-          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
-        </ul>
-      </div>
-
       {/* 우측 전체 영역 */}
       <div className="main-wrapper">
-        {/* 우측 상단 바 */}
-        <div className="top-bar">
-          <div className="search-container">
-            <input type="text" className="search-input" placeholder="제목을 입력하세요" />
-            <button className="search-btn"><FaSearch /></button>
-          </div>
-          <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
-          <div className="profile">👤</div>
-        </div>
-
         {/* 중앙: 태그 버튼 */}
         <div className={styles.tags}>
           {tagList.map(tag => (

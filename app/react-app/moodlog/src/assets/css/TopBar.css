@@ -1,0 +1,68 @@
+/* TopBar 영역: 상단 우측에 고정되도록 정렬 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* ✅ 우측 정렬 */
+  gap: 12px;
+  padding: 10px 20px;
+  background-color: transparent;
+  position: sticky; /* ✅ 스크롤해도 고정되게 하려면 */
+  top: 0;
+  z-index: 10;
+}
+
+/* 검색창 래퍼 */
+.search-container {
+  display: flex;
+  align-items: center;
+  background: #222;
+  border-radius: 30px;
+  overflow: hidden;
+  max-width: 450px;
+  min-width: 200px;
+  padding: 4px 12px;
+  height: 44px;
+  flex: 1;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* 로그인 버튼 */
+.login-btn {
+  background-color: transparent;
+  color: white;
+  border: 1px solid #555;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  height: 44px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.login-btn:hover {
+  background-color: #555;
+  color: white;
+}
+
+/* 프로필 아이콘 */
+.profile {
+  font-size: 22px;
+  cursor: pointer;
+}
