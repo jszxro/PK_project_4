@@ -16,6 +16,12 @@ export const UserProvider = ({ children }) => {
             });
     }, []);
 
+    useEffect(() => {
+        if (userInfo) {
+            console.log("로그인정보", userInfo);
+        }
+    }, [userInfo]);
+
     const logout = () => {
         axios.post('/api/logout', {}, { withCredentials: true })
             .then(() => setUserInfo(null))
