@@ -1,8 +1,10 @@
 import '../App.css';
-import { useNavigate, useLocation  } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
-import React, { useState } from 'react'; // ✔ 상태 관리를 위해 필요
+import React, { useEffect, useState, useContext } from 'react'; // ✔ 상태 관리를 위해 필요
 import LoginModal from '../components/LoginModal'; // ✔ 모달 컴포넌트 가져오기
+import { UserContext } from '../context/UserContext';
+
 
 
 
@@ -11,6 +13,8 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
     const location = useLocation(); // ✅ 현재 경로 확인용
     const [showModal, setShowModal] = useState(false);
     const handleLogout = () => {setIsLoggedIn(false);};
+    const { userInfo, logout } = useContext(UserContext);
+
   return (
     <div className="layout">
       {/* 좌측 사이드바 */}
@@ -59,18 +63,17 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
               <FaSearch />
             </button>
           </div>
-            {/* ✅ 로그인 버튼 추가 */}
-            {isLoggedIn ? (
-              <>
-                <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
-                <div className="profile">😊 사용자님 환영해요!</div>
-              </>
-            ) : (
-              <>
-                <button className="login-btn" onClick={() => {setShowModal(true)}}>로그인</button>
-                <div className="profile">👤</div>
-              </>
-            )}
+
+          {/* ✅ 로그인 버튼 추가 */}
+          {userInfo ? (
+            <>
+              <div className="profile">{userInfo.nickname}님</div>
+              <button onClick={logout} className="login-btn">로그아웃</button>
+            </>
+          ) : (
+            <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
+          )}
+          <div className="profile">👤</div>
         </div>
 
         <h3>{isLoggedIn ? '나만의 Mood Picks' : 'Mood Picks'}</h3>

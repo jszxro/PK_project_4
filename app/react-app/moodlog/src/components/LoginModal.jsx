@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 import styles from '../assets/css/LoginModal.module.css';
 import SignupModal from './SignupModal';
@@ -15,7 +16,9 @@ function LoginModal({ onClose, setIsLoggedIn }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [showFindId, setShowFindId] = useState(false);
   const [showFindPw, setShowFindPw] = useState(false);
+  const { setUserInfo } = useContext(UserContext);
 
+  
   const handleLogin = async () => {
     if (!id || !password) {
       setErrorMsg('아이디와 비밀번호를 입력하세요.');
@@ -24,14 +27,25 @@ function LoginModal({ onClose, setIsLoggedIn }) {
     }
 
     try {
+      // 1. 로그인 요청
       const response = await axios.post('/api/signin', {
         userId: id,
         userPw: password
+      }, { withCredentials: true });
+
+      console.log('로그인 성공:', response.data);
+
+      // 2. 로그인 성공 후 사용자 정보 가져오기
+      const userInfoResponse = await axios.get('/api/user-info', {
+        withCredentials: true
       });
 
-      console.log('로그인 성공✅:', response.data);
+      // 3. Context에 유저 정보 저장
+      setUserInfo(userInfoResponse.data);
       setIsLoggedIn(true);
-      onClose(); // 로그인 성공 시 모달 닫기
+      // 4. 모달 닫기
+      onClose();
+
 
     } catch (error) {
       // 어떤 오류든 무조건 아래 메시지로
