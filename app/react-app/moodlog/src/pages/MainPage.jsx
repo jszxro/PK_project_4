@@ -5,9 +5,6 @@ import React, { useEffect, useState, useContext } from 'react'; // ✔ 상태 �
 import LoginModal from '../components/LoginModal'; // ✔ 모달 컴포넌트 가져오기
 import { UserContext } from '../context/UserContext';
 
-
-
-
 function MainPage({ isLoggedIn, setIsLoggedIn }) {
     const navigate = useNavigate();
     const location = useLocation(); // ✅ 현재 경로 확인용
