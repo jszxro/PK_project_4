@@ -21,7 +21,9 @@ function Layout() {
       {/* 좌측 사이드바 */}
       <div className="sidebar">
         <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
-        <p className="subtitle">당신의 감정을 이해하는 첫 번째 플레이리스트</p>
+        <p className="subtitle"> 
+          당신의 감정을 이해하는 첫 번째 플레이리스트
+        </p>
         <ul className="nav">
           <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
           <li className={location.pathname === '/playlist' ? 'active' : ''} onClick={() => navigate('/playlist')}>Playlist</li>

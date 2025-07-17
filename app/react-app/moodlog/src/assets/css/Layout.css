@@ -3,15 +3,9 @@
   height: 100vh;
 }
 
-.sidebar {
-  width: 220px;
-  background-color: #262626;
-  color: white;
-  padding: 20px;
-}
 
 .page-content {
   flex: 1;
-  padding: 40px;
+  padding: 32px;
   overflow-y: auto;
 }

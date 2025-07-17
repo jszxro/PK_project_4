@@ -23,9 +23,18 @@ body {
   min-height: 100vh;
 }
 
+/* 레이아웃 전체 영역 */
+.layout.playlist-layout {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #000; /* 배경 색상 있으면 */
+}
+
 .playlist-layout .top-bar {
   display: flex;
-  justify-content: flex-end;      /* 오른쪽 정렬 유지 */
+  justify-content: flex-end;      
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
@@ -34,7 +43,7 @@ body {
 
 /* 좌측 사이드바 */
 .sidebar {
-  width: 350px;
+  width: 280px; /* 기존보다 좁게 */
   background: #000;
   padding: 30px;
   padding-top: 0px;
@@ -42,8 +51,9 @@ body {
 .subtitle {
   text-align: center;
   margin-left: 10px;
-  font-size: 15px;
-  line-height: 0;
+  font-size: 11px;
+  line-height: 1.2;
+  color:#A8C3A8;
 }
 
 .logo {
@@ -51,13 +61,13 @@ body {
   margin-bottom: 0px;
   margin-left: 10px;
   text-align: center;
-  font-size: 60px;
+  font-size: 48px; /* 줄임 */
 }
 
 .nav {
   list-style: none;
   padding: 0;
-  margin-top: 40px;
+  margin-top: 30px; /* 줄임 */
 }
 
 .nav li {
@@ -65,9 +75,9 @@ body {
   color: gray;
   cursor: pointer;
   text-align: center;
-  font-size: 25px;
+  font-size: 20px; /* 줄임 */
   border-bottom: 1px solid #444;
-  padding: 20px; /* ✅ padding 통일 */
+  padding: 14px; /* ✅ padding 통일 */
   border-radius: 8px; /* ✅ radius 미리 넣기 */
 }
 
@@ -608,4 +618,22 @@ body {
   margin-top: 30px;
   width: 100%;
   max-width: 1000px;
+}
+
+.moment-mood-container {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+}
+
+.main-left,
+.main-right {
+  flex: 1;
+}
+
+.empty-block {
+  background: #222;
+  padding: 40px;
+  border-radius: 8px;
+  color: white;
 }
