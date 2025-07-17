@@ -1,11 +1,17 @@
 package com.project.mood.controller;
 
+import com.project.mood.entity.Member;
 import com.project.mood.dto.MemberDTO;
+import com.project.mood.repository.MemberRepository;
 import com.project.mood.service.MemberService;
 import com.project.mood.security.JwtUtil; // JwtUtil이 이 경로에 있다고 가정
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
+
+import java.util.Collections;
+import java.util.Map;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +20,25 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody MemberDTO dto) {
         memberService.signup(dto);
         return ResponseEntity.ok("회원가입 성공");
     }
 
+    // 중복회원확인
+    @GetMapping("/check-id")
+    public ResponseEntity<Map<String, Member>> checkId(@RequestParam("userId") String userId) {
+        Member exists = memberRepository.findOneByUserId(userId); // JPA 메서드
+        return ResponseEntity.ok(Collections.singletonMap("exists", exists));
+    }
+
+    // 로그인
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody MemberDTO dto) {
         boolean result = memberService.signin(dto.getUserId(), dto.getUserPw());

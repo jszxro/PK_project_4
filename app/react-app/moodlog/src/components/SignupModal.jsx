@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import styles from '../assets/css/LoginModal.module.css';
 import axios from "axios";
+import debounce from 'lodash/debounce';
 
 function SignupModal({ onClose }) {
 
+  const [isIdAvailable, setIsIdAvailable] = useState(false);
+  const [idCheckMessage, setIdCheckMessage] = useState('');
   const [userinfo, setUserinfo] = useState({
     userId: '',
     userPw: '',
@@ -18,7 +21,33 @@ function SignupModal({ onClose }) {
       ...prev,
       [name]: value
     }));
+    // 아이디 입력 중일 때 중복 확인
+    if (name === "userId") {
+      checkUserId(value);
+    }
   };
+
+  const checkUserId = useCallback(debounce((userId) => {
+    if (!userId) {
+      setIdCheckMessage('');
+      setIsIdAvailable(false);
+      return;
+    }
+
+    axios.get(`/api/check-id?userId=${userId}`)
+      .then(res => {
+        if (res.data.exists) {
+          setIdCheckMessage("❌ 이미 존재하는 아이디입니다.");
+          setIsIdAvailable(false);
+        } else {
+          setIdCheckMessage("✅ 사용 가능한 아이디입니다!");
+          setIsIdAvailable(true);
+        }
+      })
+      .catch(() => {
+        setIdCheckMessage("오류 발생");
+      });
+  }, 300), []);
 
   const handleSignup = () => {
     console.log(userinfo)
@@ -44,22 +73,18 @@ function SignupModal({ onClose }) {
         {/* 아이디 입력 */}
         <input type="text" placeholder="아이디" className={styles.modalInput} name="userId" value={userinfo.userId} onChange={handleUserinfo} />
 
-        {/* 중복 확인 체크박스 - 오른쪽 아래 정렬 */}
-        <div className={styles.checkWrapper}>
-          <label className={styles.checkLabel}>
-            <input type="checkbox" />
-            중복 확인
-          </label>
-        </div>
-
+        {/* 중복 확인 */}
+        <p style={{ fontSize: "0.8rem", color: idCheckMessage.includes("가능") ? "green" : "red" }}>
+          {idCheckMessage}
+        </p>
         {/* 나머지 입력 필드 */}
-        <input type="password" placeholder="비밀번호" name='userPw' value={userinfo.userPw} className={styles.modalInput} onChange={handleUserinfo} />
-        <input type="password" placeholder="비밀번호 확인" className={styles.modalInput} />
-        <input type="text" placeholder="닉네임" name='nickname' value={userinfo.nickname} className={styles.modalInput} onChange={handleUserinfo} />
-        <input type="email" placeholder="이메일" name='userEmail' value={userinfo.userEmail} className={styles.modalInput} onChange={handleUserinfo} />
+        <input type="password" placeholder="비밀번호" name='userPw' value={userinfo.userPw} className={styles.modalInput} onChange={handleUserinfo} disabled={!isIdAvailable} />
+        <input type="password" placeholder="비밀번호 확인" className={styles.modalInput} disabled={!isIdAvailable} />
+        <input type="text" placeholder="닉네임" name='nickname' value={userinfo.nickname} className={styles.modalInput} onChange={handleUserinfo} disabled={!isIdAvailable} />
+        <input type="email" placeholder="이메일" name='userEmail' value={userinfo.userEmail} className={styles.modalInput} onChange={handleUserinfo} disabled={!isIdAvailable} />
 
         {/* 가입 버튼 */}
-        <button className={styles.modalLoginBtn} onClick={() => handleSignup()}>
+        <button className={styles.modalLoginBtn} onClick={() => handleSignup()} disabled={!isIdAvailable}>
           회원가입
         </button>
 
