@@ -1,15 +1,45 @@
 import '../App.css';
-import { useNavigate, useLocation  } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
-import React, { useState } from 'react'; // ✔ 상태 관리를 위해 필요
+import React, { useEffect, useState, useContext } from 'react'; // ✔ 상태 관리를 위해 필요
 import LoginModal from '../components/LoginModal'; // ✔ 모달 컴포넌트 가져오기
+import { UserContext } from '../context/UserContext';
 
 
 
 function MainPage() {
-    const navigate = useNavigate();
-    const location = useLocation(); // ✅ 현재 경로 확인용
-    const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation(); // ✅ 현재 경로 확인용
+  const [showModal, setShowModal] = useState(false);
+  const { userInfo, logout } = useContext(UserContext);
+
+
+  // useEffect(() => {
+  //   axios.get('/api/user-info', { withCredentials: true })
+  //     .then(res => {
+  //       if (res.data && res.data.nickname) {
+  //         setUserInfo(res.data);
+  //         console.log(userInfo)
+  //       }
+  //     })
+  //     .catch(err => {
+  //       console.log('로그인된 사용자 정보 없음 또는 오류', err);
+  //     });
+  // }, []);
+
+  // const handleLogout = () => {
+  //   axios.post('/api/logout', {}, { withCredentials: true })
+  //     .then(() => {
+  //       setUserInfo(null); // 상태 초기화
+  //       alert("로그아웃 되었습니다.");
+  //     })
+  //     .catch(err => {
+  //       console.error("로그아웃 실패", err);
+  //     });
+  // };
+
+
+
   return (
     <div className="layout">
       {/* 좌측 사이드바 */}
@@ -54,8 +84,15 @@ function MainPage() {
               <FaSearch />
             </button>
           </div>
-            {/* ✅ 로그인 버튼 추가 */}
+          {/* ✅ 로그인 버튼 추가 */}
+          {userInfo ? (
+            <>
+              <div className="profile">{userInfo.nickname}님</div>
+              <button onClick={logout} className="login-btn">로그아웃</button>
+            </>
+          ) : (
             <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
+          )}
           <div className="profile">👤</div>
         </div>
 
