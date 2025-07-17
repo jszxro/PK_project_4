@@ -55,7 +55,7 @@ public class MemberController {
                     .httpOnly(true)
                     .secure(false) // HTTPS 환경에서는 true
                     .path("/")
-                    .maxAge(60 * 60) // 1시간
+                    // .maxAge(60 * 60) // 1시간
                     .sameSite("Lax")
                     .build();
 
