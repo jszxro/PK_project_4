@@ -13,33 +13,6 @@ function MainPage() {
   const [showModal, setShowModal] = useState(false);
   const { userInfo, logout } = useContext(UserContext);
 
-
-  // useEffect(() => {
-  //   axios.get('/api/user-info', { withCredentials: true })
-  //     .then(res => {
-  //       if (res.data && res.data.nickname) {
-  //         setUserInfo(res.data);
-  //         console.log(userInfo)
-  //       }
-  //     })
-  //     .catch(err => {
-  //       console.log('로그인된 사용자 정보 없음 또는 오류', err);
-  //     });
-  // }, []);
-
-  // const handleLogout = () => {
-  //   axios.post('/api/logout', {}, { withCredentials: true })
-  //     .then(() => {
-  //       setUserInfo(null); // 상태 초기화
-  //       alert("로그아웃 되었습니다.");
-  //     })
-  //     .catch(err => {
-  //       console.error("로그아웃 실패", err);
-  //     });
-  // };
-
-
-
   return (
     <div className="layout">
       {/* 좌측 사이드바 */}
