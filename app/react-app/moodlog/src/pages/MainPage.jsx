@@ -6,10 +6,11 @@ import LoginModal from '../components/LoginModal'; // ✔ 모달 컴포넌트 �
 
 
 
-function MainPage() {
+function MainPage({ isLoggedIn, setIsLoggedIn }) {
     const navigate = useNavigate();
     const location = useLocation(); // ✅ 현재 경로 확인용
     const [showModal, setShowModal] = useState(false);
+    const handleLogout = () => {setIsLoggedIn(false);};
   return (
     <div className="layout">
       {/* 좌측 사이드바 */}
@@ -20,11 +21,15 @@ function MainPage() {
           <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''} style={{ cursor: 'pointer' }}>Home</li>
           <li onClick={() => navigate('/playlist')} className={location.pathname === '/playlist' ? 'active' : ''} style={{ cursor: 'pointer' }}>Playlist</li>
           <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
-          <li onClick={() => navigate('/archive')} style={{ cursor: 'pointer' }}>Archive</li>
-          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
-
+          {/* <li onClick={() => navigate('/archive')} style={{ cursor: 'pointer' }}>Archive</li>
+          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li> */}
+          {isLoggedIn && (
+            <>
+              <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''} style={{ cursor: 'pointer' }}>Archive</li>
+              <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''} style={{ cursor: 'pointer' }}>Diary</li>
+            </>
+          )}
         </ul>
-        {showModal && <LoginModal onClose={() => setShowModal(false)} />}
       </div>
 
       {/* 중앙 영역 */}
@@ -55,13 +60,24 @@ function MainPage() {
             </button>
           </div>
             {/* ✅ 로그인 버튼 추가 */}
-            <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
-          <div className="profile">👤</div>
+            {isLoggedIn ? (
+              <>
+                <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
+                <div className="profile">😊 사용자님 환영해요!</div>
+              </>
+            ) : (
+              <>
+                <button className="login-btn" onClick={() => {setShowModal(true)}}>로그인</button>
+                <div className="profile">👤</div>
+              </>
+            )}
         </div>
 
-        <h3>Mood Picks</h3>
+        <h3>{isLoggedIn ? '나만의 Mood Picks' : 'Mood Picks'}</h3>
         <div className="empty-block" />
       </div>
+    
+    {showModal && <LoginModal onClose={() => setShowModal(false)} setIsLoggedIn={setIsLoggedIn} />}
     </div>
   );
 }

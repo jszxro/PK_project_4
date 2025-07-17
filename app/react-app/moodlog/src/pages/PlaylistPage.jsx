@@ -4,18 +4,23 @@ import { FaSearch } from 'react-icons/fa';
 import { useState } from 'react';
 import LoginModal from '../components/LoginModal';
 
-function PlaylistPage() {
+function PlaylistPage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [selectedTag, setSelectedTag] = useState('Happy');
 
   const playlistData = {
-    Happy: ['[Happy 추천곡 1]', '[Happy 추천곡 2]', '[Happy 추천곡 3]'],
-    Sad: ['[Sad 추천곡 1]', '[Sad 추천곡 2]', '[Sad 추천곡 3]'],
-    Comfort: ['[Comfort 추천곡 1]', '[Comfort 추천곡 2]', '[Comfort 추천곡 3]'],
-    Alone: ['[Alone 추천곡 1]', '[Alone 추천곡 2]', '[Alone 추천곡 3]'],
-    Focus: ['[Focus 추천곡 1]', '[Focus 추천곡 2]', '[Focus 추천곡 3]']
+    "Happy": ['[Happy 추천곡 1]', '[Happy 추천곡 2]', '[Happy 추천곡 3]'],
+    "Sad": ['[Sad 추천곡 1]', '[Sad 추천곡 2]', '[Sad 추천곡 3]'],
+    "Excited": ['[Excited 추천곡 1]', '[Excited 추천곡 2]', '[Excited 추천곡 3]'],
+    "Angry": ['[Angry 추천곡 1]', '[Angry 추천곡 2]', '[Angry 추천곡 3]'],
+    "Anxious": ['[Anxious 추천곡 1]', '[Anxious 추천곡 2]', '[Anxious 추천곡 3]'],
+    "Lonely": ['[Lonely 추천곡 1]', '[Lonely 추천곡 2]', '[Lonely 추천곡 3]'],
+    "Bored": ['[Bored 추천곡 1]', '[Bored 추천곡 2]', '[Bored 추천곡 3]'],
+    "Need Comfort": ['[Comfort 추천곡 1]', '[Comfort 추천곡 2]', '[Comfort 추천곡 3]'],
+    "Calm": ['[Calm 추천곡 1]', '[Calm 추천곡 2]', '[Calm 추천곡 3]'],
+    "Focused": ['[Focused 추천곡 1]', '[Focused 추천곡 2]', '[Focused 추천곡 3]'],
   };
 
   return (
@@ -27,8 +32,14 @@ function PlaylistPage() {
           <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
           <li className="active">Playlist</li>
           <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
-          <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
-          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
+          {/* <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
+          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li> */}
+          {isLoggedIn && (
+            <>
+              <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
+              <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
+            </>
+          )}
         </ul>
       </div>
 
@@ -38,8 +49,17 @@ function PlaylistPage() {
             <input type="text" className="search-input" placeholder="제목을 입력하세요" />
             <button className="search-btn"><FaSearch /></button>
           </div>
-          <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
-          <div className="profile">👤</div>
+          {isLoggedIn ? (
+            <>
+              <button className="logout-btn" onClick={() => setIsLoggedIn(false)}>로그아웃</button>
+              <div className="profile">😊 사용자님 환영해요!</div>
+            </>
+          ) : (
+            <>
+              <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
+              <div className="profile">👤</div>
+            </>
+          )}
         </div>
 
         <h4 className="section-title"><span style={{ color: '#A8C3A8' }}>순간에 어울리는 노래</span> playlist</h4>
@@ -61,7 +81,7 @@ function PlaylistPage() {
         <div className="tag-container">
           <h4 className="section-title">오늘 기분에 어울리는 곡을 찾아드릴게요</h4>
           <div className="tags">
-            {['Happy', 'Sad', 'Comfort', 'Alone', 'Focus'].map(tag => (
+            {['Happy', 'Sad', 'Excited', 'Angry', 'Anxious', 'Lonely', 'Bored', 'Need Comfort', 'Calm', 'Focused'].map(tag => (
               <button
                 key={tag}
                 className={`tag-btn ${selectedTag === tag ? 'active' : ''}`}

@@ -8,7 +8,7 @@ import LoginModal from '../components/LoginModal';
 import FeelingCommentModal from '../components/FeelingCommentModal';
 import PostDetailModal from '../components/PostDetailModal';
 
-const MomentsPage = () => {
+const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -94,6 +94,12 @@ const MomentsPage = () => {
           <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
           <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
           <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
+          {isLoggedIn && (
+            <>
+              <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
+              <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
+            </>
+          )}
         </ul>
       </div>
 
@@ -105,8 +111,17 @@ const MomentsPage = () => {
             <input type="text" className="search-input" placeholder="제목을 입력하세요" />
             <button className="search-btn"><FaSearch /></button>
           </div>
-          <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
-          <div className="profile">👤</div>
+          {isLoggedIn ? (
+            <>
+              <button className="logout-btn" onClick={() => setIsLoggedIn(false)}>로그아웃</button>
+              <div className="profile">😊 사용자님 환영해요!</div>
+            </>
+          ) : (
+            <>
+              <button className="login-btn" onClick={() => setShowModal(true)}>로그인</button>
+              <div className="profile">👤</div>
+            </>
+          )}
         </div>
 
         {/* 중앙: 태그 버튼 */}
