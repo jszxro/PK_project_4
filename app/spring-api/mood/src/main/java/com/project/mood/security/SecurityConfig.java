@@ -15,7 +15,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/signup", "/login", "/signin").permitAll() // 이 경로는 인증 없이 허용
                         .anyRequest().permitAll() // 그 외는 인증필요(전부 수락으로 변경)
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
                 );
         return http.build();
     }
