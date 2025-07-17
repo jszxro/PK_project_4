@@ -4,6 +4,9 @@ import com.project.mood.entity.Member;
 import com.project.mood.dto.MemberDTO;
 import com.project.mood.repository.MemberRepository;
 import com.project.mood.service.MemberService;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 import com.project.mood.security.JwtUtil; // JwtUtil이 이 경로에 있다고 가정
 
 import lombok.RequiredArgsConstructor;
@@ -52,7 +55,7 @@ public class MemberController {
                     .httpOnly(true)
                     .secure(false) // HTTPS 환경에서는 true
                     .path("/")
-                    .maxAge(60 * 60) // 1시간
+                    // .maxAge(60 * 60) // 1시간
                     .sameSite("Lax")
                     .build();
 
@@ -64,4 +67,41 @@ public class MemberController {
             return ResponseEntity.status(401).body("아이디 또는 비밀번호가 틀렸습니다");
         }
     }
+
+    // 회원정보 가져오기
+    @GetMapping("/user-info")
+    public ResponseEntity<?> getUserInfo(@CookieValue(name = "signin_info", required = false) String token) {
+        if (token == null) {
+            return ResponseEntity.status(401).body("No token");
+        }
+
+        try {
+            String userId = jwtUtil.getUsername(token);
+            Member member = memberRepository.findOneByUserId(userId);
+            if (member == null) {
+                return ResponseEntity.status(404).body("User not found");
+            }
+            return ResponseEntity.ok(member); // Member 객체 전체 반환 (JSON으로 직렬화됨)
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Invalid token");
+        }
+    }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        // 쿠키 제거
+        ResponseCookie cookie = ResponseCookie.from("signin_info", null)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0) // 즉시 만료
+                .sameSite("Lax")
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("로그아웃 성공");
+    }
+
 }
