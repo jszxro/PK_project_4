@@ -73,9 +73,12 @@
 
 .checkWrapper {
   display: flex;
-  justify-content: flex-end;     /* ✅ 오른쪽 정렬 */
-  width: 95%;                    /* ✅ 입력창 너비와 맞춤 */
-  margin-top: 0px;               /* ✅ 위 입력창과 간격 */
+  justify-content: flex-end;
+  /* ✅ 오른쪽 정렬 */
+  width: 95%;
+  /* ✅ 입력창 너비와 맞춤 */
+  margin-top: 0px;
+  /* ✅ 위 입력창과 간격 */
   margin-bottom: 10px;
   box-sizing: border-box;
 }

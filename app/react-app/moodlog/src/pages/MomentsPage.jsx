@@ -8,7 +8,7 @@ import LoginModal from '../components/LoginModal';
 import FeelingCommentModal from '../components/FeelingCommentModal';
 import PostDetailModal from '../components/PostDetailModal';
 
-const MomentsPage = () => {
+const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
   const location = useLocation();
 

@@ -3,18 +3,23 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import LoginModal from '../components/LoginModal';
 
-function PlaylistPage() {
+function PlaylistPage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [selectedTag, setSelectedTag] = useState('Happy');
 
   const playlistData = {
-    Happy: ['[Happy 추천곡 1]', '[Happy 추천곡 2]', '[Happy 추천곡 3]'],
-    Sad: ['[Sad 추천곡 1]', '[Sad 추천곡 2]', '[Sad 추천곡 3]'],
-    Comfort: ['[Comfort 추천곡 1]', '[Comfort 추천곡 2]', '[Comfort 추천곡 3]'],
-    Alone: ['[Alone 추천곡 1]', '[Alone 추천곡 2]', '[Alone 추천곡 3]'],
-    Focus: ['[Focus 추천곡 1]', '[Focus 추천곡 2]', '[Focus 추천곡 3]']
+    "Happy": ['[Happy 추천곡 1]', '[Happy 추천곡 2]', '[Happy 추천곡 3]'],
+    "Sad": ['[Sad 추천곡 1]', '[Sad 추천곡 2]', '[Sad 추천곡 3]'],
+    "Excited": ['[Excited 추천곡 1]', '[Excited 추천곡 2]', '[Excited 추천곡 3]'],
+    "Angry": ['[Angry 추천곡 1]', '[Angry 추천곡 2]', '[Angry 추천곡 3]'],
+    "Anxious": ['[Anxious 추천곡 1]', '[Anxious 추천곡 2]', '[Anxious 추천곡 3]'],
+    "Lonely": ['[Lonely 추천곡 1]', '[Lonely 추천곡 2]', '[Lonely 추천곡 3]'],
+    "Bored": ['[Bored 추천곡 1]', '[Bored 추천곡 2]', '[Bored 추천곡 3]'],
+    "Need Comfort": ['[Comfort 추천곡 1]', '[Comfort 추천곡 2]', '[Comfort 추천곡 3]'],
+    "Calm": ['[Calm 추천곡 1]', '[Calm 추천곡 2]', '[Calm 추천곡 3]'],
+    "Focused": ['[Focused 추천곡 1]', '[Focused 추천곡 2]', '[Focused 추천곡 3]'],
   };
 
   return (
@@ -39,7 +44,7 @@ function PlaylistPage() {
         <div className="tag-container">
           <h4 className="section-title">오늘 기분에 어울리는 곡을 찾아드릴게요</h4>
           <div className="tags">
-            {['Happy', 'Sad', 'Comfort', 'Alone', 'Focus'].map(tag => (
+            {['Happy', 'Sad', 'Excited', 'Angry', 'Anxious', 'Lonely', 'Bored', 'Need Comfort', 'Calm', 'Focused'].map(tag => (
               <button
                 key={tag}
                 className={`tag-btn ${selectedTag === tag ? 'active' : ''}`}
