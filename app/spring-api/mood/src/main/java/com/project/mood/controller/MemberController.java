@@ -32,7 +32,7 @@ public class MemberController {
             String token = jwtUtil.createToken(dto.getUserId());
 
             // 2. HttpOnly 쿠키로 생성
-            ResponseCookie cookie = ResponseCookie.from("jwt", token)
+            ResponseCookie cookie = ResponseCookie.from("signin_info", token)
                     .httpOnly(true)
                     .secure(false) // HTTPS 환경에서는 true
                     .path("/")
