@@ -1,9 +1,12 @@
 import { useState, useCallback } from 'react';
 import styles from '../assets/css/LoginModal.module.css';
 import axios from "axios";
+import SuccessPopup from './SuccessPopup';
 import debounce from 'lodash/debounce';
 
-function SignupModal({ onClose }) {
+
+function SignupModal({ onClose, onSwitchToLogin }) {
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const [isIdAvailable, setIsIdAvailable] = useState(false);
   const [idCheckMessage, setIdCheckMessage] = useState('');
@@ -61,8 +64,12 @@ function SignupModal({ onClose }) {
         if (res.status === 200) {
           alert("회원가입 완료");
           console.log(res.data);
+          setShowSuccessPopup(true);
         }
       })
+        .catch(err => {
+        console.error("회원가입 오류:", err);
+      });
   }
 
   return (
@@ -89,7 +96,16 @@ function SignupModal({ onClose }) {
         </button>
 
         {/* 하단 안내 텍스트 */}
-        <p className={styles.bottomText}>이미 계정이 있으신가요?</p>
+        <p
+        className={styles.bottomText}
+        onClick={() => {
+          onClose();           // 현재 회원가입 모달 닫기
+          onSwitchToLogin();   // 로그인 모달 다시 열기
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        이미 계정이 있으신가요?
+      </p>
       </div>
     </div>
   );

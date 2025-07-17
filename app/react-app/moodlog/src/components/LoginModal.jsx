@@ -4,16 +4,21 @@ import axios from 'axios';
 import styles from '../assets/css/LoginModal.module.css';
 import SignupModal from './SignupModal';
 import ErrorPopup from './ErrorPopup'; // ✅ 상단 import
+import FindIdModal from './FindIdModal';
+import FindPwModal from './FindPwModal';
 
 
-function LoginModal({ onClose }) {
+function LoginModal({ onClose, setIsLoggedIn }) {
   const [showSignup, setShowSignup] = useState(false);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showFindId, setShowFindId] = useState(false);
+  const [showFindPw, setShowFindPw] = useState(false);
   const { setUserInfo } = useContext(UserContext);
 
+  
   const handleLogin = async () => {
     if (!id || !password) {
       setErrorMsg('아이디와 비밀번호를 입력하세요.');
@@ -37,16 +42,14 @@ function LoginModal({ onClose }) {
 
       // 3. Context에 유저 정보 저장
       setUserInfo(userInfoResponse.data);
-
+      setIsLoggedIn(true);
       // 4. 모달 닫기
       onClose();
 
+
     } catch (error) {
-      const msg =
-        error.response?.status === 401
-          ? '아이디 또는 비밀번호가 틀렸습니다.'
-          : '로그인 중 오류가 발생했습니다.';
-      setErrorMsg(msg);
+      // 어떤 오류든 무조건 아래 메시지로
+      setErrorMsg('아이디 또는 비밀번호가 틀렸습니다❗');
       setShowErrorPopup(true);
     }
   };
@@ -75,8 +78,8 @@ function LoginModal({ onClose }) {
           <div className={styles.modalOptions}>
             <span onClick={() => setShowSignup(true)}>회원가입</span>
             <div>
-              <span>아이디 찾기</span>
-              <span>비밀번호 찾기</span>
+              <span onClick={() => setShowFindId(true)}>아이디 찾기</span>
+              <span onClick={() => setShowFindPw(true)}>비밀번호 찾기</span>
             </div>
           </div>
           {showErrorPopup && (
@@ -92,7 +95,9 @@ function LoginModal({ onClose }) {
       </div>
 
       {/* 회원가입 모달 */}
-      {showSignup && <SignupModal onClose={() => setShowSignup(false)} />}
+      {showSignup && <SignupModal onClose={() => setShowSignup(false)} onSwitchToLogin={() => setShowSignup(false)} />}
+      {showFindId && <FindIdModal onClose={() => setShowFindId(false)} />}
+      {showFindPw && <FindPwModal onClose={() => setShowFindPw(false)} />}
     </>
   );
 }
