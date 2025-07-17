@@ -7,11 +7,13 @@ import { UserContext } from '../context/UserContext';
 
 
 
-function MainPage() {
-  const navigate = useNavigate();
-  const location = useLocation(); // ✅ 현재 경로 확인용
-  const [showModal, setShowModal] = useState(false);
-  const { userInfo, logout } = useContext(UserContext);
+
+function MainPage({ isLoggedIn, setIsLoggedIn }) {
+    const navigate = useNavigate();
+    const location = useLocation(); // ✅ 현재 경로 확인용
+    const [showModal, setShowModal] = useState(false);
+    const handleLogout = () => {setIsLoggedIn(false);};
+    const { userInfo, logout } = useContext(UserContext);
 
   return (
     <div className="layout">
@@ -23,11 +25,15 @@ function MainPage() {
           <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''} style={{ cursor: 'pointer' }}>Home</li>
           <li onClick={() => navigate('/playlist')} className={location.pathname === '/playlist' ? 'active' : ''} style={{ cursor: 'pointer' }}>Playlist</li>
           <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
-          <li onClick={() => navigate('/archive')} style={{ cursor: 'pointer' }}>Archive</li>
-          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
-
+          {/* <li onClick={() => navigate('/archive')} style={{ cursor: 'pointer' }}>Archive</li>
+          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li> */}
+          {isLoggedIn && (
+            <>
+              <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''} style={{ cursor: 'pointer' }}>Archive</li>
+              <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''} style={{ cursor: 'pointer' }}>Diary</li>
+            </>
+          )}
         </ul>
-        {showModal && <LoginModal onClose={() => setShowModal(false)} />}
       </div>
 
       {/* 중앙 영역 */}
@@ -57,6 +63,7 @@ function MainPage() {
               <FaSearch />
             </button>
           </div>
+
           {/* ✅ 로그인 버튼 추가 */}
           {userInfo ? (
             <>
@@ -69,9 +76,11 @@ function MainPage() {
           <div className="profile">👤</div>
         </div>
 
-        <h3>Mood Picks</h3>
+        <h3>{isLoggedIn ? '나만의 Mood Picks' : 'Mood Picks'}</h3>
         <div className="empty-block" />
       </div>
+    
+    {showModal && <LoginModal onClose={() => setShowModal(false)} setIsLoggedIn={setIsLoggedIn} />}
     </div>
   );
 }
