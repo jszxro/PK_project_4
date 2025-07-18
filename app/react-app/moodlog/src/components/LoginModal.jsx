@@ -18,7 +18,7 @@ function LoginModal({ onClose, setIsLoggedIn }) {
   const [showFindPw, setShowFindPw] = useState(false);
   const { setUserInfo } = useContext(UserContext);
 
-  
+
   const handleLogin = async () => {
     if (!id || !password) {
       setErrorMsg('아이디와 비밀번호를 입력하세요.');
@@ -42,13 +42,14 @@ function LoginModal({ onClose, setIsLoggedIn }) {
 
       // 3. Context에 유저 정보 저장
       setUserInfo(userInfoResponse.data);
-      setIsLoggedIn(true);
+      // setIsLoggedIn(true);
       // 4. 모달 닫기
       onClose();
 
 
     } catch (error) {
       // 어떤 오류든 무조건 아래 메시지로
+      console.log(error);
       setErrorMsg('아이디 또는 비밀번호가 틀렸습니다❗');
       setShowErrorPopup(true);
     }

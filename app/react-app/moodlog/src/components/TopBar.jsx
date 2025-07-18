@@ -1,10 +1,14 @@
 // src/components/TopBar.jsx
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import '../assets/css/TopBar.css';
+import { UserContext } from '../context/UserContext';
 
 function TopBar({ onLoginClick }) {
   const [showModal, setShowModal] = useState(false);
+  const { userInfo, logout } = useContext(UserContext);
+
+
   return (
     <div className="top-bar">
       <div className="search-container">
@@ -15,7 +19,14 @@ function TopBar({ onLoginClick }) {
         />
         <button className="search-btn"><FaSearch /></button>
       </div>
-      <button className="login-btn" onClick={onLoginClick}>로그인</button>
+      {userInfo ? (
+        <>
+          <div className="profile">{userInfo.nickname}님</div>
+          <button onClick={logout} className="login-btn">로그아웃</button>
+        </>
+      ) : (
+        <button className="login-btn" onClick={onLoginClick}>로그인</button>
+      )}
     </div>
 
   );
