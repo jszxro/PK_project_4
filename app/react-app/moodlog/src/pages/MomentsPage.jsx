@@ -11,8 +11,7 @@ import PostDetailModal from '../components/PostDetailModal';
 const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const tagList = ["Happy", "Sad", "Comfort", "Alone", "Focus"];
+  const tagList = ["Happy", "Sad", "Excited","Angry", "Anxious", "Lonely", "Bored", "Need Comfort", "Calm", "Focused"];
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [feelingText, setFeelingText] = useState('');
@@ -82,9 +81,9 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
 
   return (
 
-    <div className="layout">
+    <div className={styles.layout}>
       {/* 우측 전체 영역 */}
-      <div className="main-wrapper">
+      <div className={styles.main}>
         {/* 중앙: 태그 버튼 */}
         <div className={styles.tags}>
           {tagList.map(tag => (

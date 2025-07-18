@@ -15,16 +15,6 @@ body {
   min-height: 100vh; 
 }
 
-.main-wrapper {
-  flex: 1; /* 💡 남은 공간 전체 사용 */
-  /* padding: 90px; */
-  margin-top: 90px;
-  margin-left: 60px;
-  color: white;
-  box-sizing: border-box;
-  min-height: 100vh;
-}
-
 /* 레이아웃 전체 영역 */
 .layout.playlist-layout {
   display: flex;
@@ -148,14 +138,6 @@ body {
   border-radius: 8px;
 }
 
-.top-bar {
-  display: flex;
-  flex-wrap: wrap; /* ✅ 창이 좁아질 때 줄 바꿈 */
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
 .search {
   background: #222;
   border: none;
@@ -173,50 +155,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.search-container {
-  display: flex;
-  align-items: center;
-  background: #222;
-  border-radius: 30px;
-  overflow: hidden;
-  width: 100px;
-  max-width: 300px; 
-  min-width: 200px;
-  flex: 1;
-  padding: 4px 8px;
-  height: 50px;
-}
-
-.search-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: white;
-  padding: 10px 15px;
-  font-size: 14px;
-  outline: none;
-}
-
-.search-btn {
-  background: #333;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ccc;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  margin-left: 6px;
-}
-
-.search-btn:hover {
-  background: #555;
-  color: white;
 }
 
 .login-btn {

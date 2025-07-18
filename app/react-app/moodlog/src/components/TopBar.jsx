@@ -16,7 +16,6 @@ function TopBar({ onLoginClick }) {
         <button className="search-btn"><FaSearch /></button>
       </div>
       <button className="login-btn" onClick={onLoginClick}>로그인</button>
-      <div className="profile">👤</div>
     </div>
 
   );

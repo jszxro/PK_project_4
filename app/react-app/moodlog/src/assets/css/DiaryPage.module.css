@@ -1,3 +1,11 @@
+.layout {
+  /* display: flex;
+  min-height: 100vh;  */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #000;
+}
 
 .closeBtn {
   position: absolute;
@@ -21,11 +29,16 @@
 
 
 .diaryPageMain {
-  flex: 1;
+  /* flex: 1;
   padding: 40px;
-  background: #000;
+  background: #f50505;
   min-height: 100vh; 
-  overflow-y: auto;
+  overflow-y: auto; */
+  width: 1400px;
+  margin: 0 auto;          /* 좌우 중앙 정렬 */
+  padding: 0px 400px 30px 200px;      /* 내부 여백 */
+  box-sizing: border-box;
+  /* background: #222222; */
 }
 
 .diaryCard {
