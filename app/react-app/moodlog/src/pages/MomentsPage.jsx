@@ -1,38 +1,23 @@
 // src/pages/MomentsPage.jsx
 import '../App.css';
 import styles from '../assets/css/MomentsPage.module.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import LoginModal from '../components/LoginModal';
 import FeelingCommentModal from '../components/FeelingCommentModal';
 import PostDetailModal from '../components/PostDetailModal';
-import axios from 'axios';
 
 const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const tagList = ["Happy", "Sad", "Comfort", "Alone", "Focus"];
+  const tagList = ["Happy", "Sad", "Excited","Angry", "Anxious", "Lonely", "Bored", "Need Comfort", "Calm", "Focused"];
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [feelingText, setFeelingText] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [selectedPost, setSelectedPost] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [quote, setQuote] = useState('');
-
-  useEffect(() => {
-    axios.get('/api/quotes')
-      .then((res) => {
-        if (res.data && res.data.length > 0) {
-          setQuote(res.data[0].content);
-        }
-      })
-      .catch((err) => {
-        console.error('오늘의 한줄 가져오기 실패:', err);
-      });
-  }, []);
 
   const posts = [
     {
@@ -96,9 +81,9 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
 
   return (
 
-    <div className="layout">
+    <div className={styles.layout}>
       {/* 우측 전체 영역 */}
-      <div className="main-wrapper">
+      <div className={styles.main}>
         {/* 중앙: 태그 버튼 */}
         <div className={styles.tags}>
           {tagList.map(tag => (
@@ -122,33 +107,33 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
           {/* 왼쪽 영역: 게시글 카드 */}
           <div className={styles.leftSection}>
             {filteredPosts.length > 0 ? (
-              <>
-                <div className={styles.momentHeader}>
-                  <p className={styles.momentCount}>
-                    {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `전체 Moments (${filteredPosts.length})`}
-                  </p>
-                  <p className={styles.sortLabel}>최신순</p>
-                </div>
-                <div className={styles.momentGrid}>
-                  {filteredPosts.map(post => (
-                    <div key={post.id} className={styles.postCard}>
-                      <div className={styles.momentMeta}>
-                        <span className={styles.momentAuthor}>작성자: {post.author}</span>
-                        <span className={styles.momentTag}>#{post.tag}</span>
-                        <span className={styles.momentTime}>{post.time}</span>
-                      </div>
-                      <img className={styles.momentThumbnail} src={post.thumbnail} alt="유튜브 썸네일" />
-                      <div className={styles.momentLink}>
-                        🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
-                      </div>
-                      <div className={styles.momentContentNLikes}>
-                        <span className={styles.momentContent}>{post.content}</span>
-                        <span className={styles.momentLikes}>💛 {post.likes}</span>
-                      </div>
+            <>
+              <div className={styles.momentHeader}>
+                <p className={styles.momentCount}>
+                  {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `전체 Moments (${filteredPosts.length})`}
+                </p>
+                <p className={styles.sortLabel}>최신순</p>
+              </div>
+              <div className={styles.momentGrid}>
+                {filteredPosts.map(post => (
+                  <div key={post.id} className={styles.postCard}>
+                    <div className={styles.momentMeta}>
+                      <span className={styles.momentAuthor}>작성자: {post.author}</span>
+                      <span className={styles.momentTag}>#{post.tag}</span>
+                      <span className={styles.momentTime}>{post.time}</span>
                     </div>
-                  ))}
-                </div>
-              </>
+                    <img className={styles.momentThumbnail} src={post.thumbnail} alt="유튜브 썸네일" />
+                    <div className={styles.momentLink}>
+                      🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
+                    </div>
+                    <div className={styles.momentContentNLikes}>
+                      <span className={styles.momentContent}>{post.content}</span>
+                      <span className={styles.momentLikes}>💛 {post.likes}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
             ) : (<p className={styles.noPosts}>게시글이 없습니다.</p>)}
 
           </div>
@@ -156,45 +141,45 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
           {/* 오른쪽 영역: 인기 Moments, 태그 순위, 오늘의 기분 */}
           <div className={styles.rightSection}>
             <h3>오늘의 인기 Moments 하이라이트</h3>
-            <div className={styles.highlightContainer}>
-              {sortedByLikes.map(post => (
-                <div key={post.id} className={styles.momentHighlight}>
-                  <div className={styles.titleLine}>
-                    <span className={styles.momentContentTitle}>{post.content_title}</span>
+              <div className={styles.highlightContainer}>
+                {sortedByLikes.map(post => (
+                  <div key={post.id} className={styles.momentHighlight}>
+                    <div className={styles.titleLine}>
+                      <span className={styles.momentContentTitle}>{post.content_title}</span>
+                    </div>
+                    <div className={styles.songLine}>
+                      <span>➡️ '{post.song_title} - {post.singer}'</span>
+                    </div>
+                    <div className={styles.infoLine}>
+                      <span className={styles.momentLikes}>공감 💛 {post.likes}</span>
+                      <span className={styles.momentTime}>{post.time}</span>
+                      <span
+                        className={styles.momentShowAll}
+                        onClick={() => {
+                          setSelectedPost(post);
+                          setIsDetailModalOpen(true);
+                        }}
+                      >[전체보기]</span>
+                    </div>
                   </div>
-                  <div className={styles.songLine}>
-                    <span>➡️ '{post.song_title} - {post.singer}'</span>
-                  </div>
-                  <div className={styles.infoLine}>
-                    <span className={styles.momentLikes}>공감 💛 {post.likes}</span>
-                    <span className={styles.momentTime}>{post.time}</span>
-                    <span
-                      className={styles.momentShowAll}
-                      onClick={() => {
-                        setSelectedPost(post);
-                        setIsDetailModalOpen(true);
-                      }}
-                    >[전체보기]</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
             <h3>오늘 많이 공유된 감정</h3>
             <div className={styles.tagRanking}>
               {sortedTags.map(({ tag, count }) => (
                 <div key={tag}>#{tag} ({count})건</div>
               ))}
-              {topTag && (
-                <button className={styles.textButton} onClick={() => setSelectedTag(topTag)}>
-                  ➡️ #{topTag} Moments [전체 보기]
-                </button>
-              )}
+            {topTag && (
+              <button className={styles.textButton} onClick={() => setSelectedTag(topTag)}>
+                ➡️ #{topTag} Moments [전체 보기]
+              </button>
+            )}
             </div>
 
-            <h3>오늘의 한 줄</h3>
+            <h3>오늘의 감정 한 줄</h3>
             <div className={styles.momentCard}>
-              <p>{quote ? quote : '아직 기록된 감정이 없어요 😶'}</p>
+              <p>{feelingText || '아직 기록된 감정이 없어요 😶'}</p>
             </div>
           </div>
         </div>
