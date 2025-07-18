@@ -1,27 +1,29 @@
 import '../App.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LoginModal from '../components/LoginModal';
 import styles from '../assets/css/PlaylistPage.module.css'; // ✅ CSS 모듈 import
+import axios from 'axios';
 
 function PlaylistPage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
-  const [selectedTag, setSelectedTag] = useState('Happy');
+  const [selectedTag, setSelectedTag] = useState('행복');
+  const [emojiList, setEmojiList] = useState([]);
+  const [songs, setSongs] = useState([]);
 
-  const playlistData = {
-    "Happy": ['[Happy 추천곡 1]', '[Happy 추천곡 2]', '[Happy 추천곡 3]'],
-    "Sad": ['[Sad 추천곡 1]', '[Sad 추천곡 2]', '[Sad 추천곡 3]'],
-    "Excited": ['[Excited 추천곡 1]', '[Excited 추천곡 2]', '[Excited 추천곡 3]'],
-    "Angry": ['[Angry 추천곡 1]', '[Angry 추천곡 2]', '[Angry 추천곡 3]'],
-    "Anxious": ['[Anxious 추천곡 1]', '[Anxious 추천곡 2]', '[Anxious 추천곡 3]'],
-    "Lonely": ['[Lonely 추천곡 1]', '[Lonely 추천곡 2]', '[Lonely 추천곡 3]'],
-    "Bored": ['[Bored 추천곡 1]', '[Bored 추천곡 2]', '[Bored 추천곡 3]'],
-    "Need Comfort": ['[Comfort 추천곡 1]', '[Comfort 추천곡 2]', '[Comfort 추천곡 3]'],
-    "Calm": ['[Calm 추천곡 1]', '[Calm 추천곡 2]', '[Calm 추천곡 3]'],
-    "Focused": ['[Focused 추천곡 1]', '[Focused 추천곡 2]', '[Focused 추천곡 3]'],
-  };
+  useEffect(() => {
+    axios.get('/api/emojis')
+      .then(response => setEmojiList(response.data))
+      .catch(error => console.error('이모지 목록 불러오기 실패:', error));
+  }, []);
+
+  useEffect(() => {
+    axios.get(`/api/songs/${encodeURIComponent(selectedTag)}`)
+      .then(res => setSongs(res.data))
+      .catch(err => console.error('노래 목록 불러오기 실패:', err));
+  }, [selectedTag]);
 
   return (
     <div className={styles.playlistLayout}>
@@ -48,25 +50,22 @@ function PlaylistPage({ isLoggedIn, setIsLoggedIn }) {
         <div className={styles.tagContainer}>
           <h4 className={styles.sectionTitle}>오늘 기분에 어울리는 곡을 찾아드릴게요</h4>
           <div className={styles.tags}>
-            {[
-              'Happy', 'Sad', 'Excited', 'Angry', 'Anxious',
-              'Lonely', 'Bored', 'Need Comfort', 'Calm', 'Focused'
-            ].map(tag => (
+            {emojiList.map(({ emojiId, tag }) => (
               <button
-                key={tag}
-                className={`${styles.tagBtn} ${selectedTag === tag ? styles.active : ''}`}
-                onClick={() => setSelectedTag(tag)}
+                key={emojiId}
+                className="tag-btn"
+                onClick={() => { setSelectedTag(tag), console.log(tag) }}
               >
-                # {tag}
+                # {emojiId}
               </button>
             ))}
           </div>
         </div>
 
         <div className={styles.playlistArea}>
-          {playlistData[selectedTag].map((text, idx) => (
+          {songs.map((song, idx) => (
             <div className={styles.playlistCard} key={idx}>
-              {text}
+              {song.title} - {song.artist}
             </div>
           ))}
         </div>
