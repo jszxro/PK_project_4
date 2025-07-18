@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from '../assets/css/DiaryModal.module.css';
+import ErrorPopup from './ErrorPopup';
 
 
 function DiaryModal({ date, onClose, initialEmoji = '' }) {
@@ -8,6 +9,9 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
   const [emoji, setEmoji] = useState(initialEmoji);
   const [text, setText] = useState('');
   const [emojiList, setEmojiList] = useState([]);
+  const [title, setTitle] = useState('');
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
 
   useEffect(() => {
@@ -17,20 +21,27 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
   }, []);
 
   const handleSubmit = () => {
-    console.log('등록된 일기:', {
-      date: date.toISOString().split('T')[0],
-      emoji,
-      text,
-    });
-    onClose(); // 모달 닫기
-  };
+  if (!title || !text || !emoji) {
+    setErrorMsg('제목, 내용, 이모지를 입력하세요');
+    setShowErrorPopup(true);
+    return;
+  }
+
+  console.log('등록된 일기:', {
+    date: date.toISOString().split('T')[0],
+    emoji,
+    title,
+    text,
+  });
+
+  onClose(); // 모달 닫기
+};
 
   return (
     <div className={styles.diaryModalOverlay}>
       <div className={styles.diaryModalContainer}>
         <h2>Diary</h2>
         <p><strong>날짜:</strong> {date.toISOString().split('T')[0]}</p>
-
         <label className={styles.diaryModalLabel}>이모지 선택:</label>
         <select
           value={emoji}
@@ -45,6 +56,15 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
           ))}
         </select>
 
+        <label className={styles.diaryModalLabel}>제목:</label>
+        <input
+          type="text"
+          placeholder="일기 제목을 입력하세요"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className={styles.diaryModalTitle}
+        />
+
         <label className={styles.diaryModalLabel}>내용 작성:</label>
         <textarea
           placeholder="오늘 있었던 일을 작성하세요"
@@ -58,6 +78,13 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
           <button className={`${styles.diaryModalBtn} ${styles.submit}`} onClick={handleSubmit}>등록</button>
         </div>
       </div>
+
+      {showErrorPopup && (
+      <ErrorPopup
+        message={errorMsg}
+        onClose={() => setShowErrorPopup(false)}
+      />
+      )}
     </div>
 
   );

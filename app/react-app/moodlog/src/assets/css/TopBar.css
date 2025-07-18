@@ -2,9 +2,9 @@
 .top-bar {
   display: flex;
   align-items: center;
-  justify-content: center; /* ✅ 우측 정렬 */
+  justify-content: right; /* ✅ 우측 정렬 */
   gap: 12px;
-  padding: 50px 0px 20px 0px;
+  padding: 40px 190px 20px 0px;
   background-color: transparent;
   top: 0;
   /* margin-bottom: 0px; */

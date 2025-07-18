@@ -1,10 +1,9 @@
 // src/pages/DiaryPage.jsx
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaSearch } from 'react-icons/fa';
 import LoginModal from '../components/LoginModal';
-import styles from '../assets/css/DiaryPage.module.css';
 import DiaryModal from '../components/DiaryModal';
+import styles from '../assets/css/DiaryPage.module.css';
 import diaryex_01 from '../assets/img/diaryex_01.jpg';
 
 const DiaryPage = () => {
@@ -24,7 +23,6 @@ const DiaryPage = () => {
 
   const formattedDate = `${yyyy}-${mm}-${dd}`;
 
-
   //일기 예시
   const diaries = [
   {
@@ -37,33 +35,6 @@ const DiaryPage = () => {
     emoji: "😣"
   } 
   ]
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if(file){
-      const reader = new FileReader();
-      reader.onloadend =()=>{
-        setImage(reader.result); // base64 string 저장 
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-   
-  const handleSubmit = () => {
-    if(!title || !content){
-      alert('제목과 내용을 입력해주세요');
-      return;
-    }
-    const diaryData = {
-      title,
-      image,
-      content,
-      createdAt : new Date().toISOString(),
-    };
-    console.log('💾 저장된 일기:', diaryData);
-    alert('일기가 저장되었습니다!');
-    // 여기에 API 호출 또는 로컬스토리지 저장 가능
-  }
 
   return (
     <div className={styles.layout}>

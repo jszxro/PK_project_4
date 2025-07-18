@@ -87,7 +87,13 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
         {/* 중앙: 태그 버튼 */}
         <div className={styles.tags}>
           {tagList.map(tag => (
-            <button key={tag} className="tag-btn" onClick={() => setSelectedTag(tag)}># {tag}</button>
+          <button
+            key={tag}
+            className={`tag-btn ${selectedTag === tag ? 'active' : ''}`}
+            onClick={() => setSelectedTag(tag)}
+          >
+            # {tag}
+          </button>
           ))}
         </div>
 
