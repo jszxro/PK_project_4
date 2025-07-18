@@ -16,7 +16,6 @@
   font-size: 1.2rem;
   cursor: pointer;
 }
-
 .openModalBtn {
   background-color: #A8C3A8;
   color: white;
@@ -34,9 +33,9 @@
   background: #f50505;
   min-height: 100vh; 
   overflow-y: auto; */
-  width: 1400px;
+  width: 1000px;
   margin: 0 auto;          /* 좌우 중앙 정렬 */
-  padding: 0px 400px 30px 200px;      /* 내부 여백 */
+  padding: 0px 0px 0px 0px;      /* 내부 여백 */
   box-sizing: border-box;
   /* background: #222222; */
 }

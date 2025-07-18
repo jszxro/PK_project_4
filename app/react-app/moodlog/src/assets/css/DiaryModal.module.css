@@ -1,79 +1,81 @@
-.diaryModalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+.layout {
+  /* display: flex;
+  min-height: 100vh;  */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.diaryModalContainer {
-  background: #1f1f1f;
-  padding: 40px;
-  border-radius: 16px;
-  width: 600px;
-  height: 600px;
-  max-width: 90%;
-  color: white;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.diaryModalContainer h2 {
-  font-size: 28px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.diaryModalLabel {
-  font-size: 16px;
-  margin-top: 20px;
-  margin-bottom: 6px;
-  display: block;
-}
-
-.diaryModalSelect,
-.diaryModalTextarea {
+  flex-direction: column;
   width: 100%;
-  padding: 10px 12px;
-  font-size: 15px;
-  border-radius: 8px;
+  background-color: #000;
+  padding: 0px 170px;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
   border: none;
-  background-color: #333;
-  color: white;
-  margin-bottom: 12px;
-}
-
-.diaryModalTextarea {
-  height: 150px;
-  resize: none;
-}
-
-.diaryModalFooter {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.diaryModalBtn {
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: none;
+  font-size: 1.2rem;
   cursor: pointer;
 }
 
-.diaryModalBtn.cancel {
-  background-color: #555;
+.openModalBtn {
+  background-color: #A8C3A8;
   color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  cursor: pointer;
 }
 
-.diaryModalBtn.submit {
-  background-color: #a4cfb0;
-  color: black;
-  font-weight: bold;
+
+.diaryPageMain {
+  /* flex: 1;
+  padding: 40px;
+  background: #f50505;
+  min-height: 100vh; 
+  overflow-y: auto; */
+  width: 1400px;
+  margin: 0 auto;          /* 좌우 중앙 정렬 */
+  padding: 0px 400px 30px 200px;      /* 내부 여백 */
+  box-sizing: border-box;
+  /* background: #222222; */
 }
+
+.diaryCard {
+  background-color: #fff;
+  color: black;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  line-height: 1.6;
+
+  /* 👇 최소 높이 지정 (원하는 높이로 조정 가능) */
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+.diaryTitle {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.diaryImage {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  display: block;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.diaryContent {
+  font-size: 1rem;
+  white-space: pre-line;
+}
+

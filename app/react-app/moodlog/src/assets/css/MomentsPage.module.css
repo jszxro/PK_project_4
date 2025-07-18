@@ -2,6 +2,7 @@
 .layout {
   display: flex;
   min-height: 100vh; 
+  padding: 0px 170px;
 }
 .main {
   flex: 1; /* 💡 남은 공간 전체 사용 */
@@ -81,6 +82,7 @@
 
 .momentTag {
   color: #b5d3b0;
+  gap: 10px;
 }
 
 .momentTime {
@@ -238,11 +240,4 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.tags{
-  /* display: flex;
-  flex-wrap: wrap;
-  gap: 0px; 
-  background-color: red; */
 }
