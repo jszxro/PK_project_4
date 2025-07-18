@@ -14,18 +14,18 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ 로그인 상태 선언
 
   return (
-  <UserProvider>
-    <BrowserRouter>
-      <Routes>
-        {/* ✅ 로그인 상태를 MainPage에 props로 전달 */}
-        <Route path="/" element={<MainPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/playlist" element={<PlaylistPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/archive" element={<ArchivePage />} />
-        <Route path="/moments" element={<MomentsPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/diary" element={<DiaryPage />} />
-      </Routes>
-    </BrowserRouter>
-  </UserProvider>
+    <UserProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* ✅ 로그인 상태를 MainPage에 props로 전달 */}
+          <Route path="/" element={<MainPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/playlist" element={<PlaylistPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/archive" element={<ArchivePage />} />
+          <Route path="/moments" element={<MomentsPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/diary" element={<DiaryPage />} />
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   );
 
 }

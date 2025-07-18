@@ -8,15 +8,15 @@ function SuccessPopup({ message, onClose }) {
         <p>{message}</p>
         <button onClick={onClose} className={styles.popupBtn}>확인</button>
       </div>
-    {showSuccessPopup && (
+      {showSuccessPopup && (
         <SuccessPopup
-            message={`🎉 ${userinfo.nickname} 님, 가입을 축하드립니다!`}
-            onClose={() => {
+          message={`🎉 ${userinfo.nickname} 님, 가입을 축하드립니다!`}
+          onClose={() => {
             setShowSuccessPopup(false); // 팝업 닫기
             onClose(); // 모달 닫기
-            }}
+          }}
         />
-    )}
+      )}
     </div>
   );
 }

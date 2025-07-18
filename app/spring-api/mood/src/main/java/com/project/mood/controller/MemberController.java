@@ -5,7 +5,9 @@ import com.project.mood.dto.MemberDTO;
 import com.project.mood.repository.MemberRepository;
 import com.project.mood.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import com.project.mood.security.JwtUtil; // JwtUtil이 이 경로에 있다고 가정
 
@@ -89,13 +91,19 @@ public class MemberController {
 
     // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletResponse response) {
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 세션 제거
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
         // 쿠키 제거
         ResponseCookie cookie = ResponseCookie.from("signin_info", null)
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
-                .maxAge(0) // 즉시 만료
+                .maxAge(0)
                 .sameSite("Lax")
                 .build();
 
@@ -103,5 +111,4 @@ public class MemberController {
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body("로그아웃 성공");
     }
-
 }
