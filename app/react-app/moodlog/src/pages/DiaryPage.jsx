@@ -77,19 +77,6 @@ const DiaryPage = () => {
 
   return (
     <div className="layout">
-      {/* 좌측 사이드바 */}
-      <div className="sidebar">
-        <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
-        <p className="subtitle">당신의 감정을 이해하는 첫 번째 플레이리스트</p>
-        <ul className="nav">
-          <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
-          <li onClick={() => navigate('/playlist')} className={location.pathname === '/playlist' ? 'active' : ''}>Playlist</li>
-          <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
-          <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
-          <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
-        </ul>
-      </div>
-
       {/* 중앙 + 우측 전체 wrapper */}
       <div className="main-wrapper" style={{ display: 'flex', flex: 1 }}>
         {/* 중앙 콘텐츠 영역 (ArchivePage의 playlist-main에 해당) */}
