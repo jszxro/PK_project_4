@@ -6,7 +6,7 @@ import { UserContext } from '../context/UserContext';
 
 function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const { userInfo, logout } = useContext(UserContext);
 
