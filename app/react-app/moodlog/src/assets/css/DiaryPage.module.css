@@ -1,10 +1,13 @@
 .layout {
-  /* display: flex;
-  min-height: 100vh;  */
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   width: 100%;
-  background-color: #000;
+
+}
+
+.main {
+  width: 100%;
+  max-width: 1000px;
 }
 
 .closeBtn {
@@ -18,26 +21,20 @@
 }
 .openModalBtn {
   background-color: #A8C3A8;
-  color: white;
+  color: #1C1C1C;
+  font-weight: bold;
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 0.5rem;
   margin-top: 1rem;
-  cursor: pointer;
 }
 
-
 .diaryPageMain {
-  /* flex: 1;
-  padding: 40px;
-  background: #f50505;
-  min-height: 100vh; 
-  overflow-y: auto; */
-  width: 1000px;
-  margin: 0 auto;          /* 좌우 중앙 정렬 */
-  padding: 0px 0px 0px 0px;      /* 내부 여백 */
+  width: 100%;
+  /* background: #f50505; */
+  /* padding: 20px; */
+  margin: -20px -65px 0px -55px;
   box-sizing: border-box;
-  /* background: #222222; */
 }
 
 .diaryCard {

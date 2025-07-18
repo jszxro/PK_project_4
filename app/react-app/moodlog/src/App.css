@@ -167,23 +167,7 @@ body {
 
 /* 태그 버튼 */
 
-.tag-btn {
-  font-size: 18px;  /* 텍스트 크기 키움 */
-  padding: 8px 14px; /* 버튼 자체 크기 키움 */
-  margin: 9px;
-  border: none;
-  border-radius: 10px;
-  background: #2a2a2a;
-  background-color: #444;
-  color: #b5d3b0;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
 
-.tag-btn:hover {
-  background: #444;
-  color: #fff;
-}
 
 
 .diary-section {
@@ -483,6 +467,7 @@ body {
   font-size: 15px;
   cursor: pointer;
   transition: all 0.2s;
+  margin:4px;
 }
 
 .tag-btn.active {
@@ -492,7 +477,7 @@ body {
 }
 
 .tag-btn:hover {
-  background: #666;
+  background: #444;
   color: #fff;
 }
 

@@ -8,24 +8,41 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  justify-content: center;
+  z-index: 999;
 }
 
 .diaryModalContainer {
-  background: #222222;
-  padding: 30px;
-  border-radius: 12px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background:#1c1c1c;
+  padding: 50px;
+  border-radius: 10px;
+  width: 500px;
+  height: 600px;
+}
+
+.diaryModalContainer h2{
+  text-align: center;
+  color: #A8C3A8;
+  font-size: 50px;
+  margin-bottom: 30px;
+  margin-top: 0px;
+  font-weight: bold;
 }
 
 .diaryModalLabel {
   display: block;
-  margin-top: 20px;
+  margin-top: 10px;
   font-weight: bold;
+}
+
+.diaryModalTitle {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
 .diaryModalSelect,
@@ -42,6 +59,7 @@
 .diaryModalTextarea {
   height: 100px;
 }
+
 
 .diaryModalFooter {
   display: flex;
@@ -68,3 +86,4 @@
   background-color: #A8C3A8;
   color: white;
 }
+

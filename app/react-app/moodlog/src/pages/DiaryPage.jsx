@@ -2,10 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaSearch } from 'react-icons/fa';
 import LoginModal from '../components/LoginModal';
-import styles from '../assets/css/DiaryPage.module.css';
 import DiaryModal from '../components/DiaryModal';
+import styles from '../assets/css/DiaryPage.module.css';
 import diaryex_01 from '../assets/img/diaryex_01.jpg';
 
 const DiaryPage = () => {
@@ -33,7 +32,6 @@ const DiaryPage = () => {
       .catch(error => console.error('이모지 목록 불러오기 실패:', error));
   }, []);
 
-
   //일기 예시
   const diaries = [
     {
@@ -46,7 +44,6 @@ const DiaryPage = () => {
       emoji: "😣"
     }
   ]
-
   const handleEmojiClick = (emojiId) => {
     setSelectedEmoji(emojiId);
     setShowDiaryModal(true);
