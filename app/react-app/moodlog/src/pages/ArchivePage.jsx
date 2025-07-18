@@ -1,14 +1,16 @@
 import '../App.css'; // 혹시 공통 스타일이 있다면 유지
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import LoginModal from '../components/LoginModal';
 import CalendarBox from '../components/CalendarBox';
 import DiaryModal from '../components/DiaryModal';
-import styles from '../assets/css/ArchivePage.module.css'; // ✅ 모듈 CSS import
+import styles from '../assets/css/ArchivePage.module.css';
+import { UserContext } from '../context/UserContext';
 
 function ArchivePage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { userInfo } = useContext(UserContext);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [showDiaryModal, setShowDiaryModal] = useState(false);
@@ -26,7 +28,7 @@ function ArchivePage() {
             <img src="/your-profile-image.jpg" alt="프로필" />
           </div>
           <div className={styles.profileText}>
-            <h3>하리보</h3>
+            <h3>{userInfo?.nickname}님!</h3>
             <p>작성한 글: 1, 댓글: 12</p>
           </div>
         </div>

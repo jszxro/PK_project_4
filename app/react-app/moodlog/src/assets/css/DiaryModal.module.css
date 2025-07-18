@@ -1,81 +1,70 @@
-.layout {
-  /* display: flex;
-  min-height: 100vh;  */
-  display: flex;
-  flex-direction: column;
+/* DiaryModal.module.css */
+
+.diaryModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  background-color: #000;
-  padding: 0px 170px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.closeBtn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
+.diaryModalContainer {
+  background: #222222;
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.diaryModalLabel {
+  display: block;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.diaryModalSelect,
+.diaryModalTextarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.diaryModalTextarea {
+  height: 100px;
+}
+
+.diaryModalFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.diaryModalBtn {
+  padding: 8px 16px;
   border: none;
-  font-size: 1.2rem;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
 }
 
-.openModalBtn {
+.cancel {
+  background-color: #ccc;
+  color: #000;
+}
+
+.submit {
   background-color: #A8C3A8;
   color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 0.5rem;
-  margin-top: 1rem;
-  cursor: pointer;
 }
-
-
-.diaryPageMain {
-  /* flex: 1;
-  padding: 40px;
-  background: #f50505;
-  min-height: 100vh; 
-  overflow-y: auto; */
-  width: 1400px;
-  margin: 0 auto;          /* 좌우 중앙 정렬 */
-  padding: 0px 400px 30px 200px;      /* 내부 여백 */
-  box-sizing: border-box;
-  /* background: #222222; */
-}
-
-.diaryCard {
-  background-color: #fff;
-  color: black;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  line-height: 1.6;
-
-  /* 👇 최소 높이 지정 (원하는 높이로 조정 가능) */
-  min-height: 250px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-
-.diaryTitle {
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.diaryImage {
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  display: block;
-  margin-bottom: 12px;
-  border-radius: 8px;
-}
-
-.diaryContent {
-  font-size: 1rem;
-  white-space: pre-line;
-}
-
