@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/quotes")
+@RequestMapping("/quotes")
 @RequiredArgsConstructor
 public class QuoteController {
 
