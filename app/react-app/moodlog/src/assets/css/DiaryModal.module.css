@@ -60,6 +60,7 @@
   height: 100px;
 }
 
+
 .diaryModalFooter {
   display: flex;
   justify-content: flex-end;
@@ -85,3 +86,4 @@
   background-color: #A8C3A8;
   color: white;
 }
+
