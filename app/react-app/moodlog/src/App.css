@@ -18,31 +18,13 @@ body {
 .main-wrapper {
   flex: 1; /* 💡 남은 공간 전체 사용 */
   /* padding: 90px; */
-  margin-top: 90px;
+  margin-top: 80px;
   margin-left: 60px;
   color: white;
   box-sizing: border-box;
   min-height: 100vh;
 }
 
-/* 레이아웃 전체 영역 */
-.layout.playlist-layout {
-  display: flex;
-  justify-content: center;
-  width: 100vw;
-  min-height: 100vh;
-  background-color: #000; /* 배경 색상 있으면 */
-}
-
-.playlist-layout .top-bar {
-  display: flex;
-  justify-content: flex-end;      
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  padding-right: 355px;            /* ✅ 오른쪽 여백 조절용 */
-}
 
 /* 좌측 사이드바 */
 .sidebar {
@@ -90,20 +72,17 @@ body {
 }
 
 /* 중앙 영역 공통 */
-.main,
-.playlist-main {
-  /* flex: 1; */
-  /* padding: 130px 80px; */
-  margin-top: 130px;
-  margin-left: 60px;
-  width: 630px;
+.main{
+  padding: 0px 180px 20px 170px;
+
+  width: 1500px;
   background: #000;
   overflow-y: auto;
 }
 
 .main h3,
 .moments-section h3 {
-  margin-top: 50px;
+  margin-top: 0px;
   font-size: 30px;
   margin-bottom: 20px;
 }
@@ -122,38 +101,13 @@ body {
 }
 
 /* 우측 패널 및 추천 영역 */
-.right-panel,
-.playlist-side {
-  /* flex: 1; */
-  /* width: 800px; */
-  /* padding: 90px 20px; */
+.right-panel {
   margin-top: 80px;
   margin-left: 30px;
   width: 630px;
   background: #000;
   color: white;
   overflow-y: auto;
-}
-
-.right-panel h3,
-.playlist-side h3 {
-  margin-top: 1px;
-  font-size: 30px;
-}
-
-.playlist-card {
-  background: #222;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-}
-
-.top-bar {
-  display: flex;
-  flex-wrap: wrap; /* ✅ 창이 좁아질 때 줄 바꿈 */
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
 }
 
 .search {
@@ -173,50 +127,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.search-container {
-  display: flex;
-  align-items: center;
-  background: #222;
-  border-radius: 30px;
-  overflow: hidden;
-  width: 100px;
-  max-width: 300px; 
-  min-width: 200px;
-  flex: 1;
-  padding: 4px 8px;
-  height: 50px;
-}
-
-.search-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: white;
-  padding: 10px 15px;
-  font-size: 14px;
-  outline: none;
-}
-
-.search-btn {
-  background: #333;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ccc;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  margin-left: 6px;
-}
-
-.search-btn:hover {
-  background: #555;
-  color: white;
 }
 
 .login-btn {
@@ -260,7 +170,7 @@ body {
 .tag-btn {
   font-size: 18px;  /* 텍스트 크기 키움 */
   padding: 8px 14px; /* 버튼 자체 크기 키움 */
-  margin: 10px;
+  margin: 9px;
   border: none;
   border-radius: 10px;
   background: #2a2a2a;
@@ -282,10 +192,7 @@ body {
   padding: 15px;
   border-radius: 8px;
 }
-.archive-panel {
-  padding-top: 80px;  /* 또는 margin-top: 60px */
-  padding-left: 120px;
-}
+
 
 .calendar-box {
   margin-top: 10px;
@@ -524,7 +431,7 @@ body {
 /* 중앙 컨텐츠 전체 */
 .main-content {
   flex: 1;
-  padding: 70px 0px 0px 60px;
+  padding: 0px 0px 0px 170px;
   background-color: #000;
   color: white;
   /* margin-left: 30px; */
@@ -589,23 +496,6 @@ body {
   color: #fff;
 }
 
-/* 추천 플레이리스트 카드 */
-.playlist-area {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin: 30px 0;
-  width: 100%;
-  max-width: 1000px;
-}
-
-.playlist-card {
-  background: #222;
-  padding: 14px;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
 /* 사용자 추천 섹션 */
 .user-recommend {
   background: #111;
@@ -628,6 +518,11 @@ body {
 .main-left,
 .main-right {
   flex: 1;
+}
+
+.main-right h3 {
+  margin-bottom: 17px;
+  margin-top: 3px;
 }
 
 .empty-block {

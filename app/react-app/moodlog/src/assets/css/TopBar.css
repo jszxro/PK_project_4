@@ -2,11 +2,12 @@
 .top-bar {
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* ✅ 우측 정렬 */
+  justify-content: center; /* ✅ 우측 정렬 */
   gap: 12px;
-  padding: 10px 20px;
+  padding: 50px 0px 20px 0px;
   background-color: transparent;
   top: 0;
+  /* margin-bottom: 0px; */
   z-index: 10;
 }
 
@@ -19,7 +20,7 @@
   overflow: hidden;
   max-width: 450px;
   min-width: 200px;
-  padding: 4px 12px;
+  padding: 4px 2px;
   height: 44px;
   flex: 1;
 }
@@ -35,11 +36,22 @@
 }
 
 .search-btn {
-  background: none;
+  background: #333;
   border: none;
-  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
   cursor: pointer;
-  font-size: 16px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.search-btn:hover {
+  background: #555;
+  color: white;
 }
 
 /* 로그인 버튼 */

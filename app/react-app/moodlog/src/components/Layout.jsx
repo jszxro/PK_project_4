@@ -12,7 +12,7 @@ function Layout() {
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
     // ✅ 여기에서 조건 정의
-  const hideTopBarRoutes = ['/diary','/archive']; //탑바숨기고 싶은 경로
+  const hideTopBarRoutes = []; //탑바숨기고 싶은 경로
   const hideTopBar = hideTopBarRoutes.includes(location.pathname); 
 
 
