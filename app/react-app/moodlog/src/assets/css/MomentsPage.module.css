@@ -239,3 +239,10 @@
   flex-direction: column;
   gap: 20px;
 }
+
+.tags{
+  /* display: flex;
+  flex-wrap: wrap;
+  gap: 0px; 
+  background-color: red; */
+}

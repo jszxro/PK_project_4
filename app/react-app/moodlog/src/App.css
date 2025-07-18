@@ -198,7 +198,7 @@ body {
 .tag-btn {
   font-size: 18px;  /* 텍스트 크기 키움 */
   padding: 8px 14px; /* 버튼 자체 크기 키움 */
-  margin: 10px;
+  margin: 6px;
   border: none;
   border-radius: 10px;
   background: #2a2a2a;
