@@ -119,7 +119,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
           {emojiList.map(({ emojiId, tag }) => (
             <button
               key={emojiId}
-              className="tag-btn"
+              className={`tag-btn ${selectedTag === tag ? 'active' : ''}`}
               onClick={() => setSelectedTag(emojiId)}
             >
               # {emojiId}
