@@ -51,7 +51,7 @@ body {
 .nav {
   list-style: none;
   padding: 0;
-  margin-top: 30px; /* 줄임 */
+  margin-top: 50px; /* 줄임 */
 }
 
 .nav li {
