@@ -18,7 +18,7 @@ public class Diary {
     @Column(name = "DIARY_ID")
     private String diaryId;
 
-    @Column(name = "USER_KEY", nullable = false)
+    @Column(name = "USER_KEY")
     private String userKey;
 
     @Column(name = "CONTENT")
@@ -27,7 +27,7 @@ public class Diary {
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
 
-    @Column(name = "UPDATED_AT")
+    @Column(name = "UPDATE_AT")
     private LocalDateTime updatedAt;
 
     @ManyToOne

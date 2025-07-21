@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import styles from '../assets/css/DiaryModal.module.css';
+import { UserContext } from '../context/UserContext';
 
 
 function DiaryModal({ date, onClose, initialEmoji = '' }) {
@@ -8,6 +9,7 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
   const [emoji, setEmoji] = useState(initialEmoji);
   const [text, setText] = useState('');
   const [emojiList, setEmojiList] = useState([]);
+  const { userInfo } = useContext(UserContext);
 
 
   useEffect(() => {
@@ -16,13 +18,32 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
       .catch(error => console.error('이모지 불러오기 실패:', error));
   }, []);
 
-  const handleSubmit = () => {
-    console.log('등록된 일기:', {
-      date: date.toISOString().split('T')[0],
-      emoji,
-      text,
-    });
-    onClose(); // 모달 닫기
+  const handleSubmit = async () => {
+    if (!emoji || !text) {
+      alert('이모지와 내용을 모두 입력해주세요.');
+      return;
+    }
+
+    try {
+      await axios.post('/api/diaries', {
+        userKey: userInfo.userKey, // 또는 다른 방식으로 가져오기
+        content: text,
+        emojiId: emoji,
+        imgUrl: null // 필요하다면 이미지 추가
+      });
+
+      console.log("전송 데이터", {
+        userKey: localStorage.getItem('userKey'),
+        content: text,
+        emojiId: emoji
+      });
+
+      alert('일기가 성공적으로 저장되었습니다!');
+      onClose(); // 모달 닫기
+    } catch (error) {
+      console.error('일기 저장 실패:', error);
+      alert('일기 저장에 실패했습니다.');
+    }
   };
 
   return (
