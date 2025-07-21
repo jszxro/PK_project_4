@@ -77,3 +77,29 @@
   white-space: pre-line;
 }
 
+.emojiList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.emojiButton {
+  font-size: 24px;
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-color: #333;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.emojiButton:hover {
+  transform: scale(1.1);
+  border-color: #A8C3A8;
+}
+
+.emojiButton.selected {
+  border-color: #A8C3A8;
+  background-color: #555;
+}

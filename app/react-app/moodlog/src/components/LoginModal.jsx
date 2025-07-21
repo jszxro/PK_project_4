@@ -18,6 +18,11 @@ function LoginModal({ onClose, setIsLoggedIn }) {
   const [showFindPw, setShowFindPw] = useState(false);
   const { setUserInfo } = useContext(UserContext);
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin(); // ✅ Enter 키 눌렀을 때 로그인 실행
+    }
+  };
 
   const handleLogin = async () => {
     if (!id || !password) {
@@ -60,38 +65,43 @@ function LoginModal({ onClose, setIsLoggedIn }) {
       {/* 로그인 모달 */}
       <div className={styles.modalOverlay} onClick={onClose}>
         <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-          <h2 className={styles.modalTitle}>Moodlog</h2>
-          <input
-            type="text"
-            placeholder="아이디"
-            className={styles.modalInput}
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            className={styles.modalInput}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
 
-          <div className={styles.modalOptions}>
-            <span onClick={() => setShowSignup(true)}>회원가입</span>
-            <div>
-              <span onClick={() => setShowFindId(true)}>아이디 찾기</span>
-              <span onClick={() => setShowFindPw(true)}>비밀번호 찾기</span>
-            </div>
-          </div>
-          {showErrorPopup && (
-            <ErrorPopup
-              message={errorMsg}
-              onClose={() => setShowErrorPopup(false)}
+          <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+            <h2 className={styles.modalTitle}>Moodlog</h2>
+            <input
+              type="text"
+              placeholder="아이디"
+              className={styles.modalInput}
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              onKeyDown={handleKeyDown} // ✅ 추가
             />
-          )}
-          <button className={styles.modalLoginBtn} onClick={handleLogin}>
-            LOGIN
-          </button>
+            <input
+              type="password"
+              placeholder="비밀번호"
+              className={styles.modalInput}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown} // ✅ 추가
+            />
+
+            <div className={styles.modalOptions}>
+              <span onClick={() => setShowSignup(true)}>회원가입</span>
+              <div>
+                <span onClick={() => setShowFindId(true)}>아이디 찾기</span>
+                <span onClick={() => setShowFindPw(true)}>비밀번호 찾기</span>
+              </div>
+            </div>
+            {showErrorPopup && (
+              <ErrorPopup
+                message={errorMsg}
+                onClose={() => setShowErrorPopup(false)}
+              />
+            )}
+            <button className={styles.modalLoginBtn} onClick={handleLogin}>
+              LOGIN
+            </button>
+          </form>
         </div>
       </div>
 
