@@ -6,7 +6,7 @@
 }
 .main {
   flex: 1; /* 💡 남은 공간 전체 사용 */
-  margin: 0px 30px 0px 0px;
+  margin: 30px 50px 0px 0px;
   color: white;
   box-sizing: border-box;
   min-height: 100vh;
@@ -245,5 +245,5 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 9px;
 }

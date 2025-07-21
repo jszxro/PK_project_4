@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: right; /* ✅ 우측 정렬 */
   gap: 12px;
-  padding: 40px 190px 20px 0px;
+  padding: 40px 210px 20px 0px;
   background-color: transparent;
   top: 0;
   /* margin-bottom: 0px; */
@@ -76,4 +76,8 @@
 .profile {
   font-size: 22px;
   cursor: pointer;
+}
+
+.li {
+  margin-top: 0px;
 }
