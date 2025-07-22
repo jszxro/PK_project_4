@@ -44,5 +44,5 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
     </div>
   );
 }
-//0718
+//테스트
 export default MainPage;
