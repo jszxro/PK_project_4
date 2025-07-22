@@ -51,6 +51,7 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
       <div className={styles.diaryModalContainer}>
         <h2>Diary</h2>
         <p><strong>날짜:</strong> {date.toISOString().split('T')[0]}</p>
+
         <label className={styles.diaryModalLabel}>이모지 선택:</label>
         <select
           value={emoji}
@@ -65,15 +66,6 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
           ))}
         </select>
 
-        <label className={styles.diaryModalLabel}>제목:</label>
-        <input
-          type="text"
-          placeholder="일기 제목을 입력하세요"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className={styles.diaryModalTitle}
-        />
-
         <label className={styles.diaryModalLabel}>내용 작성:</label>
         <textarea
           placeholder="오늘 있었던 일을 작성하세요"
@@ -87,13 +79,6 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
           <button className={`${styles.diaryModalBtn} ${styles.submit}`} onClick={handleSubmit}>등록</button>
         </div>
       </div>
-
-      {showErrorPopup && (
-      <ErrorPopup
-        message={errorMsg}
-        onClose={() => setShowErrorPopup(false)}
-      />
-      )}
     </div>
 
   );
