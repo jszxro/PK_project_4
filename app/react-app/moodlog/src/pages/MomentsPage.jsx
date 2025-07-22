@@ -116,10 +116,18 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       <div className={styles.main}>
         {/* 중앙: 태그 버튼 */}
         <div className={styles.tags}>
+          {/* ✅ 모든 게시글 보기 버튼 추가 */}
+          <button
+            className={`tag-btn ${selectedTag === '' ? 'active' : ''}`}
+            onClick={() => setSelectedTag('')}
+          >
+            # all
+          </button>
+
           {emojiList.map(({ emojiId, tag }) => (
             <button
               key={emojiId}
-              className={`tag-btn ${selectedTag === tag ? 'active' : ''}`}
+              className={`tag-btn ${selectedTag === emojiId ? 'active' : ''}`}
               onClick={() => setSelectedTag(emojiId)}
             >
               # {emojiId}
@@ -127,11 +135,6 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
           ))}
         </div>
 
-        {/* 중앙: 오늘의 기분 */}
-        <div className={styles.commentFeeling} onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
-          <span>오늘의 기분을 한 줄로 남겨보세요</span>
-          <span>✏️</span>
-        </div>
         <FeelingCommentModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -146,9 +149,14 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
               <>
                 <div className={styles.momentHeader}>
                   <p className={styles.momentCount}>
-                    {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `전체 Moments (${filteredPosts.length})`}
+                    {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `all Moments (${filteredPosts.length})`}
                   </p>
-                  <p className={styles.sortLabel}>최신순</p>
+                  <button
+                    className={styles.writeBtn}
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    글쓰기 ✏️
+                  </button>
                 </div>
                 <div className={styles.momentGrid}>
                   {filteredPosts.map(post => (
