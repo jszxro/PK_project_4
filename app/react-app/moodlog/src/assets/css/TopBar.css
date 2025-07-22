@@ -2,75 +2,23 @@
 .top-bar {
   display: flex;
   align-items: center;
-  justify-content: right; /* ✅ 우측 정렬 */
   gap: 12px;
-  padding: 40px 210px 20px 0px;
   background-color: transparent;
-  top: 0;
-  /* margin-bottom: 0px; */
-  z-index: 10;
-}
 
-/* 검색창 래퍼 */
-.search-container {
-  display: flex;
-  align-items: center;
-  background: #222;
-  border-radius: 30px;
-  overflow: hidden;
-  max-width: 450px;
-  min-width: 200px;
-  padding: 4px 2px;
-  height: 44px;
-  flex: 1;
 }
-
-.search-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: white;
-  padding: 8px 12px;
-  font-size: 14px;
-  outline: none;
-}
-
-.search-btn {
-  background: #333;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ccc;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.search-btn:hover {
-  background: #555;
-  color: white;
-}
-
-.search-btn:hover {
-  background: #555;
-  color: white;
-}
-
 
 /* 로그인 버튼 */
 .login-btn {
-  background-color: transparent;
-  color: white;
-  border: 1px solid #555;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  height: 44px;
-  cursor: pointer;
+  all: unset; 
+  color: white;        /* 글자색 */
+  font-size: 20px;
+  cursor: pointer;     /* 클릭 가능하게 유지 */
+  padding: 4px 8px;    /* (선택) 클릭 영역 확보 */
+  border-radius: 4px;  /* (선택) hover 시 모양 유지 */
+  white-space: nowrap;
   transition: background 0.2s, color 0.2s;
+  margin-top: 70px;
+  margin-left:-10px;
 }
 
 .login-btn:hover {
@@ -80,9 +28,14 @@
 
 /* 프로필 아이콘 */
 .profile {
-  font-size: 18px;
-  border: 1px solid #555;
-  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  background: #333;
+  border-radius: 50%;
+  margin-top: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .li {
