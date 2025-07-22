@@ -1,35 +1,81 @@
-import { useState, useContext } from 'react';
-import { FaSearch } from 'react-icons/fa';
+import { useContext, useEffect, useRef, useState } from 'react';
 import '../assets/css/TopBar.css';
 import { UserContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 function TopBar({ onLoginClick }) {
-  const [keyword, setKeyword] = useState('');
   const { userInfo, logout } = useContext(UserContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
-  const handleSearch = () => {
-    if (!keyword.trim()) return;
-    console.log('🔍 검색어:', keyword);
-    // 여기에 검색 로직 추가 (예: navigate(`/search?query=${keyword}`) 등)
+  const handleLogout = () => {
+    logout();
+    setDropdownOpen(false);
+    navigate('/');
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+  const toggleDropdown = () => {
+    setDropdownOpen(prev => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
     }
-  };
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
     <div className="top-bar">
       {userInfo ? (
-        <>
-          <div className="profile">{userInfo.nickname}님</div>
-          
-        </>
+        <div className="profile-area" ref={dropdownRef}>
+          <div className="profile-circle" onClick={toggleDropdown}>
+            {userInfo.nickname[0] || 'U'}
+          </div>
+
+          {dropdownOpen && (
+            <div className="dropdown-menu">
+              <div className="dropdown-item" onClick={() => {
+                navigate('/archive');         // ✅ 마이페이지
+                setDropdownOpen(false);
+              }}>
+                마이페이지
+              </div>
+              <div className="dropdown-item" onClick={() => {
+                navigate('/');                // ✅ 홈
+                setDropdownOpen(false);
+              }}>
+                홈
+              </div>
+              <div className="dropdown-item" onClick={() => {
+                navigate('/moments');         // ✅ 모멘트
+                setDropdownOpen(false);
+              }}>
+                모멘트
+              </div>
+              <div className="dropdown-item" onClick={handleLogout}>
+                로그아웃
+              </div>
+            </div>
+          )}
+        </div>
       ) : (
-        <button className="login-btn" onClick={onLoginClick}>로그인</button>
+        <button className="login-btn" onClick={onLoginClick}>
+          로그인
+        </button>
       )}
-      <button onClick={logout} className="login-btn">로그아웃</button>
     </div>
   );
 }

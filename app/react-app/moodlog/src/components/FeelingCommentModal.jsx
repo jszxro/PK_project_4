@@ -67,19 +67,21 @@ const FeelingCommentModal = ({ isOpen, onClose, onSubmit }) => {
       <div className={styles.modalBox}>
         <h2 className={styles.modalTitle}>오늘의 기분</h2>
 
-        <label className={styles.diaryModalLabel}>이모지 선택:</label>
-        <select
-          value={emoji}
-          onChange={(e) => setEmoji(e.target.value)}
-          className={styles.diaryModalSelect}
-        >
-          <option value="">선택</option>
-          {emojiList.map(e => (
-            <option key={e.emojiId} value={e.emojiId}>
-              #{e.emojiId}
-            </option>
-          ))}
-        </select>
+        <div className={styles.emojiRow}>
+          <label className={styles.emojiLabel}>이모지 선택 : </label>
+          <select
+            value={emoji}
+            onChange={(e) => setEmoji(e.target.value)}
+            className={styles.diaryModalSelect}
+          >
+            <option value="">선택</option>
+            {emojiList.map(e => (
+              <option key={e.emojiId} value={e.emojiId}>
+                #{e.emojiId}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <input
           type="text"
@@ -95,8 +97,7 @@ const FeelingCommentModal = ({ isOpen, onClose, onSubmit }) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <input
-          type="text"
+        <textarea
           className={styles.modalInput}
           placeholder="내용 넣어주세요"
           value={content}

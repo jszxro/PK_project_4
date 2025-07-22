@@ -64,14 +64,17 @@ const PostDetailModal = ({ post, onClose, onReactionChange }) => {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <button className={styles.closeButton} onClick={onClose}>✖</button>
-
-        <div className={styles.momentMeta}>
+        
+        <div className={styles.modalHeader}></div>
+        <div className={styles.leftMeta}>
           <span className={styles.momentAuthor}>작성자: {post.author}</span>
           <span className={styles.momentTag}>#{post.tag}</span>
-          <span className={styles.momentTime}>{post.time}</span>
+          <span className={styles.momentTitle}>「{post.content_title}」</span>
         </div>
-
+        <div className={styles.rightMeta}>
+          <span className={styles.momentTime}>{post.time}</span>
+          <button className={styles.closeButton} onClick={onClose}>✖</button>
+        </div>
         <img
           className={styles.momentThumbnail}
           src={post.thumbnail}
