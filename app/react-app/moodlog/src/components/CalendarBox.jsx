@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, format, addMonths, subMonths } from 'date-fns';
 
-function CalendarBox({ onDateClick }) {
+function CalendarBox({ onDateClick, dateEmojis = {} }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const renderHeader = () => {
@@ -37,18 +37,21 @@ function CalendarBox({ onDateClick }) {
 
     while (day <= endDate) {
       for (let i = 0; i < 7; i++) {
-        const cloneDay = new Date(day); // ✅ 정확한 날짜 복제
-        cloneDay.setHours(12); // ✅ 이거 추가!
+        const cloneDay = new Date(day); // 날짜
+        cloneDay.setHours(12);
         const formatted = format(cloneDay, 'd');
+        const dateKey = format(cloneDay, 'yyyy-MM-dd'); // 날짜 키 생성
+        const emoji = dateEmojis[dateKey]; // 해당 날짜 이모지 가져오기
         const isCurrentMonth = cloneDay.getMonth() === monthStart.getMonth();
 
         days.push(
           <div
             className={`calendar-cell ${!isCurrentMonth ? 'calendar-disabled' : ''}`}
             key={cloneDay}
-            onClick={() => onDateClick(cloneDay)} // ✅ 정확한 날짜 복사 전달
+            onClick={() => onDateClick(cloneDay)} // 날짜 전달
           >
-            {formatted}
+            <div>{formatted}</div>
+            {emoji && <div style={{ fontSize: '12px', marginTop: '2px' }}>{emoji}</div>}
           </div>
         );
         day = addDays(day, 1);
