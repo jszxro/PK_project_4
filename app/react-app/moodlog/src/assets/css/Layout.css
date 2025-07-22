@@ -3,6 +3,25 @@
   height: 100vh;
 }
 
+.full-width-line {
+  position: fixed; /* 또는 absolute */
+  top: 135px; /* 원하는 위치 조절 */
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #f5f1f160;
+  z-index: 999;
+}
+
+.full-width-line2 {
+  position: fixed; /* 또는 absolute */
+  top: 205px; /* 원하는 위치 조절 */
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #f80404;
+  z-index: 999;
+}
 .page-content {
   flex: 1;
   padding: 32px;

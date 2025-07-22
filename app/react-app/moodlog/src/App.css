@@ -426,7 +426,6 @@ body {
   display: flex;
   gap: 30px;
   width: 100%;
-  background-color: red;
 }
 
 .main-left,
