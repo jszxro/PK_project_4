@@ -67,9 +67,9 @@ function Layout() {
 
   return (
     <div className="app-layout">
-       <div className="full-width-line"></div> {/* 실선 */}
-       <div className="full-width-line2"></div>
-        <div className="sidebar"> {/* 좌측 */}
+      {/* <div className="full-width-line"></div> 실선 */}
+      {/* <div className="full-width-line2"></div> */}
+      <div className="sidebar">  {/*좌측*/}
         <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
         <p className="subtitle">당신의 감정을 이해하는 첫 번째 플레이리스트</p>
 
