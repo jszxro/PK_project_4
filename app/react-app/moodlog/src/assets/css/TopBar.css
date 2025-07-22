@@ -80,7 +80,8 @@
 
 /* 프로필 아이콘 */
 .profile {
-  font-size: 22px;
+  font-size: 18px;
+  border: 1px solid #555;
   cursor: pointer;
 }
 

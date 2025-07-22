@@ -91,7 +91,7 @@ const DiaryPage = () => {
                     <button
                       key={emoji.emojiId}
                       onClick={() => handleEmojiClick(emoji.emojiId)}
-                      className={styles.emojiButton}
+                      className={`${styles.emojiButton} ${selectedEmoji === emoji.emojiId ? styles.selected : ''}`}
                     >
                       {emoji.emoji}
                     </button>
