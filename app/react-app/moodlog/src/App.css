@@ -424,7 +424,7 @@ body {
 
 .moment-mood-container {
   display: flex;
-  gap: 30px;
+  gap: 10px;
   width: 100%;
 }
 
@@ -445,29 +445,84 @@ body {
   margin-bottom: 20px;
 }
 
-.sectionTitle {
-  font-size: 24px;
-  margin: 8px 0 20px;
-  color: #A8C3A8;
-}
+/* App.css 또는 MainPage.module.css */
 
-.tags {
+.moment-mood-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
+  gap: 40px;
+  margin-top: 40px;
+  justify-content: center;
 }
 
-.playlistArea {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin: 30px 0;
+.main-left,
+.main-right {
+  width: 45%;
 }
 
+.moment-card {
+  background-color: #333;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
 
-.playlistCard {
-  background: #222;
-  padding: 14px;
+.moment-card:hover {
+  background-color: #444;
+}
+
+.moment-thumbnail {
+  width: 100%;
   border-radius: 8px;
-  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.moment-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: #ccc;
+}
+
+.moment-content {
+  font-size: 16px;
+  color: white;
+}
+
+.empty-block {
+  background-color: #222;
+  height: 400px;
+  border-radius: 12px;
+}
+
+/* App.css 또는 연결된 CSS 파일에 추가 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 8px;
+}
+
+.page-btn {
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.page-btn:hover {
+  background-color: #666;
+}
+
+.page-btn.active {
+  background-color: #b5d3b0;
+  color: #1c1c1c;
+  font-weight: bold;
 }
