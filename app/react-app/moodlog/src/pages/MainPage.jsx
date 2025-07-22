@@ -1,9 +1,9 @@
 import '../App.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, } from 'react';
 import LoginModal from '../components/LoginModal';
 import { UserContext } from '../context/UserContext';
-
+import axios from 'axios';
 function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,5 +44,5 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
     </div>
   );
 }
-//0718
+//테스트
 export default MainPage;
