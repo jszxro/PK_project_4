@@ -80,7 +80,7 @@ function Layout() {
           {userInfo ? (
             <>
               <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
-              <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li>
+              {/* <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li> */}
             </>
           ) : null}
         </ul>
@@ -90,10 +90,10 @@ function Layout() {
         <Outlet />
       </div>
 
-     <div className="right-sidebar"> {/* 우측 */}
+      <div className="right-sidebar"> {/* 우측 */}
         {!hideTopBar && <TopBar onLoginClick={() => setShowModal(true)} />}
         {showModal && <LoginModal onClose={() => setShowModal(false)} />}
-     </div>
+      </div>
     </div>
   );
 }
