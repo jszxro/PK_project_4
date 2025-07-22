@@ -1,45 +1,49 @@
-import { useState, useContext } from 'react';
-import { FaSearch } from 'react-icons/fa';
-import '../assets/css/TopBar.css';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
+import '../assets/css/TopBar.css';
+import { useNavigate } from 'react-router-dom';
 
 function TopBar({ onLoginClick }) {
-  const [keyword, setKeyword] = useState('');
   const { userInfo, logout } = useContext(UserContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
-  const handleSearch = () => {
-    if (!keyword.trim()) return;
-    console.log('🔍 검색어:', keyword);
-    // 여기에 검색 로직 추가 (예: navigate(`/search?query=${keyword}`) 등)
+  // 외부 클릭 시 드롭다운 닫기
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
+  const handleMenuClick = (path) => {
+    navigate(path);
+    setDropdownOpen(false);
   };
 
   return (
     <div className="top-bar">
-      <div className="search-container">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="제목을 입력하세요"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onKeyDown={handleKeyDown} // ✅ 엔터 이벤트 연결
-        />
-        <button className="search-btn" onClick={handleSearch}>
-          <FaSearch />
-        </button>
-      </div>
-
       {userInfo ? (
-        <>
-          <div className="profile">{userInfo.nickname}님</div>
-          <button onClick={logout} className="login-btn">로그아웃</button>
-        </>
+        <div className="profile-area" ref={dropdownRef}>
+          <div className="profile-circle" onClick={toggleDropdown}>
+            {userInfo.nickname[0]}
+          </div>
+          {dropdownOpen && (
+            <div className="dropdown-menu">
+              <div onClick={() => handleMenuClick('/my-page')}>내 채널</div>
+              <div onClick={() => handleMenuClick('/settings')}>설정</div>
+              <div onClick={logout}>로그아웃</div>
+            </div>
+          )}
+        </div>
       ) : (
         <button className="login-btn" onClick={onLoginClick}>로그인</button>
       )}

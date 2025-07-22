@@ -21,10 +21,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const [emojiList, setEmojiList] = useState([]);
   const [selectedEmoji, setSelectedEmoji] = useState('');
   const [posts, setPosts] = useState([]);
-
   const [quote, setQuote] = useState('');
-
-
 
   useEffect(() => {
     axios.get('/api/quotes')
@@ -37,7 +34,6 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
         console.error('오늘의 한줄 가져오기 실패:', err);
       });
 
-    // 게시글 조회하기
     axios.get('/api/posts')
       .then(res => {
         const mappedPosts = res.data.map(post => ({
@@ -70,6 +66,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       return emoji && post.tag.toLowerCase() === emoji.emojiId.toLowerCase();
     })
     : posts;
+
   const sortedByLikes = [...posts].sort((a, b) => b.likes - a.likes).slice(0, 3);
 
   const tagCounts = posts.reduce((acc, post) => {
@@ -83,6 +80,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const sortedTags = Object.entries(tagCounts)
     .sort((a, b) => b[1] - a[1])
     .map(([tag, count]) => ({ tag, count }));
+
   const topTag = sortedTags.length > 0 ? sortedTags[0].tag : null;
 
   const handleFeelingSubmit = (text) => {
@@ -110,13 +108,9 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   };
 
   return (
-
     <div className={styles.layout}>
-      {/* 우측 전체 영역 */}
       <div className={styles.main}>
-        {/* 중앙: 태그 버튼 */}
         <div className={styles.tags}>
-          {/* ✅ 모든 게시글 보기 버튼 추가 */}
           <button
             className={`tag-btn ${selectedTag === '' ? 'active' : ''}`}
             onClick={() => setSelectedTag('')}
@@ -124,7 +118,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
             # all
           </button>
 
-          {emojiList.map(({ emojiId, tag }) => (
+          {emojiList.map(({ emojiId }) => (
             <button
               key={emojiId}
               className={`tag-btn ${selectedTag === emojiId ? 'active' : ''}`}
@@ -135,62 +129,59 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
           ))}
         </div>
 
-        {/* 중앙: 오늘의 기분 */}
-        <div className={styles.commentFeeling} onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
-          <span>Moments 작성하기</span>
-          <span>✏️</span>
-        </div>
         <FeelingCommentModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleFeelingSubmit}
         />
 
-        {/* 중앙 하단: 좌우 분할 */}
         <div className={styles.splitWrapper}>
-          {/* 왼쪽 영역: 게시글 카드 */}
           <div className={styles.leftSection}>
+            <div className={styles.momentHeader}>
+              <p className={styles.momentCount}>
+                {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `all Moments (${filteredPosts.length})`}
+              </p>
+              <button
+                className={styles.writeBtn}
+                onClick={() => setIsModalOpen(true)}
+              >
+                글쓰기 ✏️
+              </button>
+            </div>
+
             {filteredPosts.length > 0 ? (
-              <>
-                <div className={styles.momentHeader}>
-                  <p className={styles.momentCount}>
-                    {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `all Moments (${filteredPosts.length})`}
-                  </p>
-                  <button
-                    className={styles.writeBtn}
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    글쓰기 ✏️
-                  </button>
-                </div>
-                <div className={styles.momentGrid}>
-                  {filteredPosts.map(post => (
-                    <div key={post.id} className={styles.postCard}>
-                      <div className={styles.momentMeta}>
-                        <span className={styles.momentAuthor}>작성자: {post.author}</span>
-                        <span className={styles.momentTag}>#{post.tag}</span>
-                        <span className={styles.momentTime}>{post.time}</span>
-                      </div>
-                      <img className={styles.momentThumbnail} src={post.thumbnail} onClick={() => {
+              <div className={styles.momentGrid}>
+                {filteredPosts.map(post => (
+                  <div key={post.id} className={styles.postCard}>
+                    <div className={styles.momentMeta}>
+                      <span className={styles.momentAuthor}>작성자: {post.author}</span>
+                      <span className={styles.momentTag}>#{post.tag}</span>
+                      <span className={styles.momentTime}>{post.time}</span>
+                    </div>
+                    <img
+                      className={styles.momentThumbnail}
+                      src={post.thumbnail}
+                      onClick={() => {
                         setSelectedPost(post);
                         setIsDetailModalOpen(true);
-                      }} alt="유튜브 썸네일" />
-                      <div className={styles.momentLink}>
-                        🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
-                      </div>
-                      <div className={styles.momentContentNLikes}>
-                        <span className={styles.momentContent}>{post.content}</span>
-                        <span className={styles.momentLikes}> 💛 {post.likes}</span>
-                      </div>
+                      }}
+                      alt="유튜브 썸네일"
+                    />
+                    <div className={styles.momentLink}>
+                      🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
                     </div>
-                  ))}
-                </div>
-              </>
-            ) : (<p className={styles.noPosts}>게시글이 없습니다.</p>)}
-
+                    <div className={styles.momentContentNLikes}>
+                      <span className={styles.momentContent}>{post.content}</span>
+                      <span className={styles.momentLikes}> 💛 {post.likes}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className={styles.noPosts}>게시글이 없습니다.</p>
+            )}
           </div>
 
-          {/* 오른쪽 영역: 인기 Moments, 태그 순위, 오늘의 기분 */}
           <div className={styles.rightSection}>
             <h3>오늘의 인기 Moments 하이라이트</h3>
             <div className={styles.highlightContainer}>
@@ -237,14 +228,12 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
         </div>
       </div>
 
-      {/* 모달들 */}
       {showModal && <LoginModal onClose={() => setShowModal(false)} />}
       {isDetailModalOpen && selectedPost && (
         <PostDetailModal
           post={selectedPost}
           onClose={() => setIsDetailModalOpen(false)}
           onReactionChange={(updatedReactionType) => {
-            // posts 상태 변경
             setPosts(prevPosts => prevPosts.map(p => {
               if (p.id === selectedPost.id) {
                 const newLikes = updatedReactionType === 1 ? p.likes + 1 : p.likes - 1;
@@ -252,8 +241,6 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
               }
               return p;
             }));
-
-            // 선택된 post도 업데이트 (모달 재렌더링용)
             setSelectedPost(prev => ({
               ...prev,
               likes: updatedReactionType === 1 ? prev.likes + 1 : prev.likes - 1
@@ -261,7 +248,6 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
           }}
         />
       )}
-
     </div>
   );
 };
