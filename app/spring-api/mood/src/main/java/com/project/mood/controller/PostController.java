@@ -30,4 +30,10 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostSummaries());
     }
 
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<PostDTO> getPostById(@PathVariable String postId) {
+        PostDTO post = postService.getPostById(postId);
+        return ResponseEntity.ok(post);
+    }
+
 }
