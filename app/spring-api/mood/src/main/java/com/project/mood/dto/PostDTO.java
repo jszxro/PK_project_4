@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostDTO {
+    private String postId;
     private String userKey;
     private String title;
     private String content;

@@ -204,11 +204,10 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <span className={styles.momentTime}>{post.time}</span>
                     <span
                       className={styles.momentShowAll}
-                      onClick={() => {
-                        setSelectedPost(post);
-                        setIsDetailModalOpen(true);
-                      }}
-                    >[전체보기]</span>
+                      onClick={() => navigate(`/moments/${post.id}`)}
+                    >
+                      [전체보기]
+                    </span>
                   </div>
                 </div>
               ))}

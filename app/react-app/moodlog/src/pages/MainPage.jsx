@@ -102,5 +102,5 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
     </div>
   );
 }
-
+//테스트
 export default MainPage;

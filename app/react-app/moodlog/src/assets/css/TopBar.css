@@ -11,15 +11,16 @@
 
 /* 로그인 버튼 */
 .login-btn {
-  background-color: transparent;
-  color: white;
-  border: 1px solid #555;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  height: 44px;
-  cursor: pointer;
+  all: unset; 
+  color: white;        /* 글자색 */
+  font-size: 20px;
+  cursor: pointer;     /* 클릭 가능하게 유지 */
+  padding: 4px 8px;    /* (선택) 클릭 영역 확보 */
+  border-radius: 4px;  /* (선택) hover 시 모양 유지 */
+  white-space: nowrap;
   transition: background 0.2s, color 0.2s;
+  margin-top: 70px;
+  margin-left:-10px;
 }
 
 .login-btn:hover {
