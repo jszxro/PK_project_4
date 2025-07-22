@@ -20,8 +20,11 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [emojiList, setEmojiList] = useState([]);
   const [selectedEmoji, setSelectedEmoji] = useState('');
+  const [posts, setPosts] = useState([]);
 
   const [quote, setQuote] = useState('');
+
+
 
   useEffect(() => {
     axios.get('/api/quotes')
@@ -33,6 +36,26 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       .catch((err) => {
         console.error('오늘의 한줄 가져오기 실패:', err);
       });
+
+    // 게시글 조회하기
+    axios.get('/api/posts')
+      .then(res => {
+        const mappedPosts = res.data.map(post => ({
+          id: post.postId,
+          author: post.author,
+          tag: post.emojiId,
+          content_title: post.title,
+          content: post.content,
+          url: post.url,
+          thumbnail: post.imgUrl,
+          likes: post.likes,
+          time: post.createdAt
+        }));
+        setPosts(mappedPosts);
+      })
+      .catch(err => {
+        console.error('게시글 불러오기 실패:', err);
+      });
   }, []);
 
   useEffect(() => {
@@ -40,48 +63,6 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       .then(response => setEmojiList(response.data))
       .catch(error => console.error('이모지 목록 불러오기 실패:', error));
   }, []);
-
-  const posts = [
-    {
-      id: 1,
-      author: "매운 하리보",
-      tag: "Happy",
-      content_title: "행복한 순간을 공유하고 싶어요",
-      content: "같이 노래 들어요 힘이 남",
-      song_title: "Get You",
-      singer: "Daniel Caesar",
-      url: "https://www.youtube.com/watch?v=ffjjhRSd7Cw",
-      thumbnail: "https://img.youtube.com/vi/ffjjhRSd7Cw/hqdefault.jpg",
-      likes: 23,
-      time: "30초 전"
-    },
-    {
-      id: 2,
-      author: "안매운 하리보",
-      tag: "Sad",
-      content_title: "엉엉생략테스트엉엉엉",
-      content: "같이 노래 들어요 슬픔",
-      song_title: "Move Through the fog",
-      singer: "Lo-fi",
-      url: "https://www.youtube.com/watch?v=C5V_3r5NI88",
-      thumbnail: "https://img.youtube.com/vi/C5V_3r5NI88/hqdefault.jpg",
-      likes: 46,
-      time: "3초 전"
-    },
-    {
-      id: 3,
-      author: "짱매운 하리보",
-      tag: "Happy",
-      content_title: "내가 좋아하는 노래",
-      content: "같이 노래 들어봅시다 행복임",
-      song_title: "나 안아 벌금내",
-      singer: "쿼카",
-      url: "https://www.youtube.com/watch?v=FepuXV72_hQ",
-      thumbnail: "https://img.youtube.com/vi/FepuXV72_hQ/hqdefault.jpg",
-      likes: 96,
-      time: "1초 전"
-    },
-  ];
 
   const filteredPosts = selectedTag
     ? posts.filter(post => {
@@ -107,6 +88,25 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const handleFeelingSubmit = (text) => {
     setFeelingText(text);
     setIsModalOpen(false);
+
+    axios.get('/api/posts')
+      .then(res => {
+        const mappedPosts = res.data.map(post => ({
+          id: post.postId,
+          author: post.author,
+          tag: post.emojiId,
+          content_title: post.title,
+          content: post.content,
+          url: post.url,
+          thumbnail: post.imgUrl,
+          likes: post.likes,
+          time: post.createdAt
+        }));
+        setPosts(mappedPosts);
+      })
+      .catch(err => {
+        console.error('게시글 불러오기 실패:', err);
+      });
   };
 
   return (
@@ -129,7 +129,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
 
         {/* 중앙: 오늘의 기분 */}
         <div className={styles.commentFeeling} onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
-          <span>오늘의 기분을 한 줄로 남겨보세요</span>
+          <span>Moments 작성하기</span>
           <span>✏️</span>
         </div>
         <FeelingCommentModal
@@ -158,13 +158,16 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                         <span className={styles.momentTag}>#{post.tag}</span>
                         <span className={styles.momentTime}>{post.time}</span>
                       </div>
-                      <img className={styles.momentThumbnail} src={post.thumbnail} alt="유튜브 썸네일" />
+                      <img className={styles.momentThumbnail} src={post.thumbnail} onClick={() => {
+                        setSelectedPost(post);
+                        setIsDetailModalOpen(true);
+                      }} alt="유튜브 썸네일" />
                       <div className={styles.momentLink}>
                         🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
                       </div>
                       <div className={styles.momentContentNLikes}>
                         <span className={styles.momentContent}>{post.content}</span>
-                        <span className={styles.momentLikes}>💛 {post.likes}</span>
+                        <span className={styles.momentLikes}> 💛 {post.likes}</span>
                       </div>
                     </div>
                   ))}
@@ -184,7 +187,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <span className={styles.momentContentTitle}>{post.content_title}</span>
                   </div>
                   <div className={styles.songLine}>
-                    <span>➡️ '{post.song_title} - {post.singer}'</span>
+                    <span>➡️ '{post.content}'</span>
                   </div>
                   <div className={styles.infoLine}>
                     <span className={styles.momentLikes}>공감 💛 {post.likes}</span>
@@ -224,8 +227,28 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       {/* 모달들 */}
       {showModal && <LoginModal onClose={() => setShowModal(false)} />}
       {isDetailModalOpen && selectedPost && (
-        <PostDetailModal post={selectedPost} onClose={() => setIsDetailModalOpen(false)} />
+        <PostDetailModal
+          post={selectedPost}
+          onClose={() => setIsDetailModalOpen(false)}
+          onReactionChange={(updatedReactionType) => {
+            // posts 상태 변경
+            setPosts(prevPosts => prevPosts.map(p => {
+              if (p.id === selectedPost.id) {
+                const newLikes = updatedReactionType === 1 ? p.likes + 1 : p.likes - 1;
+                return { ...p, likes: newLikes };
+              }
+              return p;
+            }));
+
+            // 선택된 post도 업데이트 (모달 재렌더링용)
+            setSelectedPost(prev => ({
+              ...prev,
+              likes: updatedReactionType === 1 ? prev.likes + 1 : prev.likes - 1
+            }));
+          }}
+        />
       )}
+
     </div>
   );
 };
