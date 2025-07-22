@@ -1,39 +1,29 @@
 package com.project.mood.controller;
 
 import com.project.mood.dto.DiaryDTO;
-import com.project.mood.entity.Diary;
-import com.project.mood.entity.Emoji;
-import com.project.mood.repository.DiaryRepository;
-import com.project.mood.repository.EmojiRepository;
+import com.project.mood.service.DiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/diaries")
 public class DiaryController {
 
     @Autowired
-    private DiaryRepository diaryRepository;
-
-    @Autowired
-    private EmojiRepository emojiRepository;
+    private DiaryService diaryService;
 
     @PostMapping
     public String createDiary(@RequestBody DiaryDTO request) {
-        Emoji emoji = emojiRepository.findById(request.getEmojiId())
-                .orElseThrow(() -> new RuntimeException("이모지 못 찾았어요"));
+        return diaryService.createDiary(request);
+    }
 
-        Diary diary = new Diary();
-        diary.setDiaryId(UUID.randomUUID().toString());
-        diary.setUserKey(request.getUserKey());
-        diary.setContent(request.getContent());
-        diary.setEmoji(emoji);
-        diary.setImgUrl(request.getImgUrl());
-
-        diaryRepository.save(diary);
-
-        return "저장 완료!";
+    @GetMapping("/user/{userKey}")
+    public ResponseEntity<List<DiaryDTO>> getDiariesByUserKey(@PathVariable String userKey) {
+        System.out.println("일기 불러오기 요청, userKey = " + userKey);
+        List<DiaryDTO> result = diaryService.getDiariesByUserKey(userKey);
+        return ResponseEntity.ok(result);
     }
 }
