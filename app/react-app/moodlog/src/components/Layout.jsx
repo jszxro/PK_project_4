@@ -67,7 +67,7 @@ function Layout() {
 
   return (
     <div className="app-layout">
-      <div className="sidebar">
+      <div className="sidebar"> {/* 좌측 */}
         <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
         <p className="subtitle">당신의 감정을 이해하는 첫 번째 플레이리스트</p>
 
@@ -86,11 +86,14 @@ function Layout() {
         </ul>
       </div>
 
-      <div className="page-content">
-        {!hideTopBar && <TopBar onLoginClick={() => setShowModal(true)} />}
-        {showModal && <LoginModal onClose={() => setShowModal(false)} />}
+      <div className="page-content"> {/* 중앙 */}
         <Outlet />
       </div>
+
+     <div className="right-sidebar"> {/* 우측 */}
+        {!hideTopBar && <TopBar onLoginClick={() => setShowModal(true)} />}
+        {showModal && <LoginModal onClose={() => setShowModal(false)} />}
+     </div>
     </div>
   );
 }
