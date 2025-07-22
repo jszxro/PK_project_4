@@ -29,7 +29,6 @@ function TopBar({ onLoginClick }) {
       ) : (
         <button className="login-btn" onClick={onLoginClick}>로그인</button>
       )}
-      <button onClick={logout} className="login-btn">로그아웃</button>
     </div>
   );
 }

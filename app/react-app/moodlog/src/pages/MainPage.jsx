@@ -1,14 +1,31 @@
 import '../App.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoginModal from '../components/LoginModal';
 import { UserContext } from '../context/UserContext';
+import axios from 'axios';
 
 function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
+  const [selectedTag, setSelectedTag] = useState('행복');
   const { userInfo, logout } = useContext(UserContext);
+
+  const [emojiList, setEmojiList] = useState([]);
+  const [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/emojis')
+      .then(response => setEmojiList(response.data))
+      .catch(error => console.error('이모지 목록 불러오기 실패:', error));
+  }, []);
+
+  useEffect(() => {
+    axios.get(`/api/songs/${encodeURIComponent(selectedTag)}`)
+      .then(res => setSongs(res.data))
+      .catch(err => console.error('노래 목록 불러오기 실패:', err));
+  }, [selectedTag]);
 
   return (
     <div className="layout">
@@ -30,7 +47,28 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
           {/* 오른쪽: Mood Picks */}
           <div className="main-right">
             <h3>{isLoggedIn ? '나만의 Mood Picks' : 'Mood Picks'}</h3>
-            <div className="empty-block" />
+             <div className="tagContainer">
+                <h4 className="sectionTitle">오늘 기분에 어울리는 곡을 찾아드릴게요</h4>
+                <div className="tags">
+                  {emojiList.map(({ emojiId, tag }) => (
+                    <button
+                      key={emojiId}
+                      className="tag-btn"
+                      onClick={() => { setSelectedTag(tag), console.log(tag) }}
+                    >
+                      # {emojiId}
+                    </button>
+                  ))}
+                </div>
+              </div>
+      
+              <div className="playlistArea">
+                {songs.map((song, idx) => (
+                  <div className="playlistCard" key={idx}>
+                    {song.title} - {song.artist}
+                  </div>
+                ))}
+              </div>
           </div>
         </div>
       </div>
