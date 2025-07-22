@@ -152,16 +152,23 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                 </div>
                 <div className={styles.momentGrid}>
                   {filteredPosts.map(post => (
-                    <div key={post.id} className={styles.postCard}>
+                    <div
+                      key={post.id}
+                      className={styles.postCard}
+                      onClick={() => navigate(`/moments/${post.id}`)}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <div className={styles.momentMeta}>
                         <span className={styles.momentAuthor}>작성자: {post.author}</span>
                         <span className={styles.momentTag}>#{post.tag}</span>
                         <span className={styles.momentTime}>{post.time}</span>
                       </div>
-                      <img className={styles.momentThumbnail} src={post.thumbnail} onClick={() => {
-                        setSelectedPost(post);
-                        setIsDetailModalOpen(true);
-                      }} alt="유튜브 썸네일" />
+                      <img
+                        className={styles.momentThumbnail}
+                        src={post.thumbnail}
+                        // onClick={() => navigate(`/moments/${post.id}`)}
+                        alt="썸네일"
+                      />
                       <div className={styles.momentLink}>
                         🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
                       </div>
@@ -194,11 +201,10 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <span className={styles.momentTime}>{post.time}</span>
                     <span
                       className={styles.momentShowAll}
-                      onClick={() => {
-                        setSelectedPost(post);
-                        setIsDetailModalOpen(true);
-                      }}
-                    >[전체보기]</span>
+                      onClick={() => navigate(`/moments/${post.id}`)}
+                    >
+                      [전체보기]
+                    </span>
                   </div>
                 </div>
               ))}
