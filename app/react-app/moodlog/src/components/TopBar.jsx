@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import '../assets/css/TopBar.css';
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -7,21 +7,40 @@ function TopBar({ onLoginClick }) {
   const { userInfo, logout } = useContext(UserContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
-    logout();             // 사용자 정보 초기화
+    logout();
     setDropdownOpen(false);
-    navigate('/');        // 홈으로 이동
+    navigate('/');
   };
 
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+    setDropdownOpen(prev => !prev);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
     <div className="top-bar">
       {userInfo ? (
-        <div className="profile-area">
+        <div className="profile-area" ref={dropdownRef}>
           <div className="profile-circle" onClick={toggleDropdown}>
             {userInfo.nickname[0] || 'U'}
           </div>
@@ -29,10 +48,22 @@ function TopBar({ onLoginClick }) {
           {dropdownOpen && (
             <div className="dropdown-menu">
               <div className="dropdown-item" onClick={() => {
-                navigate('/mypage');
+                navigate('/archive');         // ✅ 마이페이지
                 setDropdownOpen(false);
               }}>
-                내 채널
+                마이페이지
+              </div>
+              <div className="dropdown-item" onClick={() => {
+                navigate('/');                // ✅ 홈
+                setDropdownOpen(false);
+              }}>
+                홈
+              </div>
+              <div className="dropdown-item" onClick={() => {
+                navigate('/moments');         // ✅ 모멘트
+                setDropdownOpen(false);
+              }}>
+                모멘트
               </div>
               <div className="dropdown-item" onClick={handleLogout}>
                 로그아웃
@@ -41,7 +72,9 @@ function TopBar({ onLoginClick }) {
           )}
         </div>
       ) : (
-        <button className="login-btn" onClick={onLoginClick}>로그인</button>
+        <button className="login-btn" onClick={onLoginClick}>
+          로그인
+        </button>
       )}
     </div>
   );

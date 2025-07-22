@@ -155,7 +155,13 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                   <div key={post.id} className={styles.postCard}>
                     <div className={styles.momentMeta}>
                       <span className={styles.momentAuthor}>작성자: {post.author}</span>
-                      <span className={styles.momentTag}>#{post.tag}</span>
+                      <span
+                        className={styles.momentTag}
+                        onClick={() => setSelectedTag(post.tag)}
+                        style={{ cursor: 'pointer', color: '#b5d3b0' }}
+                      >
+                        #{post.tag}
+                      </span>
                       <span className={styles.momentTime}>{post.time}</span>
                     </div>
                     <img

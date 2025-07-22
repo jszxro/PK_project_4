@@ -44,6 +44,8 @@
   display: flex;
   justify-content: space-between;
   gap: 10px;
+  width: 90%;         /* ✅ input과 동일하게 */
+  margin: 0 auto;     /* ✅ 가운데 정렬 */
 }
 
 .submitBtn, .cancelBtn {
