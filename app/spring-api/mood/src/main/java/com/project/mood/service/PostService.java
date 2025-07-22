@@ -34,4 +34,19 @@ public class PostService {
     public List<PostSummaryDTO> getPostSummaries() {
         return postRepository.findPostSummaries();
     }
+
+    public PostDTO getPostById(String postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        PostDTO dto = new PostDTO();
+        dto.setUserKey(post.getUserKey());
+        dto.setTitle(post.getTitle());
+        dto.setContent(post.getContent());
+        dto.setEmojiId(post.getEmojiId());
+        dto.setUrl(post.getUrl());
+        dto.setImgUrl(post.getImgUrl());
+
+        return dto;
+    }
 }
