@@ -1,46 +1,42 @@
-import { useContext, useState, useRef, useEffect } from 'react';
-import { UserContext } from '../context/UserContext';
+import { useContext, useState } from 'react';
 import '../assets/css/TopBar.css';
+import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 function TopBar({ onLoginClick }) {
   const { userInfo, logout } = useContext(UserContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  // 외부 클릭 시 드롭다운 닫기
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const toggleDropdown = () => {
-    setDropdownOpen((prev) => !prev);
+  const handleLogout = () => {
+    logout();             // 사용자 정보 초기화
+    setDropdownOpen(false);
+    navigate('/');        // 홈으로 이동
   };
 
-  const handleMenuClick = (path) => {
-    navigate(path);
-    setDropdownOpen(false);
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
   return (
     <div className="top-bar">
       {userInfo ? (
-        <div className="profile-area" ref={dropdownRef}>
+        <div className="profile-area">
           <div className="profile-circle" onClick={toggleDropdown}>
-            {userInfo.nickname[0]}
+            {userInfo.nickname[0] || 'U'}
           </div>
+
           {dropdownOpen && (
             <div className="dropdown-menu">
-              <div onClick={() => handleMenuClick('/my-page')}>내 채널</div>
-              <div onClick={() => handleMenuClick('/settings')}>설정</div>
-              <div onClick={logout}>로그아웃</div>
+              <div className="dropdown-item" onClick={() => {
+                navigate('/mypage');
+                setDropdownOpen(false);
+              }}>
+                내 채널
+              </div>
+              <div className="dropdown-item" onClick={handleLogout}>
+                로그아웃
+              </div>
             </div>
           )}
         </div>

@@ -1,12 +1,12 @@
-/* TopBar 영역: 오른쪽 상단에 고정 */
 .top-bar {
   display: flex;
-  justify-content: flex-end; /* ✅ 오른쪽 끝 정렬 */
   align-items: center;
-  padding: 20px 20px 20px 0px;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 20px 20px 0;
   background-color: transparent;
-  position: relative;
   z-index: 10;
+  position: relative;
 }
 
 /* 로그인 버튼 */
@@ -27,50 +27,46 @@
   color: white;
 }
 
-/* 프로필 드롭다운 영역 */
+/* 프로필 원 */
 .profile-area {
   position: relative;
-  margin-right: 10px;
 }
 
-/* 프로필 동그라미 */
 .profile-circle {
-  width: 40px;
-  height: 40px;
-  background-color: #444;
+  width: 44px;
+  height: 44px;
+  background-color: #555;
   color: white;
-  border: 1px solid #555;
   border-radius: 50%;
-  text-align: center;
-  line-height: 40px;
-  font-weight: bold;
-  cursor: pointer;
   font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
 }
 
 /* 드롭다운 메뉴 */
 .dropdown-menu {
   position: absolute;
   top: 50px;
-  right: 0; /* ✅ 오른쪽으로 정렬 */
-  background-color: #222;
-  border: 1px solid #555;
+  right: 0;
+  background: #222;
+  border: 1px solid #444;
   border-radius: 8px;
-  overflow: hidden;
-  z-index: 1001;
-  min-width: 120px;
+  padding: 8px 0;
+  width: 120px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 20;
 }
 
-/* 드롭다운 항목 */
-.dropdown-menu div {
+.dropdown-item {
   padding: 10px 16px;
   color: white;
-  cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s;
+  cursor: pointer;
 }
 
-/* 드롭다운 항목 호버 */
-.dropdown-menu div:hover {
-  background-color: #333;
+.dropdown-item:hover {
+  background-color: #444;
 }
