@@ -52,8 +52,8 @@ function ArchivePage() {
         });
 
         setDateEmojis(emojiData);
-        console.log('로드된 일기 데이터:', diaries);
-        console.log('변환된 이모지 데이터:', emojiData);
+        // console.log('로드된 일기 데이터:', diaries);
+        // console.log('변환된 이모지 데이터:', emojiData);
       } catch (error) {
         console.error('일기 데이터 로드 실패:', error);
       }

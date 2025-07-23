@@ -64,9 +64,12 @@ public class DiaryService {
       dto.setUserKey(d.getUserKey());
       dto.setContent(d.getContent());
       dto.setEmojiId(d.getEmoji().getEmojiId());
+      dto.setEmoji(d.getEmoji().getEmoji()); // 실제 이모지 문자 추가
       dto.setImgUrl(d.getImgUrl());
       dto.setCreatedAt(d.getCreatedAt());
       dto.setUpdatedAt(d.getUpdatedAt());
+      // System.out.println("일기 조회 - ID: " + d.getDiaryId() + ", 이모지: " +
+      // d.getEmoji().getEmoji() + ", 날짜: " + d.getCreatedAt());
       return dto;
     }).collect(Collectors.toList());
   }
