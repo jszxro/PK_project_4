@@ -72,10 +72,18 @@ function ArchivePage() {
   // 다이어리 저장 시 이모지 업데이트
   const handleDiarySave = async (date, emoji, content) => {
     const dateKey = date.toISOString().split('T')[0];
-    setDateEmojis(prev => ({
-      ...prev,
-      [dateKey]: emoji
-    }));
+
+    // 해당 날짜에 이미 일기가 있는지 확인
+    const existingDiary = diaryList.find(diary =>
+      diary.createdAt && diary.createdAt.split('T')[0] === dateKey
+    );
+
+    if (existingDiary) {
+      alert('해당 날짜에 이미 일기가 작성되어 있습니다.');
+      setShowDiaryModal(false);
+      return;
+    }
+
     setShowDiaryModal(false);
 
     // 서버에서 최신 데이터 다시 로드
@@ -87,6 +95,7 @@ function ArchivePage() {
 
         setDiaryList(diaries);
 
+        // 일기 데이터를 날짜별 이모지 형태로 변환 (데이터베이스의 실제 이모지 사용)
         const emojiData = {};
         diaries.forEach(diary => {
           if (diary.createdAt && diary.emoji) {
@@ -96,6 +105,8 @@ function ArchivePage() {
         });
 
         setDateEmojis(emojiData);
+        console.log('업데이트된 일기 데이터:', diaries);
+        console.log('업데이트된 이모지 데이터:', emojiData);
       } catch (error) {
         console.error('최신 일기 데이터 로드 실패:', error);
       }
@@ -203,6 +214,16 @@ function ArchivePage() {
             <div className={styles.calendarBox}>
               <CalendarBox
                 onDateClick={(date) => {
+                  const dateKey = date.toISOString().split('T')[0];
+                  const existingDiary = diaryList.find(diary =>
+                    diary.createdAt && diary.createdAt.split('T')[0] === dateKey
+                  );
+
+                  if (existingDiary) {
+                    alert('해당 날짜에 이미 일기가 작성되어 있습니다.');
+                    return;
+                  }
+
                   setSelectedDate(date);
                   setShowDiaryModal(true);
                 }}
