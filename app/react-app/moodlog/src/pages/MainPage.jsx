@@ -22,6 +22,11 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const totalPages = Math.ceil(allPosts.length / postsPerPage);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  useEffect(() => {
+  console.log('[🔍 MainPage] isLoggedIn:', isLoggedIn);
+  console.log('[🔍 MainPage] userInfo:', userInfo);
+  }, [isLoggedIn, userInfo]);
+
   // ✅ 태그 및 노래 상태
   const [selectedTag, setSelectedTag] = useState('행복');
   const [emojiList, setEmojiList] = useState([]);
@@ -64,6 +69,29 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
   return (
     <div className="layout">
       <div className="main">
+        {userInfo && (
+          <div className={styles.moodContainer}>
+            {/* 1. 인삿말 */}
+            <p className={styles.moodTitle}>
+              오늘 기분이 어떠신가요, <span className={styles.nickname}>{userInfo?.nickname || '사용자'}</span>님
+            </p>
+
+            {/* 2. 이모지 버튼 리스트 */}
+            <div className={styles.moodBar}>
+              {emojiList.map((e) => (
+                <button
+                  key={e.emojiId}
+                  className={`${styles.moodBtn} ${selectedTag === e.tag ? styles.activeMood : ''}`}
+                  onClick={() => setSelectedTag(e.tag)}
+                >
+                  {e.emojiId}
+                </button>
+              ))}
+            </div>
+
+            <p className={styles.moodSub}>이 기분을 기록할까요?</p>
+          </div>
+        )}
         <div className="moment-mood-container">
           {/* 왼쪽: Moments */}
           <div className="main-left">
@@ -125,11 +153,31 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
 
               <div className={styles.songBox}>
                 {songs.length > 0 ? (
-                  songs.map((song, idx) => (
-                    <div key={idx} className={styles.songItem}>
-                      🎵 {song.title} - {song.artist}
-                    </div>
-                  ))
+                  songs.map((song, idx) => {
+                    const textToCopy = `${song.title} - ${song.artist}`;
+                    return (
+                      <div key={idx} className={styles.songItem} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>🎵 {textToCopy}</span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(textToCopy);
+                            alert('복사되었습니다!');
+                          }}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#ccc',
+                            cursor: 'pointer',
+                            marginLeft: '10px',
+                            fontSize: '14px',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          ⧉ 복사
+                        </button>
+                      </div>
+                    );
+                  })
                 ) : (
                   <div style={{ color: '#aaa' }}>노래가 없습니다.</div>
                 )}

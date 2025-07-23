@@ -175,7 +175,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                       src={post.thumbnail}
                       onClick={() => {
                         console.log('Clicked post:', post);
-                        console.log('userKey in clicked post:', post.userKey);
+
                         navigate(`/moments/${post.id}`, { state: { post } });
                       }}
                       alt="유튜브 썸네일"
