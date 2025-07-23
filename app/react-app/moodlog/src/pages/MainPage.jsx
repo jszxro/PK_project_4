@@ -102,24 +102,24 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
 
           {/* 오른쪽: Mood Picks */}
           <div className="main-right">
-            <h3>{isLoggedIn ? '나만의 Playlist' : 'Playlist'}</h3>
+            <h3>{userInfo ? '나만의 Playlist' : 'Playlist'}</h3>
             <div className="empty-block" />
 
             {/* ✅ 태그 버튼 + 노래 박스 */}
             <div>
               <div>
-            {emojiList.map(({ emojiId, tag }) => (
-                <button
-                  key={emojiId}
-                  className={
-                    selectedTag === tag
-                      ? `${styles.tagButton} ${styles.tagButtonActive}`
-                      : styles.tagButton
-                  }
-                  onClick={() => setSelectedTag(tag)}
-                >
-                  #{emojiId}
-                </button>
+                {emojiList.map(({ emojiId, tag }) => (
+                  <button
+                    key={emojiId}
+                    className={
+                      selectedTag === tag
+                        ? `${styles.tagButton} ${styles.tagButtonActive}`
+                        : styles.tagButton
+                    }
+                    onClick={() => setSelectedTag(tag)}
+                  >
+                    #{emojiId}
+                  </button>
                 ))}
               </div>
 
