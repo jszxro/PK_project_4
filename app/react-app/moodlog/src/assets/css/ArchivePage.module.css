@@ -205,3 +205,11 @@
   margin: auto 0;
   text-align: center;
 }
+
+/* 다이어리 구분선 스타일 */
+.timelineBox hr {
+  border: none;
+  border-top: 1px solid #E2E2E2;
+  margin: 12px 0;
+  width: 100%;
+}

@@ -352,63 +352,66 @@ function ArchivePage() {
                   </div>
                   <hr className={diaryStyles.titleDivider} />
                   {selectedDiary.imgUrl && (
-                    <div className={diaryStyles.imageContainer} style={{ position: 'relative', minHeight: '120px', maxHeight: '220px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      {imageLoading && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          padding: '15px',
-                          backgroundColor: '#f5f5f5',
-                          borderRadius: '8px',
-                          color: '#666',
-                          fontSize: '12px'
-                        }}>
-                          이미지 로딩 중...
-                        </div>
-                      )}
-                      {imageError && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          padding: '15px',
-                          backgroundColor: '#f8f8f8',
-                          borderRadius: '8px',
-                          color: '#999',
-                          fontSize: '12px',
-                          border: '1px dashed #ddd'
-                        }}>
-                          이미지를 불러올 수 없습니다.
-                        </div>
-                      )}
-                      <img
-                        className={diaryStyles.diaryImage}
-                        src={(() => {
-                          const imageUrl = selectedDiary.imgUrl.startsWith('http')
-                            ? selectedDiary.imgUrl
-                            : `http://localhost:8080${selectedDiary.imgUrl}`;
-                          return imageUrl;
-                        })()}
-                        alt="일기 이미지"
-                        onLoadStart={handleImageLoadStart}
-                        onLoad={handleImageLoad}
-                        onError={handleImageError}
-                        style={{
-                          display: imageError ? 'none' : 'block',
-                          opacity: imageLoading ? 0.3 : 1,
-                          transition: 'opacity 0.3s ease',
-                          maxWidth: '280px',
-                          maxHeight: '180px',
-                          width: 'auto',
-                          height: 'auto',
-                          objectFit: 'cover',
-                          borderRadius: '8px'
-                        }}
-                      />
-                    </div>
+                    <>
+                      <div className={diaryStyles.imageContainer} style={{ position: 'relative', minHeight: '120px', maxHeight: '220px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {imageLoading && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            padding: '15px',
+                            backgroundColor: '#f5f5f5',
+                            borderRadius: '8px',
+                            color: '#666',
+                            fontSize: '12px'
+                          }}>
+                            이미지 로딩 중...
+                          </div>
+                        )}
+                        {imageError && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            padding: '15px',
+                            backgroundColor: '#f8f8f8',
+                            borderRadius: '8px',
+                            color: '#999',
+                            fontSize: '12px',
+                            border: '1px dashed #ddd'
+                          }}>
+                            이미지를 불러올 수 없습니다.
+                          </div>
+                        )}
+                        <img
+                          className={diaryStyles.diaryImage}
+                          src={(() => {
+                            const imageUrl = selectedDiary.imgUrl.startsWith('http')
+                              ? selectedDiary.imgUrl
+                              : `http://localhost:8080${selectedDiary.imgUrl}`;
+                            return imageUrl;
+                          })()}
+                          alt="일기 이미지"
+                          onLoadStart={handleImageLoadStart}
+                          onLoad={handleImageLoad}
+                          onError={handleImageError}
+                          style={{
+                            display: imageError ? 'none' : 'block',
+                            opacity: imageLoading ? 0.3 : 1,
+                            transition: 'opacity 0.3s ease',
+                            maxWidth: '280px',
+                            maxHeight: '180px',
+                            width: 'auto',
+                            height: 'auto',
+                            objectFit: 'cover',
+                            borderRadius: '8px'
+                          }}
+                        />
+                      </div>
+                      <hr className={diaryStyles.titleDivider} />
+                    </>
                   )}
                   <div className={diaryStyles.diaryContent}>
                     {selectedDiary.content}
