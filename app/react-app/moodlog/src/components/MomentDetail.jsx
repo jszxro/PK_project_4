@@ -12,6 +12,7 @@ const MomentDetail = () => {
     const postFromState = location.state?.post;
     const [showEditForm, setShowEditForm] = useState(false);
 
+
     const [post, setPost] = useState(postFromState || null);
 
     useEffect(() => {
@@ -28,6 +29,7 @@ const MomentDetail = () => {
     }, [postId]);
 
     const isAuthor = userInfo?.userKey === post.userKey;
+
 
     if (!post) return <div>불러오는 중...</div>;
 
