@@ -4,7 +4,7 @@ import styles from '../assets/css/DiaryModal.module.css';
 import { UserContext } from '../context/UserContext';
 
 
-function DiaryModal({ date, onClose, initialEmoji = '' }) {
+function DiaryModal({ date, onClose, onSave, initialEmoji = '' }) {
   // const [emoji, setEmoji] = useState('');
   const [emoji, setEmoji] = useState(initialEmoji);
   const [text, setText] = useState('');
@@ -24,21 +24,39 @@ function DiaryModal({ date, onClose, initialEmoji = '' }) {
       return;
     }
 
+    // userKey 가져오기
+    const userKey = userInfo?.userKey || localStorage.getItem('userKey');
+    if (!userKey) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
     try {
-      await axios.post('/api/diaries', {
-        userKey: userInfo.userKey, // 또는 다른 방식으로 가져오기
+      const response = await axios.post('/api/diaries', {
+        userKey: userKey,
         content: text,
         emojiId: emoji,
-        imgUrl: null // 필요하다면 이미지 추가
+        imgUrl: null,
+        selectedDate: date.toISOString().split('T')[0] // 선택된 날짜 전송
       });
 
       console.log("전송 데이터", {
-        userKey: localStorage.getItem('userKey'),
+        userKey: userKey,
         content: text,
-        emojiId: emoji
+        emojiId: emoji,
+        selectedDate: date.toISOString().split('T')[0]
       });
 
       alert('일기가 성공적으로 저장되었습니다!');
+
+
+      if (onSave) {
+        // 이모지 찾기
+        const selectedEmojiData = emojiList.find(e => e.emojiId === emoji);
+        const emojiChar = selectedEmojiData ? selectedEmojiData.emoji : emoji;
+        onSave(date, emojiChar, text);
+      }
+
       onClose(); // 모달 닫기
     } catch (error) {
       console.error('일기 저장 실패:', error);

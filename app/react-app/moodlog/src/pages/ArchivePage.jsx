@@ -22,6 +22,7 @@ function ArchivePage() {
   const [diaryList, setDiaryList] = useState([]);
   const [emojiList, setEmojiList] = useState([]);
   const [selectedEmoji, setSelectedEmoji] = useState('');
+  const [selectedDiary, setSelectedDiary] = useState(null);
 
   // 오늘 날짜 구하기
   const today = new Date();
@@ -52,8 +53,8 @@ function ArchivePage() {
         });
 
         setDateEmojis(emojiData);
-        console.log('로드된 일기 데이터:', diaries);
-        console.log('변환된 이모지 데이터:', emojiData);
+        // console.log('로드된 일기 데이터:', diaries);
+        // console.log('변환된 이모지 데이터:', emojiData);
       } catch (error) {
         console.error('일기 데이터 로드 실패:', error);
       }
@@ -72,10 +73,18 @@ function ArchivePage() {
   // 다이어리 저장 시 이모지 업데이트
   const handleDiarySave = async (date, emoji, content) => {
     const dateKey = date.toISOString().split('T')[0];
-    setDateEmojis(prev => ({
-      ...prev,
-      [dateKey]: emoji
-    }));
+
+    // 해당 날짜에 이미 일기가 있는지 확인
+    const existingDiary = diaryList.find(diary =>
+      diary.createdAt && diary.createdAt.split('T')[0] === dateKey
+    );
+
+    if (existingDiary) {
+      alert('해당 날짜에 이미 일기가 작성되어 있습니다.');
+      setShowDiaryModal(false);
+      return;
+    }
+
     setShowDiaryModal(false);
 
     // 서버에서 최신 데이터 다시 로드
@@ -87,6 +96,7 @@ function ArchivePage() {
 
         setDiaryList(diaries);
 
+        // 일기 데이터를 날짜별 이모지 형태로 변환 (데이터베이스의 실제 이모지 사용)
         const emojiData = {};
         diaries.forEach(diary => {
           if (diary.createdAt && diary.emoji) {
@@ -96,6 +106,17 @@ function ArchivePage() {
         });
 
         setDateEmojis(emojiData);
+
+        // 새로 저장된 일기를 자동으로 선택
+        const newDiary = diaries.find(diary =>
+          diary.createdAt && diary.createdAt.split('T')[0] === dateKey
+        );
+        if (newDiary) {
+          setSelectedDiary(newDiary);
+        }
+
+        // console.log('업데이트된 일기 데이터:', diaries);
+        // console.log('업데이트된 이모지 데이터:', emojiData);
       } catch (error) {
         console.error('최신 일기 데이터 로드 실패:', error);
       }
@@ -203,8 +224,19 @@ function ArchivePage() {
             <div className={styles.calendarBox}>
               <CalendarBox
                 onDateClick={(date) => {
-                  setSelectedDate(date);
-                  setShowDiaryModal(true);
+                  const dateKey = date.toISOString().split('T')[0];
+                  const existingDiary = diaryList.find(diary =>
+                    diary.createdAt && diary.createdAt.split('T')[0] === dateKey
+                  );
+
+                  if (existingDiary) {
+                    // 일기가 있으면 선택해서 표시
+                    setSelectedDiary(existingDiary);
+                  } else {
+                    // 일기가 없으면 새로 작성
+                    setSelectedDate(date);
+                    setShowDiaryModal(true);
+                  }
                 }}
                 dateEmojis={dateEmojis}
               />
@@ -214,10 +246,29 @@ function ArchivePage() {
             {/* 다이어리 제목 */}
             <div className={styles.emotionHeader}>
               <h4>Diary</h4>
-              <span></span>
+              <span>{selectedDiary ? selectedDiary.createdAt?.split('T')[0] : '날짜를 선택하세요'}</span>
             </div>
             <div className={styles.timelineBox}>
-              <p></p>
+              {selectedDiary ? (
+                <div className={diaryStyles.diaryCard}>
+                  <div className={diaryStyles.diaryTitle}>
+                    {selectedDiary.emoji} {selectedDiary.createdAt?.split('T')[0]}
+                  </div>
+                  <hr className={diaryStyles.titleDivider} />
+                  {selectedDiary.imgUrl && (
+                    <img
+                      className={diaryStyles.diaryImage}
+                      src={selectedDiary.imgUrl}
+                      alt="일기 이미지"
+                    />
+                  )}
+                  <div className={diaryStyles.diaryContent}>
+                    {selectedDiary.content}
+                  </div>
+                </div>
+              ) : (
+                <p>캘린더에서 날짜를 선택하면 해당 날짜의 일기를 볼 수 있습니다.</p>
+              )}
             </div>
           </div>
         </div>
@@ -233,38 +284,7 @@ function ArchivePage() {
           </div>
         </div>
 
-
-        {/* 작성된 일기 목록 */}
-        <div className={styles.diaryListSection}>
-          <h4>내 일기 목록</h4>
-          {diaryList.length > 0 ? (
-            <div className={styles.diaryGrid}>
-              {diaryList.map((diary) => (
-                <div key={diary.diaryId} className={diaryStyles.diaryCard}>
-                  <div className={diaryStyles.diaryTitle}>
-                    {diary.emoji} {diary.createdAt?.split('T')[0]}
-                  </div>
-                  <hr className={diaryStyles.titleDivider} />
-                  {diary.imgUrl && (
-                    <img
-                      className={diaryStyles.diaryImage}
-                      src={diary.imgUrl}
-                      alt="일기 이미지"
-                    />
-                  )}
-                  <div className={diaryStyles.diaryContent}>
-                    {diary.content}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>아직 작성된 일기가 없습니다. </p>
-          )}
-        </div>
       </div>
-
-
 
       {/* 모달 */}
       {showModal && <LoginModal onClose={() => setShowModal(false)} />}
