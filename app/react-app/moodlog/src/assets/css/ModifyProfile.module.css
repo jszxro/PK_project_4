@@ -1,0 +1,80 @@
+.profileWrapper {
+    padding: 150px 20px 60px;
+    max-width: 500px;
+    margin: auto;
+    color: white;
+    border-radius: 12px;
+}
+
+.title {
+    font-size: 28px;
+    color: #b5d3b0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profileImageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profileImage,
+.defaultProfile {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #444;
+    object-fit: cover;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    color: #fff;
+}
+
+.inputFile {
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+.defaultBtn {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    background: #ddd;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1c1c1c;
+}
+
+.submitBtn {
+    width: 100%;
+    background: #b5d3b0;
+    color: #1c1c1c;
+    font-weight: bold;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.submitBtn:hover {
+    background: #a2c5a1;
+}
