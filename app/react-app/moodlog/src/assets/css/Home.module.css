@@ -156,7 +156,7 @@
 }
 
 .nickname {
-  color: #fcbf49;
+  color: #A8C3A8;
 }
 
 .moodBar {
@@ -178,9 +178,9 @@
 }
 
 .activeMood {
-  background-color: #fcbf49;
+  background-color: #A8C3A8;
   color: black;
-  border-color: #fcbf49;
+  border-color: #A8C3A8;
 }
 
 .recommendMsg {

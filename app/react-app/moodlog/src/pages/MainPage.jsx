@@ -22,6 +22,11 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const totalPages = Math.ceil(allPosts.length / postsPerPage);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  useEffect(() => {
+  console.log('[🔍 MainPage] isLoggedIn:', isLoggedIn);
+  console.log('[🔍 MainPage] userInfo:', userInfo);
+  }, [isLoggedIn, userInfo]);
+
   // ✅ 태그 및 노래 상태
   const [selectedTag, setSelectedTag] = useState('행복');
   const [emojiList, setEmojiList] = useState([]);
@@ -64,7 +69,7 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
   return (
     <div className="layout">
       <div className="main">
-        {isLoggedIn && (
+        {userInfo && (
           <div className={styles.moodContainer}>
             {/* 1. 인삿말 */}
             <p className={styles.moodTitle}>
