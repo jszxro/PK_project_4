@@ -36,4 +36,10 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
 
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<String> updatePost(@PathVariable String postId, @RequestBody PostDTO dto) {
+        postService.updatePost(postId, dto);
+        return ResponseEntity.ok("게시글 수정 완료");
+    }
+
 }
