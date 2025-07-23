@@ -5,6 +5,8 @@ import com.project.mood.dto.PostSummaryDTO;
 import com.project.mood.entity.Post;
 import com.project.mood.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,5 +50,19 @@ public class PostService {
         dto.setImgUrl(post.getImgUrl());
 
         return dto;
+    }
+
+    public void updatePost(String postId, PostDTO dto) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            post.setTitle(dto.getTitle());
+            post.setContent(dto.getContent());
+            post.setUrl(dto.getUrl());
+            post.setUpdatedAt(LocalDateTime.now()); // 마지막 수정 시간 업데이트
+            postRepository.save(post);
+        } else {
+            throw new IllegalArgumentException("게시글을 찾을 수 없습니다: " + postId);
+        }
     }
 }

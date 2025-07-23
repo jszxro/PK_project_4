@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import LoginModal from '../components/LoginModal';
 import FeelingCommentModal from '../components/FeelingCommentModal';
-import PostDetailModal from '../components/PostDetailModal';
+// import PostDetailModal from '../components/PostDetailModal';
 import axios from 'axios';
 
 const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
@@ -39,6 +39,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
         const mappedPosts = res.data.map(post => ({
           id: post.postId,
           author: post.author,
+          userKey: post.userKey,
           tag: post.emojiId,
           content_title: post.title,
           content: post.content,
@@ -89,9 +90,11 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
 
     axios.get('/api/posts')
       .then(res => {
+        console.log("백엔드 응답:", res.data);
         const mappedPosts = res.data.map(post => ({
           id: post.postId,
           author: post.author,
+          userKey: post.userKey,
           tag: post.emojiId,
           content_title: post.title,
           content: post.content,
@@ -157,7 +160,10 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                       <span className={styles.momentAuthor}>작성자: {post.author}</span>
                       <span
                         className={styles.momentTag}
-                        onClick={() => setSelectedTag(post.tag)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedTag(post.tag);
+                        }}
                         style={{ cursor: 'pointer', color: '#b5d3b0' }}
                       >
                         #{post.tag}
@@ -168,8 +174,9 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                       className={styles.momentThumbnail}
                       src={post.thumbnail}
                       onClick={() => {
-                        setSelectedPost(post);
-                        setIsDetailModalOpen(true);
+                        console.log('Clicked post:', post);
+                        console.log('userKey in clicked post:', post.userKey);
+                        navigate(`/moments/${post.id}`, { state: { post } });
                       }}
                       alt="유튜브 썸네일"
                     />
@@ -234,7 +241,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       </div>
 
       {showModal && <LoginModal onClose={() => setShowModal(false)} />}
-      {isDetailModalOpen && selectedPost && (
+      {/* {isDetailModalOpen && selectedPost && (
         <PostDetailModal
           post={selectedPost}
           onClose={() => setIsDetailModalOpen(false)}
@@ -252,7 +259,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
             }));
           }}
         />
-      )}
+      )} */}
     </div>
   );
 };
