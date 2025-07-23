@@ -17,6 +17,7 @@ function ArchivePage() {
   // 새로 추가되는 상태들
   const [dateEmojis, setDateEmojis] = useState({});
   const [diaryList, setDiaryList] = useState([]);
+  const [postList, setPostList] = useState([]); // POST 데이터를 위한 상태 추가
   const [emojiList, setEmojiList] = useState([]);
   const [selectedDiary, setSelectedDiary] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -58,7 +59,20 @@ function ArchivePage() {
       }
     };
 
+    const loadPostData = async () => {
+      const userKey = userInfo?.userKey || localStorage.getItem('userKey');
+      if (!userKey) return;
+
+      try {
+        const response = await axios.get(`/api/posts/user/${userKey}`);
+        setPostList(response.data);
+      } catch (error) {
+        console.error('POST 데이터 로드 실패:', error);
+      }
+    };
+
     loadDiaryData();
+    loadPostData();
   }, [userInfo]);
 
   // 페이지가 포커스될 때마다 데이터 새로고침
@@ -244,7 +258,7 @@ function ArchivePage() {
           </div>
           <div className={styles.profileText}>
             <h3>{userInfo?.nickname || '사용자'}님!</h3>
-            <p>작성한 글: {diaryList.length}개, 댓글: 0개</p>
+            {/* <p>Post 작성: {diaryList.length}개, 댓글 작성: 0개</p> */}
           </div>
         </div>
 
@@ -288,7 +302,7 @@ function ArchivePage() {
             </div>
             <div className={styles.emotionBox}>
               <p>📌 Moments 작성: {diaryList.length}개</p>
-              <p>💬 남긴 댓글: 0개</p>
+              <p>💬 남긴 댓글: {postList.length}개</p>
               <p>📂 기록한 감정: {Object.keys(emotionStats.emotionCount).length}종류</p>
 
             </div>
