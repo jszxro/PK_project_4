@@ -29,8 +29,18 @@ public class DiaryService {
     // System.out.println("받은 userKey: " + request.getUserKey());
     // System.out.println("받은 content: " + request.getContent());
 
-    Emoji emoji = emojiRepository.findById(request.getEmojiId())
-        .orElseThrow(() -> new RuntimeException("이모지 못 찾음"));
+    Emoji emoji;
+
+    // emojiId가 있으면 그것으로 조회, 없으면 emoji 문자로 조회
+    if (request.getEmojiId() != null && !request.getEmojiId().isEmpty()) {
+      emoji = emojiRepository.findById(request.getEmojiId())
+          .orElseThrow(() -> new RuntimeException("이모지 못 찾음"));
+    } else if (request.getEmoji() != null && !request.getEmoji().isEmpty()) {
+      emoji = emojiRepository.findByEmoji(request.getEmoji())
+          .orElseThrow(() -> new RuntimeException("이모지 못 찾음: " + request.getEmoji()));
+    } else {
+      throw new RuntimeException("이모지 정보가 없습니다.");
+    }
 
     Diary diary = new Diary();
     diary.setDiaryId(UUID.randomUUID().toString());
