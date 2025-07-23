@@ -237,17 +237,7 @@ function ArchivePage() {
             {userInfo?.profileImage ? (
               <img src={userInfo.profileImage} alt="프로필" />
             ) : (
-              <div style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#555',
-                color: 'white',
-                fontSize: '24px',
-                fontWeight: 'bold'
-              }}>
+              <div className={styles.profilePlaceholder}>
                 {userInfo?.nickname ? userInfo.nickname.charAt(0).toUpperCase() : '😊'}
               </div>
             )}
@@ -353,35 +343,14 @@ function ArchivePage() {
                   <hr className={diaryStyles.titleDivider} />
                   {selectedDiary.imgUrl && (
                     <>
-                      <div className={diaryStyles.imageContainer} style={{ position: 'relative', minHeight: '120px', maxHeight: '220px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <div className={`${diaryStyles.imageContainer} ${styles.imageContainer}`}>
                         {imageLoading && (
-                          <div style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            padding: '15px',
-                            backgroundColor: '#f5f5f5',
-                            borderRadius: '8px',
-                            color: '#666',
-                            fontSize: '12px'
-                          }}>
+                          <div className={styles.imageLoading}>
                             이미지 로딩 중...
                           </div>
                         )}
                         {imageError && (
-                          <div style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            padding: '15px',
-                            backgroundColor: '#f8f8f8',
-                            borderRadius: '8px',
-                            color: '#999',
-                            fontSize: '12px',
-                            border: '1px dashed #ddd'
-                          }}>
+                          <div className={styles.imageError}>
                             이미지를 불러올 수 없습니다.
                           </div>
                         )}
