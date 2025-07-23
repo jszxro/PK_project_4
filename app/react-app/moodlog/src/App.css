@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
 * {
   box-sizing: border-box;
 }
@@ -6,17 +8,18 @@ body {
   margin: 0;
   background: #000;
   color: white;
-  font-family: sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   min-width: 768px;
 }
 
 .layout {
   display: flex;
-  min-height: 100vh; 
+  min-height: 100vh;
 }
 
 .main-wrapper {
-  flex: 1; /* 💡 남은 공간 전체 사용 */
+  flex: 1;
+  /* 💡 남은 공간 전체 사용 */
   /* padding: 90px; */
   margin-top: 80px;
   margin-left: 60px;
@@ -27,7 +30,7 @@ body {
 
 
 /* 중앙 영역 공통 */
-.main{
+.main {
   padding: 145px 100px 0px 100px;
   width: 100%;
   max-width: 1500px;
@@ -88,7 +91,8 @@ body {
 
 /* Mood 글자 크기 */
 .tag-bar h3 {
-  font-size: 40px; /* 기존보다 큼 */
+  font-size: 40px;
+  /* 기존보다 큼 */
   margin-bottom: 12px;
   color: #b5d3b0;
 }
@@ -217,13 +221,17 @@ body {
 
 
 .calendar-cell:hover {
-  background-color: #444;        /* 밝게 변화 */
-  transform: scale(1.03);        /* 약간 커지는 효과 */
+  background-color: #444;
+  /* 밝게 변화 */
+  transform: scale(1.03);
+  /* 약간 커지는 효과 */
 }
 
 .calendar-cell:active {
-  background-color: #666;        /* 눌렀을 때 진해짐 */
-  transform: scale(0.98);        /* 눌리는 느낌 */
+  background-color: #666;
+  /* 눌렀을 때 진해짐 */
+  transform: scale(0.98);
+  /* 눌리는 느낌 */
 }
 
 
@@ -236,9 +244,12 @@ body {
   /* margin: 60px 0 20px 0; */
   color: #a8c3a8;
 }
+
 .user-recommend-title {
-  margin-top: 50px; /* 원하는 만큼 조절 */
+  margin-top: 50px;
+  /* 원하는 만큼 조절 */
 }
+
 /* 사용자 추천 영역 */
 .user-recommend {
   background: #111;
@@ -298,7 +309,8 @@ body {
   gap: 20px;
   margin-bottom: 20px;
   flex-wrap: wrap;
-  align-items: stretch; /* ✅ 박스 높이 일치 */
+  align-items: stretch;
+  /* ✅ 박스 높이 일치 */
 }
 
 .archive-box {
@@ -330,14 +342,17 @@ body {
   /* text-align: center; */
   color: #888;
 }
+
 .timeline-fixed {
   height: 440px;
   box-sizing: border-box;
   padding: 16px;
-  margin-top: 10px; /* ✅ 위 간격 벌리기 */
+  margin-top: 10px;
+  /* ✅ 위 간격 벌리기 */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* 내부 내용 위 정렬 */
+  justify-content: flex-start;
+  /* 내부 내용 위 정렬 */
 }
 
 /* 중앙 컨텐츠 전체 */
@@ -395,7 +410,7 @@ body {
   font-size: 15px;
   cursor: pointer;
   transition: all 0.2s;
-  margin:4px;
+  margin: 4px;
 }
 
 .tag-btn.active {
