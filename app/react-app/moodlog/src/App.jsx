@@ -8,6 +8,7 @@ import ArchivePage from './pages/ArchivePage';
 import MomentsPage from './pages/MomentsPage';
 // import DiaryPage from './pages/DiaryPage';
 import MomentDetail from './components/MomentDetail';
+import ModifyProfile from './pages/ModifyProfile';
 
 import './App.css';
 
@@ -24,6 +25,7 @@ function App() {
             <Route path="/archive" element={<ArchivePage />} />
             <Route path="/moments" element={<MomentsPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="/moments/:postId" element={<MomentDetail />} />
+            <Route path="/modifyprofile" element={<ModifyProfile />} />
             {/* <Route path="/diary" element={<DiaryPage />} /> */}
           </Route>
         </Routes>

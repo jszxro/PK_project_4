@@ -42,7 +42,9 @@ function TopBar({ onLoginClick }) {
       {userInfo ? (
         <div className="profile-area" ref={dropdownRef}>
           <div className="profile-circle" onClick={toggleDropdown}>
-            {userInfo.nickname[0] || 'U'}
+            {userInfo.profile ?
+              <img src={userInfo.profile} alt="프로필" className="profile-circle" /> : userInfo.nickname[0] || 'U'
+            }
           </div>
 
           {dropdownOpen && (
@@ -52,6 +54,12 @@ function TopBar({ onLoginClick }) {
                 setDropdownOpen(false);
               }}>
                 마이페이지
+              </div>
+              <div className="dropdown-item" onClick={() => {
+                navigate('/modifyprofile');         // ✅ 마이페이지
+                setDropdownOpen(false);
+              }}>
+                프로필수정
               </div>
               <div className="dropdown-item" onClick={() => {
                 navigate('/');                // ✅ 홈

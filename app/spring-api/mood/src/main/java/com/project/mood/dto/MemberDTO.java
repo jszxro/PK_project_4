@@ -10,4 +10,5 @@ public class MemberDTO {
     private String userPw;
     private String nickname;
     private String userEmail;
+    private String profile;
 }
