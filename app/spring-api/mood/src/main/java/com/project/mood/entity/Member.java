@@ -39,6 +39,9 @@ public class Member {
     @Column(name = "ROLE")
     private String role;
 
+    @Column(name = "PROFILE")
+    private String profile;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now(); // 현재시간으로 설정
