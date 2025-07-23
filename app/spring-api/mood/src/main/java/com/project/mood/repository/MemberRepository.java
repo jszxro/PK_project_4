@@ -15,4 +15,10 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
     @Query(value = "SELECT * FROM MEMBER WHERE USER_ID = :userId AND ROWNUM = 1", nativeQuery = true)
     Member findOneByUserId(@Param("userId") String userId);
+
+    // 아이디찾기
+    Optional<Member> findByUserEmail(String userEmail);
+
+    // 비밀번호찾기
+    Optional<Member> findByUserIdAndUserEmail(String userId, String userEmail);
 }

@@ -1,18 +1,29 @@
 // src/components/FindPwModal.jsx
 import React, { useState } from 'react';
+import axios from 'axios';
 import styles from '../assets/css/LoginModal.module.css';
 
 function FindPwModal({ onClose }) {
   const [userId, setUserId] = useState('');
   const [email, setEmail] = useState('');
-  const [result, setResult] = useState('');
 
   const handleFindPw = async () => {
-    // 예시 검증 로직
-    if (userId === 'haribo123' && email === 'test@example.com') {
-      setResult('등록된 이메일로 임시 비밀번호를 발송했습니다.');
-    } else {
-      setResult('입력한 정보가 일치하지 않습니다.');
+    try {
+      const res = await axios.post('/api/auth/find-password', {
+        userId,
+        email
+      });
+
+      if (res.status === 200) {
+        alert(`임시 비밀번호: ${res.data.tempPassword}`);
+      }
+    } catch (err) {
+      if (err.response && err.response.data) {
+        alert(err.response.data);
+      } else {
+        alert("비밀번호 찾기 실패");
+      }
+      console.error("에러:", err);
     }
   };
 
@@ -37,7 +48,6 @@ function FindPwModal({ onClose }) {
         <button className={styles.modalLoginBtn} onClick={handleFindPw}>
           비밀번호 찾기
         </button>
-        {result && <p style={{ marginTop: '10px' }}>{result}</p>}
       </div>
     </div>
   );
