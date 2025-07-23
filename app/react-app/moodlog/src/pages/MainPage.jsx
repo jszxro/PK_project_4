@@ -1,30 +1,47 @@
-// MainPage.jsx
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, useContext } from 'react';
 import LoginModal from '../components/LoginModal';
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
+import styles from '../assets/css/Home.module.css'; // ✅ CSS 모듈 import
 
 function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const { userInfo } = useContext(UserContext);
 
-  // ✅ 추가됨: 전체 게시글 상태와 페이지네이션 상태
+  // 게시글 관련 상태
   const [allPosts, setAllPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5;
 
-  // ✅ 추가됨: 현재 페이지에 표시할 게시글 범위 계산
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = allPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(allPosts.length / postsPerPage);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const totalPages = Math.ceil(allPosts.length / postsPerPage); // ✅ 추가됨
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);   // ✅ 추가됨
+  // ✅ 태그 및 노래 상태
+  const [selectedTag, setSelectedTag] = useState('행복');
+  const [emojiList, setEmojiList] = useState([]);
+  const [songs, setSongs] = useState([]);
 
-  // ✅ 기존과 동일한 axios 요청, 단 상태만 latestPosts → allPosts 로 수정
+  // ✅ 이모지 목록 불러오기
+  useEffect(() => {
+    axios.get('/api/emojis')
+      .then(response => setEmojiList(response.data))
+      .catch(error => console.error('이모지 목록 불러오기 실패:', error));
+  }, []);
+
+  // ✅ 선택한 태그에 따라 노래 목록 불러오기
+  useEffect(() => {
+    axios.get(`/api/songs/${encodeURIComponent(selectedTag)}`)
+      .then(res => setSongs(res.data))
+      .catch(err => console.error('노래 목록 불러오기 실패:', err));
+  }, [selectedTag]);
+
+  // 게시글 불러오기
   useEffect(() => {
     axios.get('/api/posts')
       .then(res => {
@@ -39,7 +56,7 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
           likes: post.likes,
           time: post.createdAt
         }));
-        setAllPosts(mappedPosts); // ✅ 수정됨
+        setAllPosts(mappedPosts);
       })
       .catch(err => console.error('최신 게시글 가져오기 실패:', err));
   }, []);
@@ -51,17 +68,15 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
           {/* 왼쪽: Moments */}
           <div className="main-left">
             <h3>Moments</h3>
-            {currentPosts.length > 0 ? ( // ✅ latestPosts → currentPosts 로 변경
+            {currentPosts.length > 0 ? (
               currentPosts.map(post => (
                 <div key={post.id} className="moment-card" onClick={() => navigate('/moments')}>
                   <img src={post.thumbnail} alt="썸네일" className="moment-thumbnail" />
-
                   <div className="moment-meta">
                     <span className="moment-author">작성자: {post.author}</span>
                     <span className="moment-tag">#{post.tag}</span>
                     <span className="moment-time">{new Date(post.time).toLocaleDateString()}</span>
                   </div>
-
                   <div className="moment-content">{post.content}</div>
                 </div>
               ))
@@ -69,7 +84,7 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
               <p>게시글이 없습니다.</p>
             )}
 
-            {/* ✅ 추가됨: 페이지네이션 UI */}
+            {/* 페이지네이션 */}
             {totalPages > 1 && (
               <div className="pagination">
                 {Array.from({ length: totalPages }, (_, idx) => (
@@ -87,8 +102,39 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
 
           {/* 오른쪽: Mood Picks */}
           <div className="main-right">
-            <h3>{isLoggedIn ? '나만의 Mood Picks' : 'Mood Picks'}</h3>
+            <h3>{isLoggedIn ? '나만의 Playlist' : 'Playlist'}</h3>
             <div className="empty-block" />
+
+            {/* ✅ 태그 버튼 + 노래 박스 */}
+            <div>
+              <div>
+            {emojiList.map(({ emojiId, tag }) => (
+                <button
+                  key={emojiId}
+                  className={
+                    selectedTag === tag
+                      ? `${styles.tagButton} ${styles.tagButtonActive}`
+                      : styles.tagButton
+                  }
+                  onClick={() => setSelectedTag(tag)}
+                >
+                  #{emojiId}
+                </button>
+                ))}
+              </div>
+
+              <div className={styles.songBox}>
+                {songs.length > 0 ? (
+                  songs.map((song, idx) => (
+                    <div key={idx} className={styles.songItem}>
+                      🎵 {song.title} - {song.artist}
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ color: '#aaa' }}>노래가 없습니다.</div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -102,5 +148,5 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
     </div>
   );
 }
-//테스트
+
 export default MainPage;

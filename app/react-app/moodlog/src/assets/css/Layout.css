@@ -1,94 +1,90 @@
-.app-layout {
+/* 전체 레이아웃 */
+.app-container {
   display: flex;
   height: 100vh;
-}
-
-.full-width-line {
-  position: fixed;
-  /* 또는 absolute */
-  top: 135px;
-  /* 원하는 위치 조절 */
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #f5f1f160;
-  z-index: 999;
-}
-
-.full-width-line2 {
-  position: fixed;
-  /* 또는 absolute */
-  top: 205px;
-  /* 원하는 위치 조절 */
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #f80404;
-  z-index: 999;
-}
-
-.page-content {
-  flex: 1;
-  padding: 32px;
-  /* overflow-y: auto; */
+  background-color: #000;
+  color: white;
 }
 
 /* 좌측 사이드바 */
 .sidebar {
   width: 320px;
   background: #000;
-  padding: 30px;
-  /* padding-top: 0px; */
-  border: 2px solid #8A8A8A;
+  padding: 0px;
+  border-right: 2px solid #8A8A8A;
+  flex-shrink: 0;
 }
 
-.right-sidebar {
-  width: 320px;
-  border: 2px solid #8A8A8A;
-  padding: 30px;
+/* 메인 전체 영역 (TopBar + 콘텐츠) */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   height: 100vh;
+  overflow-y: auto;
 }
 
+
+.top-bar {
+  position: fixed;              /* 화면 고정 */
+  top: 0;                       /* 상단 정렬 */
+  left: 320px;                  /* 사이드바 너비만큼 오른쪽으로 밀기 */
+  width: calc(100% - 320px - 16px);    /* 사이드바 제외 전체 너비 */
+  
+  display: flex;                /* 가로 정렬 */
+  justify-content: flex-end;    /* 오른쪽 정렬 */
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px 200px 10px 0px;   /* 위, 오른쪽, 아래 패딩 */
+  background-color:  #000;
+  border-bottom: 2px solid #8A8A8A;
+  z-index: 100;                 /* 다른 요소 위에 위치 */
+}
+
+
+/* 실제 콘텐츠 (양쪽 여백 포함) */
+.content-area {
+  flex: 1;
+  padding: 0 64px 64px 64px;
+  /* 좌우 여백 64px */
+  box-sizing: border-box;
+}
+
+/* 네비게이션 로고 및 문구 */
 .logo {
   color: #A8C3A8;
-  margin-bottom: 0px;
-  margin-left: 10px;
+  margin: 0px;
   text-align: center;
   font-size: 48px;
-  /* 줄임 */
+  margin-top: 20px;
 }
-
 
 .subtitle {
   text-align: center;
-  margin-left: 10px;
   font-size: 12px;
-  line-height: 0;
+  line-height: 1.5;
+  margin: 0px;
 }
 
+/* 네비게이션 */
 .nav {
   list-style: none;
   padding: 0;
   margin-top: 45px;
-  /* 줄임 */
 }
 
 .nav li {
-  margin: 0px 0;
   color: gray;
   cursor: pointer;
   text-align: center;
   font-size: 20px;
-  /* 줄임 */
   border-bottom: 1px solid #444;
   padding: 20px;
-  /* ✅ padding 통일 */
   border-radius: 8px;
-  /* ✅ radius 미리 넣기 */
 }
 
 .nav li.active {
   background: #333;
   color: white;
-  /* padding, border-radius 제거 혹은 동일하게 유지 */
 }
