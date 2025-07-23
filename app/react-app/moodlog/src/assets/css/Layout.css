@@ -1,76 +1,73 @@
 /* 전체 레이아웃 */
-.app-layout {
+.app-container {
   display: flex;
   height: 100vh;
-  /* overflow: hidden; 중앙만 스크롤하도록 제한 */
+  background-color: #000;
+  color: white;
 }
 
-/* 좌측 사이드바 고정 */
-/* .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
+/* 좌측 사이드바 */
+.sidebar {
   width: 320px;
-  height: 100vh;
   background: #000;
-  padding: 5px;
-  border: 2px solid #8A8A8A;
+  padding: 0px;
+  border-right: 2px solid #8A8A8A;
   flex-shrink: 0;
-  overflow-y: auto;
-  z-index: 100;
-} */
-
-/* 우측 사이드바 고정 */
-.right-sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 320px;
-  height: 100vh;
-  border: 2px solid #8A8A8A;
-  padding: 30px;
-  background: #000;
-  overflow-y: auto;
-  z-index: 100;
 }
 
-/* 중앙 콘텐츠 영역 (스크롤 허용) */
-.page-content {
+/* 메인 전체 영역 (TopBar + 콘텐츠) */
+.main-container {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   height: 100vh;
   overflow-y: auto;
-  padding: 32px;
-  padding-right: 352px;  /* 오른쪽 사이드바 공간 확보 (320px + 32px padding) */
-  margin-left: 320px;     /* 왼쪽 고정 사이드바 공간 확보 */
 }
 
 
-.full-width-line2 {
-  position: fixed;
-  top: 205px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #f80404;
-  z-index: 999;
+.top-bar {
+  position: fixed;              /* 화면 고정 */
+  top: 0;                       /* 상단 정렬 */
+  left: 320px;                  /* 사이드바 너비만큼 오른쪽으로 밀기 */
+  width: calc(100% - 320px - 16px);    /* 사이드바 제외 전체 너비 */
+  
+  display: flex;                /* 가로 정렬 */
+  justify-content: flex-end;    /* 오른쪽 정렬 */
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px 200px 10px 0px;   /* 위, 오른쪽, 아래 패딩 */
+  background-color:  #000;
+  border-bottom: 2px solid #8A8A8A;
+  z-index: 100;                 /* 다른 요소 위에 위치 */
 }
 
-/* 로고 및 사이드바 내부 요소들 */
+
+/* 실제 콘텐츠 (양쪽 여백 포함) */
+.content-area {
+  flex: 1;
+  padding: 0 64px 64px 64px;
+  /* 좌우 여백 64px */
+  box-sizing: border-box;
+}
+
+/* 네비게이션 로고 및 문구 */
 .logo {
   color: #A8C3A8;
-  margin-bottom: 0px;
-  margin-left: 10px;
+  margin: 0px;
   text-align: center;
   font-size: 48px;
+  margin-top: 20px;
 }
 
 .subtitle {
   text-align: center;
-  margin-left: 10px;
   font-size: 12px;
-  line-height: 0;
+  line-height: 1.5;
+  margin: 0px;
 }
 
+/* 네비게이션 */
 .nav {
   list-style: none;
   padding: 0;
@@ -78,7 +75,6 @@
 }
 
 .nav li {
-  margin: 0;
   color: gray;
   cursor: pointer;
   text-align: center;
