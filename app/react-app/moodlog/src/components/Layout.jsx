@@ -9,14 +9,13 @@ function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
-
-  const { userInfo } = useContext(UserContext) || {};  // ✅ 여기를 안전하게
+  const { userInfo } = useContext(UserContext) || {};
 
   const hideTopBarRoutes = [];
   const hideTopBar = hideTopBarRoutes.includes(location.pathname);
 
   return (
-    <div className="app-layout">
+    <div className="app-container">
       {/* <div className="full-width-line"></div> 실선 */}
       {/* <div className="full-width-line2"></div> */}
       <div className="sidebar">  {/*좌측*/}
@@ -25,7 +24,6 @@ function Layout() {
 
         <ul className="nav">
           <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
-          <li onClick={() => navigate('/playlist')} className={location.pathname === '/playlist' ? 'active' : ''}>Playlist</li>
           <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
 
           {/* 조건부 렌더링 - 안전하게 */}
@@ -38,13 +36,16 @@ function Layout() {
         </ul>
       </div>
 
-      <div className="page-content"> {/* 중앙 */}
-        <Outlet />
-      </div>
-
-      <div className="right-sidebar"> {/* 우측 */}
+      {/* 우측 메인 영역 (스크롤 가능) */}
+      <div className="main-container">
+        {/* 상단 고정 TopBar */}
         {!hideTopBar && <TopBar onLoginClick={() => setShowModal(true)} />}
         {showModal && <LoginModal onClose={() => setShowModal(false)} />}
+
+        {/* 실제 콘텐츠 영역 (여백 포함) */}
+        <div className="content-area">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

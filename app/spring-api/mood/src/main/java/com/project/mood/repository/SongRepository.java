@@ -15,7 +15,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     @Query(value = "SELECT * FROM (\r\n" + //
             "    SELECT * FROM SONG WHERE TAG = ? ORDER BY DBMS_RANDOM.VALUE\r\n" + //
             ") WHERE ROWNUM <= 10", nativeQuery = true)
-    // SELECT * FROM SONG WHERE TAG = ? ORDER BY DBMS_RANDOM.VALUE FETCH FIRST 3
+    // SELECT * FROM SONG WHERE TAG = ? ORDER BY DBMS_RANDOM.VALUE FETCH FIRST 10
     // ROWS ONLY 11g이상이면 이거씀
     List<Song> findRandomSongsByTag(@Param("tag") String tag);
 }

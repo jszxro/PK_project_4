@@ -48,10 +48,16 @@ body {
 }
 
 .moment-card {
-  background: #333;
-  border-radius: 8px;
+  background: #222;
+  border-radius: 12px;
   margin-bottom: 20px;
   padding: 50px;
+  background-color: #222;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  max-width: none;
 }
 
 .moment-card img {
@@ -79,10 +85,10 @@ body {
   width: 300px;
 }
 
-.empty-block {
+/* .empty-block {
   height: 300px;
   background: transparent;
-}
+} */
 
 .tag-bar {
   margin-bottom: 40px;
@@ -437,15 +443,14 @@ body {
   max-width: 1000px;
 }
 
-.moment-mood-container {
-  display: flex;
-  gap: 10px;
-  width: 100%;
+.main-left {
+  flex: 2px;
+  max-width: 60%;  /* ✅ 기존 45% → 더 넓게 */
 }
 
-.main-left,
 .main-right {
-  flex: 1;
+  max-width: 40%;  /* ✅ 좁히기 */
+  flex: 1px;
 }
 
 .main-right h3 {
@@ -453,35 +458,21 @@ body {
   margin-top: 3px;
 }
 
-.empty-block {
+/* .empty-block {
   background: #222;
   padding: 40px;
   border-radius: 8px;
   color: white;
-}
+} */
 
 /* App.css 또는 MainPage.module.css */
 
 .moment-mood-container {
   display: flex;
-  gap: 40px;
-  margin-top: 40px;
-  justify-content: center;
-}
-
-.main-left,
-.main-right {
-  width: 45%;
-}
-
-.moment-card {
-  background-color: #333;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-  color: white;
-  cursor: pointer;
-  transition: background 0.2s;
+  gap: 30px;
+  margin-top: 10px;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .moment-card:hover {
@@ -505,12 +496,6 @@ body {
 .moment-content {
   font-size: 16px;
   color: white;
-}
-
-.empty-block {
-  background-color: #222;
-  height: 400px;
-  border-radius: 12px;
 }
 
 /* App.css 또는 연결된 CSS 파일에 추가 */
