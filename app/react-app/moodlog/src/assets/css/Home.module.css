@@ -141,3 +141,55 @@
   font-weight: bold;
   text-align: center;
 }
+
+.moodContainer {
+  padding: 20px;
+  border-bottom: 1px solid #333;
+  margin-bottom: 20px;
+}
+
+.moodTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #f0f0f0;
+  margin-bottom: 10px;
+}
+
+.nickname {
+  color: #fcbf49;
+}
+
+.moodBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.moodBtn {
+  font-size: 20px;
+  padding: 6px 10px;
+  background-color: #222;
+  border: 1px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  transition: 0.2s;
+}
+
+.activeMood {
+  background-color: #fcbf49;
+  color: black;
+  border-color: #fcbf49;
+}
+
+.recommendMsg {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+
+.moodSub {
+  font-size: 0.95rem;
+  color: #aaa;
+}

@@ -16,8 +16,6 @@ function Layout() {
 
   return (
     <div className="app-container">
-      {/* <div className="full-width-line"></div> 실선 */}
-      {/* <div className="full-width-line2"></div> */}
       <div className="sidebar">  {/*좌측*/}
         <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
         <p className="subtitle">당신의 감정을 이해하는 첫 번째 플레이리스트</p>
@@ -30,13 +28,11 @@ function Layout() {
           {userInfo ? (
             <>
               <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
-              {/* <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li> */}
             </>
           ) : null}
         </ul>
       </div>
 
-      {/* 우측 메인 영역 (스크롤 가능) */}
       <div className="main-container">
         {/* 상단 고정 TopBar */}
         {!hideTopBar && <TopBar onLoginClick={() => setShowModal(true)} />}
