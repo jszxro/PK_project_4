@@ -15,6 +15,7 @@ public interface PostRepository extends JpaRepository<Post, String> {
                 SELECT
                     p.POST_ID AS postId,
                     m.NICKNAME AS author,
+                    p.USER_KEY AS userKey,
                     p.TITLE AS title,
                     p.CONTENT AS content,
                     p.URL AS url,
@@ -26,7 +27,7 @@ public interface PostRepository extends JpaRepository<Post, String> {
                 JOIN MEMBER m ON p.USER_KEY = m.USER_KEY
                 LEFT JOIN REACTION r ON p.POST_ID = r.POST_ID AND r.REACTION_TYPE = 1
                 GROUP BY
-                    p.POST_ID, m.NICKNAME, p.TITLE, p.CONTENT, p.URL, p.IMG_URL, p.EMOJI_ID, p.CREATED_AT
+                    p.POST_ID, m.NICKNAME, p.USER_KEY, p.TITLE, p.CONTENT, p.URL, p.IMG_URL, p.EMOJI_ID, p.CREATED_AT
                 ORDER BY p.CREATED_AT DESC
             """, nativeQuery = true)
     List<PostSummaryDTO> findPostSummaries();

@@ -39,6 +39,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
         const mappedPosts = res.data.map(post => ({
           id: post.postId,
           author: post.author,
+          userKey: post.userKey,
           tag: post.emojiId,
           content_title: post.title,
           content: post.content,
@@ -89,9 +90,11 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
 
     axios.get('/api/posts')
       .then(res => {
+        console.log("백엔드 응답:", res.data);
         const mappedPosts = res.data.map(post => ({
           id: post.postId,
           author: post.author,
+          userKey: post.userKey,
           tag: post.emojiId,
           content_title: post.title,
           content: post.content,
@@ -172,6 +175,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                       src={post.thumbnail}
                       onClick={() => {
                         console.log('Clicked post:', post);
+
                         navigate(`/moments/${post.id}`, { state: { post } });
                       }}
                       alt="유튜브 썸네일"

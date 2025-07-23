@@ -136,18 +136,18 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
             {/* ✅ 태그 버튼 + 노래 박스 */}
             <div>
               <div>
-            {emojiList.map(({ emojiId, tag }) => (
-                <button
-                  key={emojiId}
-                  className={
-                    selectedTag === tag
-                      ? `${styles.tagButton} ${styles.tagButtonActive}`
-                      : styles.tagButton
-                  }
-                  onClick={() => setSelectedTag(tag)}
-                >
-                  #{emojiId}
-                </button>
+                {emojiList.map(({ emojiId, tag }) => (
+                  <button
+                    key={emojiId}
+                    className={
+                      selectedTag === tag
+                        ? `${styles.tagButton} ${styles.tagButtonActive}`
+                        : styles.tagButton
+                    }
+                    onClick={() => setSelectedTag(tag)}
+                  >
+                    #{emojiId}
+                  </button>
                 ))}
               </div>
 
