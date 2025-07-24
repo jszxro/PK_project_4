@@ -18,6 +18,8 @@ function DiaryDetail() {
   const [imagePreview, setImagePreview] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingDiary, setEditingDiary] = useState(null);
+  const [hoveredEmojiDesc, setHoveredEmojiDesc] = useState('');
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (location.state?.selectedDate) {
