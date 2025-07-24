@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MoodApplication<mood>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.project.mood.MoodApplication",
+            "projectName": "mood",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

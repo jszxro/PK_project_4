@@ -4,24 +4,24 @@ import com.project.mood.entity.Member;
 import com.project.mood.dto.MemberDTO;
 import com.project.mood.repository.MemberRepository;
 import com.project.mood.service.MemberService;
+import com.project.mood.security.JwtUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import com.project.mood.security.JwtUtil; // JwtUtil이 이 경로에 있다고 가정
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseCookie;
-
-import java.util.Collections;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +31,9 @@ public class MemberController {
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody MemberDTO dto) {
@@ -38,10 +41,10 @@ public class MemberController {
         return ResponseEntity.ok("회원가입 성공");
     }
 
-    // 중복회원확인
+    // 아이디 중복 체크
     @GetMapping("/check-id")
     public ResponseEntity<Map<String, Member>> checkId(@RequestParam("userId") String userId) {
-        Member exists = memberRepository.findOneByUserId(userId); // JPA 메서드
+        Member exists = memberRepository.findOneByUserId(userId);
         return ResponseEntity.ok(Collections.singletonMap("exists", exists));
     }
 
@@ -51,19 +54,21 @@ public class MemberController {
         boolean result = memberService.signin(dto.getUserId(), dto.getUserPw());
 
         if (result) {
-            // 1. JWT 생성
-            String token = jwtUtil.createToken(dto.getUserId());
+            // 1. userKey를 조회
+            Member member = memberRepository.findOneByUserId(dto.getUserId());
+            String userKey = member.getUserKey();
 
-            // 2. HttpOnly 쿠키로 생성
+            // 2. userKey를 토큰으로 생성
+            String token = jwtUtil.createToken(userKey);
+
+            // 3. 쿠키에 담아 응답
             ResponseCookie cookie = ResponseCookie.from("signin_info", token)
                     .httpOnly(true)
-                    .secure(false) // HTTPS 환경에서는 true
+                    .secure(false)
                     .path("/")
-                    // .maxAge(60 * 60) // 1시간
                     .sameSite("Lax")
                     .build();
 
-            // 3. 쿠키 포함 응답
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, cookie.toString())
                     .body("로그인 성공");
@@ -72,7 +77,7 @@ public class MemberController {
         }
     }
 
-    // 회원정보 가져오기
+    // 회원정보 조회
     @GetMapping("/user-info")
     public ResponseEntity<?> getUserInfo(@CookieValue(name = "signin_info", required = false) String token) {
         if (token == null) {
@@ -80,12 +85,15 @@ public class MemberController {
         }
 
         try {
-            String userId = jwtUtil.getUsername(token);
-            Member member = memberRepository.findOneByUserId(userId);
+            String decodedToken = URLDecoder.decode(token, StandardCharsets.UTF_8);
+            String userKey = jwtUtil.getUsername(decodedToken);
+
+            Member member = memberRepository.findById(userKey).orElse(null);
             if (member == null) {
                 return ResponseEntity.status(404).body("User not found");
             }
-            return ResponseEntity.ok(member); // Member 객체 전체 반환 (JSON으로 직렬화됨)
+
+            return ResponseEntity.ok(member);
         } catch (Exception e) {
             return ResponseEntity.status(400).body("Invalid token");
         }
@@ -94,28 +102,23 @@ public class MemberController {
     // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
-        // 세션 제거
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
 
-        // 쿠키 제거
         ResponseCookie cookie = ResponseCookie.from("signin_info", null)
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
                 .maxAge(0)
-                .sameSite("None")
+                .sameSite("Lax")
                 .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body("로그아웃 성공");
     }
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
 
     // 프로필 수정
     @PutMapping("/members/update-profile")
@@ -128,10 +131,12 @@ public class MemberController {
         }
 
         try {
-            String userId = jwtUtil.getUsername(token);
-            Member member = memberRepository.findOneByUserId(userId);
-            if (member == null)
+            String userKey = jwtUtil.getUsername(token);
+            Member member = memberRepository.findById(userKey).orElse(null);
+
+            if (member == null) {
                 return ResponseEntity.status(404).body("사용자 없음");
+            }
 
             member.setNickname(dto.getNickname());
             member.setUserEmail(dto.getUserEmail());
