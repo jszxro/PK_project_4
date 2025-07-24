@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import LoginModal from '../components/LoginModal';
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
-import styles from '../assets/css/Home.module.css'; // ✅ CSS 모듈 import
+import styles from '../assets/css/Home.module.css'; // CSS 모듈 import
 
 function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
@@ -23,23 +23,23 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   useEffect(() => {
-  console.log('[🔍 MainPage] isLoggedIn:', isLoggedIn);
-  console.log('[🔍 MainPage] userInfo:', userInfo);
+    console.log('[🔍 MainPage] isLoggedIn:', isLoggedIn);
+    console.log('[🔍 MainPage] userInfo:', userInfo);
   }, [isLoggedIn, userInfo]);
 
-  // ✅ 태그 및 노래 상태
+  // 태그 및 노래 상태
   const [selectedTag, setSelectedTag] = useState('행복');
   const [emojiList, setEmojiList] = useState([]);
   const [songs, setSongs] = useState([]);
 
-  // ✅ 이모지 목록 불러오기
+  // 이모지 목록 불러오기
   useEffect(() => {
     axios.get('/api/emojis')
       .then(response => setEmojiList(response.data))
       .catch(error => console.error('이모지 목록 불러오기 실패:', error));
   }, []);
 
-  // ✅ 선택한 태그에 따라 노래 목록 불러오기
+  // 선택한 태그에 따라 노래 목록 불러오기
   useEffect(() => {
     axios.get(`/api/songs/${encodeURIComponent(selectedTag)}`)
       .then(res => setSongs(res.data))
@@ -89,16 +89,56 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
               ))}
             </div>
 
-            <p className={styles.moodSub}>이 기분을 기록할까요?</p>
+            <p
+              className={styles.moodSub}
+              onClick={() =>
+                navigate('/diary', {
+                  state: {
+                    selectedTag: selectedTag,              // 감정 태그 전달 (예: 'happy')
+                    selectedDate: new Date().toISOString(), // 오늘 날짜 전달 (옵션)
+                    // fromMain: true                          // 구분용 (필요 시)
+                  }
+                })
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              이 기분을 기록할까요?
+            </p>
           </div>
         )}
         <div className="moment-mood-container">
           {/* 왼쪽: Moments */}
           <div className="main-left">
-            <h3>Moments</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3>Moments</h3>
+              <button
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  color: '#A8C3A8',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem'
+                }}
+                onClick={() => navigate('/moments')}
+              >
+                ➥더보기
+              </button>
+            </div>
             {currentPosts.length > 0 ? (
               currentPosts.map(post => (
-                <div key={post.id} className="moment-card" onClick={() => navigate('/moments')}>
+                <div
+                  key={post.id}
+                  className="moment-card"
+                  onClick={() => {
+                    if (!userInfo) {
+                      alert('로그인이 필요한 기능입니다.');
+                      setShowModal(true);
+                    } else {
+                      navigate(`/moments/${post.id}`, { state: { post } });
+                    }
+                  }}
+                >
                   <img src={post.thumbnail} alt="썸네일" className="moment-thumbnail" />
                   <div className="moment-meta">
                     <span className="moment-author">작성자: {post.author}</span>
@@ -111,29 +151,14 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
             ) : (
               <p>게시글이 없습니다.</p>
             )}
-
-            {/* 페이지네이션 */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                {Array.from({ length: totalPages }, (_, idx) => (
-                  <button
-                    key={idx + 1}
-                    className={`page-btn ${currentPage === idx + 1 ? 'active' : ''}`}
-                    onClick={() => paginate(idx + 1)}
-                  >
-                    {idx + 1}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* 오른쪽: Mood Picks */}
           <div className="main-right">
-            <h3>{userInfo ? '나만의 Playlist' : 'Playlist'}</h3>
+            <h3>{userInfo ? '추천 Playlist' : 'Playlist'}</h3>
             <div className="empty-block" />
 
-            {/* ✅ 태그 버튼 + 노래 박스 */}
+            {/* 태그 버튼 + 노래 박스 */}
             <div>
               <div>
                 {emojiList.map(({ emojiId, tag }) => (
@@ -173,7 +198,7 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
                             whiteSpace: 'nowrap'
                           }}
                         >
-                          ⧉ 복사
+                          ⧉
                         </button>
                       </div>
                     );

@@ -13,11 +13,9 @@ function ArchivePage() {
   const location = useLocation();
   const { userInfo } = useContext(UserContext);
   const [showModal, setShowModal] = useState(false);
-
-  // 새로 추가되는 상태들
   const [dateEmojis, setDateEmojis] = useState({});
   const [diaryList, setDiaryList] = useState([]);
-  const [postList, setPostList] = useState([]); // POST 데이터를 위한 상태 추가
+  const [postList, setPostList] = useState([]);
   const [emojiList, setEmojiList] = useState([]);
   const [selectedDiary, setSelectedDiary] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -64,8 +62,10 @@ function ArchivePage() {
       if (!userKey) return;
 
       try {
-        const response = await axios.get(`/api/posts/user/${userKey}`);
-        setPostList(response.data);
+        const response = await axios.get(`/api/posts`);
+        // 현재 사용자가 작성한 POST만 필터링
+        const userPosts = response.data.filter(post => post.userKey === userKey);
+        setPostList(userPosts);
       } catch (error) {
         console.error('POST 데이터 로드 실패:', error);
       }
@@ -98,6 +98,18 @@ function ArchivePage() {
           setDateEmojis(emojiData);
         })
         .catch(error => console.error('일기 데이터 새로고침 실패:', error));
+
+      // POST 데이터 다시 로드
+      axios.get(`/api/posts`)
+        .then(response => {
+          const userKey = userInfo?.userKey || localStorage.getItem('userKey');
+          if (userKey) {
+            // 현재 사용자가 작성한 POST만 필터링
+            const userPosts = response.data.filter(post => post.userKey === userKey);
+            setPostList(userPosts);
+          }
+        })
+        .catch(error => console.error('POST 데이터 새로고침 실패:', error));
     };
 
     window.addEventListener('focus', handleFocus);
@@ -112,7 +124,7 @@ function ArchivePage() {
     if (location.state?.refreshData) {
       const userKey = userInfo?.userKey || localStorage.getItem('userKey');
       if (userKey) {
-        // 일기 데이터 즉시 새로고침
+        // 일기 새로고침
         axios.get(`/api/diaries/user/${userKey}`)
           .then(response => {
             const diaries = response.data;
@@ -128,6 +140,18 @@ function ArchivePage() {
             setDateEmojis(emojiData);
           })
           .catch(error => console.error('일기 데이터 새로고침 실패:', error));
+
+        // POST 새로고침
+        axios.get(`/api/posts`)
+          .then(response => {
+            const userKey = userInfo?.userKey || localStorage.getItem('userKey');
+            if (userKey) {
+              // 본인 작성한 것만
+              const userPosts = response.data.filter(post => post.userKey === userKey);
+              setPostList(userPosts);
+            }
+          })
+          .catch(error => console.error('POST 데이터 새로고침 실패:', error));
       }
 
       // 상태 초기화
@@ -135,12 +159,10 @@ function ArchivePage() {
     }
   }, [location.state, userInfo, navigate]);
 
-  // selectedDiary가 변경될 때 이미지 로딩 상태 초기화 및 프리로딩
   useEffect(() => {
     setImageLoading(false);
     setImageError(false);
 
-    // 이미지가 있다면 프리로딩
     if (selectedDiary?.imgUrl) {
       const img = new Image();
       const imageUrl = selectedDiary.imgUrl.startsWith('http')
@@ -182,26 +204,11 @@ function ArchivePage() {
     const mostFrequentEmotion = Object.entries(emotionCount)
       .sort((a, b) => b[1] - a[1])[0];
 
-    // 가장 많이 사용한 감정과 동일한 횟수의 감정들 찾기
+    // 최대 감정 & 횟수 (중복 횟수 감정도 적용)
     const maxCount = mostFrequentEmotion ? mostFrequentEmotion[1] : 0;
     const topEmotions = Object.entries(emotionCount)
       .filter(([emoji, count]) => count === maxCount)
       .map(([emoji, count]) => emoji);
-
-    // 첫 번째 일기 날짜부터 오늘까지의 총 일수 계산
-    let totalPeriodDays = 1; // 기본값
-    if (diaryList.length > 0) {
-      const diaryDates = diaryList.map(diary => new Date(diary.createdAt.split('T')[0]));
-      const firstDiaryDate = new Date(Math.min(...diaryDates));
-      const today = new Date();
-
-      // 날짜만 비교하도록 시간 부분 제거
-      firstDiaryDate.setHours(0, 0, 0, 0);
-      today.setHours(0, 0, 0, 0);
-
-      const diffTime = today - firstDiaryDate;
-      totalPeriodDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1은 시작일 포함
-    }
 
     // 현재 달의 총 일수 계산
     const today = new Date();
@@ -221,7 +228,6 @@ function ArchivePage() {
 
   const emotionStats = calculateEmotionStats();
 
-  // 이미지 로딩 핸들러
   const handleImageLoad = () => {
     setImageLoading(false);
     setImageError(false);
@@ -238,7 +244,61 @@ function ArchivePage() {
     setImageError(false);
   };
 
-  return (
+  // 다이어리 수정
+  const handleEditDiary = (diary) => {
+    navigate('/diary', {
+      state: {
+        editingDiary: diary,
+        selectedDate: diary.createdAt,
+        fromArchive: true
+      }
+    });
+  };
+
+  // 다이어리 삭제
+  const handleDeleteDiary = async (diaryId) => {
+    // console.log('삭제하려는 다이어리 ID:', diaryId);
+    // console.log('선택된 다이어리 데이터:', selectedDiary);
+
+    if (!window.confirm('정말로 이 일기를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`/api/diaries/${diaryId}`);
+
+      // 삭제 성공 -> 새로고침
+      const userKey = userInfo?.userKey || localStorage.getItem('userKey');
+      if (userKey) {
+        const response = await axios.get(`/api/diaries/user/${userKey}`);
+        const diaries = response.data;
+        setDiaryList(diaries);
+
+        // 날짜별 이모지 데이터 업데이트
+        const emojiData = {};
+        diaries.forEach(diary => {
+          if (diary.createdAt && diary.emoji) {
+            const dateKey = diary.createdAt.split('T')[0];
+            emojiData[dateKey] = diary.emoji;
+          }
+        });
+        setDateEmojis(emojiData);
+
+        // 선택된 다이어리 초기화
+        setSelectedDiary(null);
+      }
+
+      alert('일기가 삭제되었습니다.');
+
+    } catch (error) {
+      console.error('일기 삭제 실패:', error);
+      if (error.response?.status === 404) {
+        alert('삭제하려는 일기를 찾을 수 없습니다.');
+      } else {
+        alert('일기 삭제에 실패했습니다. 다시 시도해주세요.');
+      }
+    }
+  }; return (
     <div className="layout">
       {/* 좌측 사이드바 */}
 
@@ -248,8 +308,8 @@ function ArchivePage() {
         {/* 프로필 요약 */}
         <div className={styles.profileSummary}>
           <div className={styles.profile}>
-            {userInfo?.profileImage ? (
-              <img src={userInfo.profileImage} alt="프로필" />
+            {userInfo?.profile ? (
+              <img src={userInfo.profile} alt="프로필" />
             ) : (
               <div className={styles.profilePlaceholder}>
                 {userInfo?.nickname ? userInfo.nickname.charAt(0).toUpperCase() : '😊'}
@@ -258,11 +318,11 @@ function ArchivePage() {
           </div>
           <div className={styles.profileText}>
             <h3>{userInfo?.nickname || '사용자'}님!</h3>
-            {/* <p>Post 작성: {diaryList.length}개, 댓글 작성: 0개</p> */}
+            <p>Post 작성: {postList.length}개, 댓글 작성: 0개</p>
           </div>
         </div>
 
-        {/* 감정 통계 요약 */}
+        {/* 감정 통계 */}
         <div className={styles.emotionContainer}>
           <div className={styles.emotionBoxWrapper}>
             {/* 감정 통계 제목 */}
@@ -301,8 +361,8 @@ function ArchivePage() {
               <span></span>
             </div>
             <div className={styles.emotionBox}>
-              <p>📌 Moments 작성: {diaryList.length}개</p>
-              <p>💬 남긴 댓글: {postList.length}개</p>
+              <p>📌 Post 작성: {postList.length}개</p>
+              <p>💬 남긴 댓글: 0개</p>
               <p>📂 기록한 감정: {Object.keys(emotionStats.emotionCount).length}종류</p>
 
             </div>
@@ -354,6 +414,20 @@ function ArchivePage() {
                   <div className={diaryStyles.diaryTitle}>
                     {selectedDiary.emoji} {selectedDiary.createdAt?.split('T')[0]}
                   </div>
+                  <div className={styles.diaryActions}>
+                    <button
+                      className={styles.editBtn}
+                      onClick={() => handleEditDiary(selectedDiary)}
+                    >
+                      ✏️수정하기
+                    </button>
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => handleDeleteDiary(selectedDiary.diaryId)}
+                    >
+                      🗑️삭제하기
+                    </button>
+                  </div>
                   <hr className={diaryStyles.titleDivider} />
                   {selectedDiary.imgUrl && (
                     <>
@@ -369,7 +443,7 @@ function ArchivePage() {
                           </div>
                         )}
                         <img
-                          className={diaryStyles.diaryImage}
+                          className={`${styles.diaryImage} ${imageLoading ? styles.loading : ''} ${imageError ? styles.error : ''}`}
                           src={(() => {
                             const imageUrl = selectedDiary.imgUrl.startsWith('http')
                               ? selectedDiary.imgUrl
@@ -380,17 +454,6 @@ function ArchivePage() {
                           onLoadStart={handleImageLoadStart}
                           onLoad={handleImageLoad}
                           onError={handleImageError}
-                          style={{
-                            display: imageError ? 'none' : 'block',
-                            opacity: imageLoading ? 0.3 : 1,
-                            transition: 'opacity 0.3s ease',
-                            maxWidth: '280px',
-                            maxHeight: '180px',
-                            width: 'auto',
-                            height: 'auto',
-                            objectFit: 'cover',
-                            borderRadius: '8px'
-                          }}
                         />
                       </div>
                       <hr className={diaryStyles.titleDivider} />
