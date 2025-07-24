@@ -6,7 +6,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import LoginModal from '../components/LoginModal';
 import FeelingCommentModal from '../components/FeelingCommentModal';
-// import PostDetailModal from '../components/PostDetailModal';
 import axios from 'axios';
 
 const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
@@ -22,6 +21,9 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const [selectedEmoji, setSelectedEmoji] = useState('');
   const [posts, setPosts] = useState([]);
   const [quote, setQuote] = useState('');
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 5;
 
   useEffect(() => {
     axios.get('/api/quotes')
@@ -61,12 +63,21 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       .catch(error => console.error('이모지 목록 불러오기 실패:', error));
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1); // 💡 태그 바뀔 때 1페이지로 리셋
+  }, [selectedTag]);
+
   const filteredPosts = selectedTag
     ? posts.filter(post => {
       const emoji = emojiList.find(e => e.emojiId === selectedTag);
       return emoji && post.tag.toLowerCase() === emoji.emojiId.toLowerCase();
     })
     : posts;
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
   const sortedByLikes = [...posts].sort((a, b) => b.likes - a.likes).slice(0, 3);
 
@@ -90,7 +101,6 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
 
     axios.get('/api/posts')
       .then(res => {
-        console.log("백엔드 응답:", res.data);
         const mappedPosts = res.data.map(post => ({
           id: post.postId,
           author: post.author,
@@ -152,9 +162,9 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
               </button>
             </div>
 
-            {filteredPosts.length > 0 ? (
+            {currentPosts.length > 0 ? (
               <div className={styles.momentGrid}>
-                {filteredPosts.map(post => (
+                {currentPosts.map(post => (
                   <div key={post.id} className={styles.postCard}>
                     <div className={styles.momentMeta}>
                       <span className={styles.momentAuthor}>작성자: {post.author}</span>
@@ -173,12 +183,8 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <img
                       className={styles.momentThumbnail}
                       src={post.thumbnail}
-                      onClick={() => {
-                        console.log('Clicked post:', post);
-
-                        navigate(`/moments/${post.id}`, { state: { post } });
-                      }}
-                      alt="유튜브 썸네일"
+                      onClick={() => navigate(`/moments/${post.id}`, { state: { post } })}
+                      alt="썸네일"
                     />
                     <div className={styles.momentLink}>
                       🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
@@ -192,6 +198,37 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
               </div>
             ) : (
               <p className={styles.noPosts}>게시글이 없습니다.</p>
+            )}
+
+            {totalPages > 1 && (
+              <div className={styles.pagination}>
+                {/* ◀ 이전 */}
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className={`${styles.pageButton} ${styles.arrowButton}`}
+                >
+                  ◀
+                </button>
+                {Array.from({ length: totalPages }, (_, idx) => (
+                  <button
+                    key={idx + 1}
+                    onClick={() => setCurrentPage(idx + 1)}
+                    className={`${styles.pageButton} ${currentPage === idx + 1 ? styles.activePage : ''}`}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+
+                {/* ▶ 다음 */}
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className={`${styles.pageButton} ${styles.arrowButton}`}
+                >
+                  ▶
+                </button>
+              </div>
             )}
           </div>
 
@@ -241,25 +278,6 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       </div>
 
       {showModal && <LoginModal onClose={() => setShowModal(false)} />}
-      {/* {isDetailModalOpen && selectedPost && (
-        <PostDetailModal
-          post={selectedPost}
-          onClose={() => setIsDetailModalOpen(false)}
-          onReactionChange={(updatedReactionType) => {
-            setPosts(prevPosts => prevPosts.map(p => {
-              if (p.id === selectedPost.id) {
-                const newLikes = updatedReactionType === 1 ? p.likes + 1 : p.likes - 1;
-                return { ...p, likes: newLikes };
-              }
-              return p;
-            }));
-            setSelectedPost(prev => ({
-              ...prev,
-              likes: updatedReactionType === 1 ? prev.likes + 1 : prev.likes - 1
-            }));
-          }}
-        />
-      )} */}
     </div>
   );
 };
