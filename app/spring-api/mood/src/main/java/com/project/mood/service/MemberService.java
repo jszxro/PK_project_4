@@ -5,11 +5,17 @@ import com.project.mood.entity.Member;
 import com.project.mood.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +38,20 @@ public class MemberService {
 
     public boolean signin(String userId, String rawPw) {
         Optional<Member> optionalMember = memberRepository.findByUserId(userId);
+
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            return passwordEncoder.matches(rawPw, member.getUserPw());
+
+            if (passwordEncoder.matches(rawPw, member.getUserPw())) {
+                String userKey = member.getUserKey(); // ✅ userKey 가져오기
+                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userKey, null,
+                        authorities);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                return true;
+            }
         }
+
         return false;
     }
 
