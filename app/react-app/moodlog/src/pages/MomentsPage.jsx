@@ -211,7 +211,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <span className={styles.momentTime}>{post.time}</span>
                     <span
                       className={styles.momentShowAll}
-                      onClick={() => navigate(`/moments/${post.id}`)}
+                      onClick={() => navigate(`/moments/${post.id}`, { state: { post } })}
                     >
                       [전체보기]
                     </span>
