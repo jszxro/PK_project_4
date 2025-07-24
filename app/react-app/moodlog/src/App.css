@@ -31,12 +31,13 @@ body {
 
 /* 중앙 영역 공통 */
 .main {
-  padding: 110px 100px 0px 100px;
+  padding: 0px 100px 0px 100px;
   width: 100%;
   max-width: 1500px;
   margin: 0 auto;
   background: #000;
   overflow-y: auto;
+  margin-top: 135px;
 
 }
 

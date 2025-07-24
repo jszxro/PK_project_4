@@ -124,7 +124,7 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
                   if (userInfo) {
                     navigate('/moments');
                   } else {
-                    alert('더 많은 이야기를 보고 싶다면, 로그인 해주세요😊');
+                    alert('로그인이 필요한 기능입니다.');
                     setShowModal(true);
                   }
                 }}
