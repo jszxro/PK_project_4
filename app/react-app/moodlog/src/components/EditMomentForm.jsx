@@ -18,7 +18,8 @@ const EditMomentForm = ({ post, onSave, onCancel }) => {
 
             await axios.put(`/api/posts/${post.postId || post.id}`, updatedPost);
 
-            if (onSave) onSave();
+            // 수정된 post 정보를 상위에 전달
+            if (onSave) onSave({ ...post, ...updatedPost });
         } catch (error) {
             console.error('게시글 수정 실패:', error);
             alert('수정에 실패했습니다.');
