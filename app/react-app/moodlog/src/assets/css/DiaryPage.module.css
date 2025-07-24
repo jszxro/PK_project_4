@@ -2,7 +2,6 @@
   display: flex;
   justify-content: center;
   width: 100%;
-
 }
 
 .main {
@@ -10,11 +9,11 @@
   max-width: 1000px;
 }
 
-.clo.emojiSection h3,
+.emojiSection h3,
 .contentSection h3,
 .imageSection h3 {
   font-size: 1.3rem;
-  margin-bottom: 15px;
+  /* margin-bottom: 10px; */
   color: #A8C3A8;
 }
 
@@ -26,9 +25,73 @@
   justify-items: center;
 }
 
+/* 기존 이미지 정보 스타일 */
+.imageInfo {
+  margin-top: 15px;
+}
+
+.existingImageBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background-color: #444;
+  border: 2px solid #666;
+  border-radius: 8px;
+  position: relative;
+  max-width: 200px;
+}
+
+.imageIcon {
+  font-size: 1.5rem;
+}
+
+.imageText {
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.imageHint {
+  color: #888;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: block;
+}
+
+.noImageText {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.imageLabel {
+  color: #A8C3A8;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  text-align: center;
+}
+
+/* 기존 .removeImageButton 스타일을 existingImageBox용으로 조정 */
+.existingImageBox .removeImageButton {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* 이미지 업로드 스타일 */
 .imageSection {
-  margin: 20px 0;
+  border-top: 1px solid #888;
 }
 
 .imageUpload {
@@ -134,7 +197,6 @@
   flex-direction: column;
   justify-content: space-between;
 }
-
 
 .diaryTitle {
   font-size: 1.3rem;
@@ -262,6 +324,11 @@
   margin-top: 20px;
 }
 
+.contentSection {
+  margin-bottom: 2rem;
+  /* 아래쪽 여백 */
+}
+
 .cancelButton,
 .saveButton {
   padding: 12px 30px;
@@ -311,4 +378,26 @@
   z-index: 9999;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
   transform: translateY(-50%);
+}
+
+.diaryHeader {
+  text-align: center;
+  margin-bottom: 40px;
+  border-bottom: 1px solid #888;
+  /* 날짜 밑에 선 추가 */
+  /* padding-bottom: 20px; */
+  /* 선과 내용 사이 여백 */
+}
+
+.diaryHeader h2 {
+  font-size: 2rem;
+  /* margin-bottom: 10px; */
+  color: #A8C3A8;
+}
+
+.dateDisplay {
+  font-size: 1.2rem;
+  color: #ccc;
+  margin-bottom: 15px;
+  /* 날짜와 선 사이 여백 */
 }

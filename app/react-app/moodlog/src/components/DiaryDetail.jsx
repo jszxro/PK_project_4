@@ -16,6 +16,8 @@ function DiaryDetail() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [existingImageUrl, setExistingImageUrl] = useState(null);
+  const [imageRemoved, setImageRemoved] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingDiary, setEditingDiary] = useState(null);
   const [hoveredEmojiDesc, setHoveredEmojiDesc] = useState('');
@@ -25,11 +27,10 @@ function DiaryDetail() {
     if (location.state?.selectedDate) {
       setSelectedDate(new Date(location.state.selectedDate));
     } else {
-      // 날짜 없으면 오늘 날짜
       setSelectedDate(new Date());
     }
 
-    // 수정 확인
+    // 수정 모드 확인
     if (location.state?.editingDiary) {
       setIsEditMode(true);
       setEditingDiary(location.state.editingDiary);
@@ -37,7 +38,8 @@ function DiaryDetail() {
       setContent(location.state.editingDiary.content);
 
       if (location.state.editingDiary.imgUrl) {
-        setImagePreview(location.state.editingDiary.imgUrl);
+        setExistingImageUrl(location.state.editingDiary.imgUrl);
+        // 기존 이미지를 미리보기로 표시하지 않음 (새 선택과 구분)
       }
     }
   }, [location.state]);
@@ -45,7 +47,7 @@ function DiaryDetail() {
   useEffect(() => {
     const loadEmojis = async () => {
       try {
-        const response = await axios.get('/api/emojis');
+        const response = await axios.get('http://localhost:8080/api/emojis');
         setEmojiList(response.data);
       } catch (error) {
         console.error('이모지 목록 불러오기 실패:', error);
@@ -63,7 +65,6 @@ function DiaryDetail() {
     }
   }, [location.state, emojiList, isEditMode]);
 
-  // 일기 저장/수정
   const handleSave = async () => {
     if (!selectedEmoji || !content.trim()) {
       alert('감정과 내용을 모두 입력해주세요.');
@@ -79,47 +80,59 @@ function DiaryDetail() {
 
     try {
       const userKey = userInfo.userKey || localStorage.getItem('userKey');
+      let finalImageUrl = null;
 
       if (isEditMode) {
-        // 수정 모드
-        let imgUrl = editingDiary.imgUrl; // 기존 이미지 URL 유지
+        console.log('=== 수정 모드 ===');
+        console.log('새 이미지 선택됨:', !!selectedImage);
+        console.log('기존 이미지 URL:', existingImageUrl);
+        console.log('이미지 제거됨:', imageRemoved);
 
-        // 새 이미지가 선택되었다면 업로드
+        // 이미지 처리 로직
         if (selectedImage) {
-          const formData = new FormData();
-          formData.append('file', selectedImage);
-
+          // 새 이미지가 선택된 경우 업로드
           try {
-            const uploadResponse = await axios.post('/api/upload', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
+            const formData = new FormData();
+            formData.append('image', selectedImage);
+            formData.append('userKey', userKey);
+
+            console.log('이미지 업로드 시작...');
+            const uploadResponse = await axios.post('http://localhost:8080/api/image/upload', formData, {
+              headers: { 'Content-Type': 'multipart/form-data' }
             });
-            imgUrl = uploadResponse.data.url;
+
+            finalImageUrl = uploadResponse.data.imgUrl;
+            console.log('새 이미지 업로드 성공:', finalImageUrl);
           } catch (uploadError) {
             console.error('이미지 업로드 실패:', uploadError);
-            alert('이미지 업로드에 실패했습니다. 기존 이미지로 저장하시겠습니까?');
-            if (!confirm('기존 이미지로 저장하시겠습니까?')) {
-              setIsLoading(false);
-              return;
-            }
+            alert('이미지 업로드에 실패했습니다.');
+            setIsLoading(false);
+            return;
           }
+        } else if (!imageRemoved && existingImageUrl) {
+          // 기존 이미지 유지
+          finalImageUrl = existingImageUrl;
+          console.log('기존 이미지 유지:', finalImageUrl);
+        } else {
+          // 이미지 삭제 (null로 설정)
+          finalImageUrl = null;
+          console.log('이미지 삭제 (null로 설정)');
         }
 
         const updateData = {
           emoji: selectedEmoji,
           content: content,
-          imgUrl: imgUrl
+          imgUrl: finalImageUrl // null일 수도 있음 (이미지 삭제)
         };
 
-        await axios.put(`/api/diaries/${editingDiary.diaryId}`, updateData);
+        console.log('수정 데이터:', updateData);
+        await axios.put(`http://localhost:8080/api/diaries/${editingDiary.diaryId}`, updateData);
         alert('일기가 성공적으로 수정되었습니다!');
       } else {
         // 새 일기 작성 모드
         const dateKey = selectedDate.toISOString().split('T')[0];
 
-        // 해당 날짜에 이미 일기가 있는지 확인
-        const existingResponse = await axios.get(`/api/diaries/user/${userKey}`);
+        const existingResponse = await axios.get(`http://localhost:8080/api/diaries/user/${userKey}`);
         const existingDiary = existingResponse.data.find(diary =>
           diary.createdAt && diary.createdAt.split('T')[0] === dateKey
         );
@@ -130,21 +143,17 @@ function DiaryDetail() {
           return;
         }
 
-        // 새 일기 저장
-        let imgUrl = null;
-
-        // 이미지가 선택되었다면 업로드
+        // 새 이미지 업로드
         if (selectedImage) {
-          const formData = new FormData();
-          formData.append('file', selectedImage);
-
           try {
-            const uploadResponse = await axios.post('/api/upload', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
+            const formData = new FormData();
+            formData.append('image', selectedImage);
+            formData.append('userKey', userKey);
+
+            const uploadResponse = await axios.post('http://localhost:8080/api/image/upload', formData, {
+              headers: { 'Content-Type': 'multipart/form-data' }
             });
-            imgUrl = uploadResponse.data.url;
+            finalImageUrl = uploadResponse.data.imgUrl;
           } catch (uploadError) {
             console.error('이미지 업로드 실패:', uploadError);
             alert('이미지 업로드에 실패했습니다. 이미지 없이 저장하시겠습니까?');
@@ -159,15 +168,14 @@ function DiaryDetail() {
           userKey: userKey,
           emoji: selectedEmoji,
           content: content,
-          selectedDate: selectedDate.toISOString().split('T')[0], // YYYY-MM-DD 형식
-          imgUrl: imgUrl
+          selectedDate: selectedDate.toISOString().split('T')[0],
+          imgUrl: finalImageUrl
         };
 
-        await axios.post('/api/diaries', diaryData);
+        await axios.post('http://localhost:8080/api/diaries', diaryData);
         alert('일기가 성공적으로 저장되었습니다!');
       }
 
-      // Archive 페이지에서 왔다면 돌아가기, 아니면 홈
       if (location.state?.fromArchive) {
         navigate('/archive', { state: { refreshData: true } });
       } else {
@@ -185,6 +193,7 @@ function DiaryDetail() {
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(file);
+      setImageRemoved(false);
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
@@ -196,6 +205,10 @@ function DiaryDetail() {
   const handleRemoveImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
+    if (isEditMode && existingImageUrl) {
+      setExistingImageUrl(null);
+      setImageRemoved(true);
+    }
   };
 
   const handleCancel = () => {
@@ -245,6 +258,18 @@ function DiaryDetail() {
           </div>
         </div>
 
+        {/* 내용 작성 */}
+        <div className={styles.contentSection}>
+          <h3>오늘 하루는 어땠나요?</h3>
+          <textarea
+            className={styles.contentTextarea}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="오늘 있었던 일을 작성하세요"
+            rows={10}
+          />
+        </div>
+
         {/* 이미지 업로드 */}
         <div className={styles.imageSection}>
           <h3>사진 추가 (선택사항)</h3>
@@ -260,31 +285,44 @@ function DiaryDetail() {
               📷 사진 선택
             </label>
 
+            {/* 새로 선택한 이미지 미리보기 */}
             {imagePreview && (
               <div className={styles.imagePreview}>
-                <img src={imagePreview} alt="미리보기" className={styles.previewImage} />
+                <img src={imagePreview} alt="새 이미지 미리보기" className={styles.previewImage} />
                 <button
                   type="button"
                   onClick={handleRemoveImage}
                   className={styles.removeImageButton}
                 >
-                  ✕ 제거
+                  ✕
                 </button>
+                <p className={styles.imageLabel}>새 이미지</p>
               </div>
             )}
-          </div>
-        </div>
 
-        {/* 내용 작성 */}
-        <div className={styles.contentSection}>
-          <h3>오늘 하루는 어땠나요?</h3>
-          <textarea
-            className={styles.contentTextarea}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="오늘 있었던 일을 작성하세요"
-            rows={10}
-          />
+            {/* 기존 이미지 표시 (수정 모드에서만) */}
+            {!imagePreview && existingImageUrl && !imageRemoved && (
+              <div className={styles.imageInfo}>
+                <div className={styles.existingImageBox}>
+                  <span className={styles.imageIcon}>🖼️</span>
+                  <span className={styles.imageText}>기존 사진</span>
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className={styles.removeImageButton}
+                  >
+                    ✕
+                  </button>
+                </div>
+                <small className={styles.imageHint}>새 사진을 선택하면 기존 사진이 교체됩니다</small>
+              </div>
+            )}
+
+            {/* 이미지가 없을 때 */}
+            {!imagePreview && (!existingImageUrl || imageRemoved) && (
+              <p className={styles.noImageText}>선택된 사진이 없습니다</p>
+            )}
+          </div>
         </div>
 
         {/* 버튼 영역 */}
@@ -309,7 +347,7 @@ function DiaryDetail() {
         </div>
       </div>
 
-      {/* 툴팁 출력 */}
+      {/* 툴팁 */}
       {hoveredEmojiDesc && (
         <div
           className={styles.tooltip}
