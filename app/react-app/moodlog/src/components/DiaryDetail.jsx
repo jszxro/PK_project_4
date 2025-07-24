@@ -17,17 +17,18 @@ function DiaryDetail() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  // 페이지 진입 시 전달받은 데이터 처리
+  // ✅ 툴팁 관련 상태
+  const [hoveredEmojiDesc, setHoveredEmojiDesc] = useState('');
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     if (location.state?.selectedDate) {
       setSelectedDate(new Date(location.state.selectedDate));
     } else {
-      // 날짜가 없으면 오늘 날짜로 설정
       setSelectedDate(new Date());
     }
   }, [location.state]);
 
-  // 이모지 목록 로드
   useEffect(() => {
     const loadEmojis = async () => {
       try {
@@ -40,7 +41,6 @@ function DiaryDetail() {
     loadEmojis();
   }, []);
 
-  // 일기 저장
   const handleSave = async () => {
     if (!selectedEmoji || !content.trim()) {
       alert('감정과 내용을 모두 입력해주세요.');
@@ -56,8 +56,6 @@ function DiaryDetail() {
 
     try {
       const dateKey = selectedDate.toISOString().split('T')[0];
-
-      // 해당 날짜에 이미 일기가 있는지 확인
       const userKey = userInfo.userKey || localStorage.getItem('userKey');
       const existingResponse = await axios.get(`/api/diaries/user/${userKey}`);
       const existingDiary = existingResponse.data.find(diary =>
@@ -70,10 +68,7 @@ function DiaryDetail() {
         return;
       }
 
-      // 새 일기 저장
       let imgUrl = null;
-
-      // 이미지가 선택되었다면 업로드
       if (selectedImage) {
         const formData = new FormData();
         formData.append('file', selectedImage);
@@ -96,26 +91,21 @@ function DiaryDetail() {
       }
 
       const diaryData = {
-        userKey: userKey,
+        userKey,
         emoji: selectedEmoji,
-        content: content,
-        selectedDate: selectedDate.toISOString().split('T')[0], // YYYY-MM-DD 형식
-        imgUrl: imgUrl
+        content,
+        selectedDate: dateKey,
+        imgUrl,
       };
 
       await axios.post('/api/diaries', diaryData);
 
       alert('일기가 성공적으로 저장되었습니다!');
-
-      // Archive 페이지에서 왔다면 돌아가기, 아니면 홈으로
       if (location.state?.fromArchive) {
-        navigate('/archive', {
-          state: { refreshData: true }
-        });
+        navigate('/archive', { state: { refreshData: true } });
       } else {
         navigate('/');
       }
-
     } catch (error) {
       console.error('일기 저장 실패:', error);
       alert('일기 저장에 실패했습니다.');
@@ -124,13 +114,10 @@ function DiaryDetail() {
     }
   };
 
-  // 이미지 파일 선택 핸들러
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(file);
-
-      // 이미지 미리보기 생성
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
@@ -139,13 +126,11 @@ function DiaryDetail() {
     }
   };
 
-  // 이미지 제거
   const handleRemoveImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
   };
 
-  // 취소
   const handleCancel = () => {
     if (location.state?.fromArchive) {
       navigate('/archive');
@@ -163,9 +148,7 @@ function DiaryDetail() {
     <div className={styles.diaryContainer}>
       <div className={styles.diaryHeader}>
         <h2>Diary</h2>
-        <div className={styles.dateDisplay}>
-          {formatDate(selectedDate)}
-        </div>
+        <div className={styles.dateDisplay}>{formatDate(selectedDate)}</div>
       </div>
 
       <div className={styles.diaryForm}>
@@ -176,9 +159,16 @@ function DiaryDetail() {
             {emojiList.map((emoji) => (
               <button
                 key={emoji.emojiId}
-                className={`${styles.emojiButton} ${selectedEmoji === emoji.emoji ? styles.selected : ''
-                  }`}
+                className={`${styles.emojiButton} ${selectedEmoji === emoji.emoji ? styles.selected : ''}`}
                 onClick={() => setSelectedEmoji(emoji.emoji)}
+                onMouseEnter={(e) => {
+                  setHoveredEmojiDesc(emoji.description || emoji.tag || '감정');
+                  setTooltipPos({ x: e.clientX, y: e.clientY });
+                }}
+                onMouseMove={(e) => {
+                  setTooltipPos({ x: e.clientX, y: e.clientY });
+                }}
+                onMouseLeave={() => setHoveredEmojiDesc('')}
               >
                 {emoji.emoji}
               </button>
@@ -246,6 +236,16 @@ function DiaryDetail() {
           </button>
         </div>
       </div>
+
+      {/* 툴팁 출력 */}
+      {hoveredEmojiDesc && (
+        <div
+          className={styles.tooltip}
+          style={{ top: tooltipPos.y + 15, left: tooltipPos.x + 15 }}
+        >
+          {hoveredEmojiDesc}
+        </div>
+      )}
     </div>
   );
 }

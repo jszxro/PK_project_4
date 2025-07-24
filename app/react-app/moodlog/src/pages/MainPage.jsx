@@ -95,42 +95,42 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
         <div className="moment-mood-container">
           {/* 왼쪽: Moments */}
           <div className="main-left">
-            <h3>Moments</h3>
-            {currentPosts.length > 0 ? (
-              currentPosts.map(post => (
-                <div key={post.id} className="moment-card" onClick={() => navigate('/moments')}>
-                  <img src={post.thumbnail} alt="썸네일" className="moment-thumbnail" />
-                  <div className="moment-meta">
-                    <span className="moment-author">작성자: {post.author}</span>
-                    <span className="moment-tag">#{post.tag}</span>
-                    <span className="moment-time">{new Date(post.time).toLocaleDateString()}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3>Moments</h3>
+              <button
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  color: '#A8C3A8',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem'
+                }}
+                onClick={() => navigate('/moments')}
+              >
+               ➥더보기
+              </button>
+              </div>
+              {currentPosts.length > 0 ? (
+                currentPosts.map(post => (
+                  <div key={post.id} className="moment-card" onClick={() => navigate('/moments')}>
+                    <img src={post.thumbnail} alt="썸네일" className="moment-thumbnail" />
+                    <div className="moment-meta">
+                      <span className="moment-author">작성자: {post.author}</span>
+                      <span className="moment-tag">#{post.tag}</span>
+                      <span className="moment-time">{new Date(post.time).toLocaleDateString()}</span>
+                    </div>
+                    <div className="moment-content">{post.content}</div>
                   </div>
-                  <div className="moment-content">{post.content}</div>
-                </div>
               ))
             ) : (
               <p>게시글이 없습니다.</p>
-            )}
-
-            {/* 페이지네이션 */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                {Array.from({ length: totalPages }, (_, idx) => (
-                  <button
-                    key={idx + 1}
-                    className={`page-btn ${currentPage === idx + 1 ? 'active' : ''}`}
-                    onClick={() => paginate(idx + 1)}
-                  >
-                    {idx + 1}
-                  </button>
-                ))}
-              </div>
             )}
           </div>
 
           {/* 오른쪽: Mood Picks */}
           <div className="main-right">
-            <h3>{userInfo ? '나만의 Playlist' : 'Playlist'}</h3>
+            <h3>{userInfo ? '추천 Playlist' : 'Playlist'}</h3>
             <div className="empty-block" />
 
             {/* ✅ 태그 버튼 + 노래 박스 */}
