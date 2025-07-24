@@ -40,10 +40,10 @@ function SignupModal({ onClose, onSwitchToLogin }) {
     axios.get(`/api/check-id?userId=${userId}`)
       .then(res => {
         if (res.data.exists) {
-          setIdCheckMessage("❌ 이미 존재하는 아이디입니다.");
+          setIdCheckMessage("이미 존재하는 아이디입니다.");
           setIsIdAvailable(false);
         } else {
-          setIdCheckMessage("✅ 사용 가능한 아이디입니다!");
+          setIdCheckMessage("사용 가능한 아이디입니다!");
           setIsIdAvailable(true);
         }
       })
@@ -67,7 +67,7 @@ function SignupModal({ onClose, onSwitchToLogin }) {
           setShowSuccessPopup(true);
         }
       })
-        .catch(err => {
+      .catch(err => {
         console.error("회원가입 오류:", err);
       });
   }
@@ -97,15 +97,15 @@ function SignupModal({ onClose, onSwitchToLogin }) {
 
         {/* 하단 안내 텍스트 */}
         <p
-        className={styles.bottomText}
-        onClick={() => {
-          onClose();           // 현재 회원가입 모달 닫기
-          onSwitchToLogin();   // 로그인 모달 다시 열기
-        }}
-        style={{ cursor: 'pointer' }}
-      >
-        이미 계정이 있으신가요?
-      </p>
+          className={styles.bottomText}
+          onClick={() => {
+            onClose();           // 현재 회원가입 모달 닫기
+            onSwitchToLogin();   // 로그인 모달 다시 열기
+          }}
+          style={{ cursor: 'pointer' }}
+        >
+          이미 계정이 있으신가요?
+        </p>
       </div>
     </div>
   );

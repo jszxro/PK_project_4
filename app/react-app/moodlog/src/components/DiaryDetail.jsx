@@ -41,6 +41,16 @@ function DiaryDetail() {
     loadEmojis();
   }, []);
 
+  useEffect(() => {
+    if (location.state?.selectedTag && emojiList.length > 0) {
+      const matchedEmoji = emojiList.find(e => e.tag === location.state.selectedTag);
+      if (matchedEmoji) {
+        setSelectedEmoji(matchedEmoji.emoji);
+      }
+    }
+  }, [location.state, emojiList]);
+
+  // 일기 저장
   const handleSave = async () => {
     if (!selectedEmoji || !content.trim()) {
       alert('감정과 내용을 모두 입력해주세요.');
