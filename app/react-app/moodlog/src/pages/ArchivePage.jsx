@@ -375,7 +375,7 @@ function ArchivePage() {
                           </div>
                         )}
                         <img
-                          className={`${diaryStyles.diaryImage} ${styles.diaryImage} ${imageLoading ? styles.loading : ''} ${imageError ? styles.error : ''}`}
+                          className={`${styles.diaryImage} ${imageLoading ? styles.loading : ''} ${imageError ? styles.error : ''}`}
                           src={(() => {
                             const imageUrl = selectedDiary.imgUrl.startsWith('http')
                               ? selectedDiary.imgUrl

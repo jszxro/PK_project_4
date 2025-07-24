@@ -216,6 +216,7 @@
 
 /* 다이어리 이미지 스타일 */
 .diaryImage {
+  display: block;
   max-width: 280px;
   max-height: 180px;
   width: auto;
@@ -223,6 +224,7 @@
   object-fit: cover;
   border-radius: 8px;
   transition: opacity 0.3s ease;
+  margin: 12px auto;
 }
 
 .diaryImage.loading {
