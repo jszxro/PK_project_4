@@ -1,12 +1,13 @@
 // src/pages/MomentsPage.jsx
 import '../App.css';
 import styles from '../assets/css/MomentsPage.module.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import LoginModal from '../components/LoginModal';
 import FeelingCommentModal from '../components/FeelingCommentModal';
 import axios from 'axios';
+import { UserContext } from '../context/UserContext';
 
 const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const [selectedEmoji, setSelectedEmoji] = useState('');
   const [posts, setPosts] = useState([]);
   const [quote, setQuote] = useState('');
+  const { userInfo } = useContext(UserContext);
 
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5;
@@ -156,7 +158,13 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
               </p>
               <button
                 className={styles.writeBtn}
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                  if (!userInfo) {
+                    setShowModal(true);
+                    return;
+                  }
+                  setIsModalOpen(true);
+                }}
               >
                 글쓰기 ✏️
               </button>
@@ -183,7 +191,13 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <img
                       className={styles.momentThumbnail}
                       src={post.thumbnail}
-                      onClick={() => navigate(`/moments/${post.id}`, { state: { post } })}
+                      onClick={() => {
+                        if (!userInfo) {
+                          setShowModal(true);
+                          return;
+                        }
+                        navigate(`/moments/${post.id}`, { state: { post } });
+                      }}
                       alt="썸네일"
                     />
                     <div className={styles.momentLink}>
@@ -248,7 +262,13 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <span className={styles.momentTime}>{post.time}</span>
                     <span
                       className={styles.momentShowAll}
-                      onClick={() => navigate(`/moments/${post.id}`, { state: { post } })}
+                      onClick={() => {
+                        if (!userInfo) {
+                          setShowModal(true);
+                          return;
+                        }
+                        navigate(`/moments/${post.id}`, { state: { post } });
+                      }}
                     >
                       [전체보기]
                     </span>
