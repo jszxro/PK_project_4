@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -64,5 +65,16 @@ public class PostService {
         } else {
             throw new IllegalArgumentException("게시글을 찾을 수 없습니다: " + postId);
         }
+    }
+
+    public void deletePost(String postId, String currentUserKey) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        if (!post.getUserKey().equals(currentUserKey)) {
+            throw new SecurityException("게시글 삭제 권한이 없습니다.");
+        }
+
+        postRepository.delete(post);
     }
 }
