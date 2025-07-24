@@ -1,6 +1,5 @@
 package com.project.mood.controller;
 
-import com.project.mood.entity.Comments;
 import com.project.mood.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +12,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/comments")
 @RequiredArgsConstructor
-public class CommentController {
+public class CommentsController {
 
-    private final CommentService commentService;
+    private final CommentService commentsService;
 
     @PostMapping
     public ResponseEntity<String> addComment(@RequestBody Map<String, String> body, Principal principal) {
@@ -27,14 +26,22 @@ public class CommentController {
         }
 
         String userKey = principal.getName(); // JWT 인증 시 userKey로 이름 설정했다면
-        commentService.addComment(postId, userKey, content);
+        commentsService.addComment(postId, userKey, content);
 
         return ResponseEntity.ok("댓글 작성 완료");
     }
 
+    // @GetMapping("/{postId}")
+    // public ResponseEntity<List<Comments>> getComments(@PathVariable String
+    // postId) {
+    // List<Comments> comments = commentsService.getCommentsByPostId(postId);
+    // return ResponseEntity.ok(comments);
+    // }
+
+    // 댓글조회
     @GetMapping("/{postId}")
-    public ResponseEntity<List<Comments>> getComments(@PathVariable String postId) {
-        List<Comments> comments = commentService.getCommentsByPostId(postId);
+    public ResponseEntity<?> getComments(@PathVariable("postId") String postId) {
+        List<Map<String, Object>> comments = commentsService.getCommentsWithNickname(postId);
         return ResponseEntity.ok(comments);
     }
 }
