@@ -83,4 +83,47 @@ public class DiaryService {
       return dto;
     }).collect(Collectors.toList());
   }
+
+  public String updateDiary(String diaryId, DiaryDTO request) {
+    System.out.println("DiaryService.updateDiary 시작, diaryId = " + diaryId);
+
+    Diary diary = diaryRepository.findById(diaryId)
+        .orElseThrow(() -> new RuntimeException("일기를 찾을 수 없습니다: " + diaryId));
+
+    // 이모지 정보 업데이트
+    if (request.getEmoji() != null && !request.getEmoji().isEmpty()) {
+      Emoji emoji = emojiRepository.findByEmoji(request.getEmoji())
+          .orElseThrow(() -> new RuntimeException("이모지를 찾을 수 없습니다: " + request.getEmoji()));
+      diary.setEmoji(emoji);
+    }
+
+    // 내용 업데이트
+    if (request.getContent() != null) {
+      diary.setContent(request.getContent());
+    }
+
+    // 이미지 URL 업데이트
+    if (request.getImgUrl() != null) {
+      diary.setImgUrl(request.getImgUrl());
+    }
+
+    // 수정 시간 업데이트
+    diary.setUpdatedAt(LocalDateTime.now());
+
+    diaryRepository.save(diary);
+    // System.out.println("일기 수정 완료, diaryId = " + diaryId);
+    return "수정 완료!";
+  }
+
+  public String deleteDiary(String diaryId) {
+    // System.out.println("DiaryService.deleteDiary 시작, diaryId = " + diaryId);
+
+    if (!diaryRepository.existsById(diaryId)) {
+      throw new RuntimeException("일기를 찾을 수 없습니다: " + diaryId);
+    }
+
+    diaryRepository.deleteById(diaryId);
+    // System.out.println("일기 삭제 완료, diaryId = " + diaryId);
+    return "삭제 완료!";
+  }
 }
