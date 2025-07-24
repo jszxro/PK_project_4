@@ -61,18 +61,6 @@ function TopBar({ onLoginClick }) {
               }}>
                 프로필수정
               </div>
-              <div className="dropdown-item" onClick={() => {
-                navigate('/');                // 홈
-                setDropdownOpen(false);
-              }}>
-                홈
-              </div>
-              <div className="dropdown-item" onClick={() => {
-                navigate('/moments');         // 모멘트
-                setDropdownOpen(false);
-              }}>
-                모멘트
-              </div>
               <div className="dropdown-item" onClick={handleLogout}>
                 로그아웃
               </div>

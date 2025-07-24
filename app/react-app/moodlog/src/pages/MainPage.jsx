@@ -120,14 +120,25 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
                   cursor: 'pointer',
                   fontSize: '0.95rem'
                 }}
-                onClick={() => navigate('/moments')}
+                onClick={() => {
+                  if (userInfo) {
+                    navigate('/moments');
+                  } else {
+                    alert('더 많은 이야기를 보고 싶다면, 로그인 해주세요😊');
+                    setShowModal(true);
+                  }
+                }}
               >
                ➥더보기
               </button>
               </div>
               {currentPosts.length > 0 ? (
                 currentPosts.map(post => (
-                  <div key={post.id} className="moment-card" onClick={() => navigate('/moments')}>
+                  <div
+                    key={post.id}
+                    className="moment-card"
+                    onClick={() => navigate(`/moments/${post.id}`, { state: { post } })}
+                  >
                     <img src={post.thumbnail} alt="썸네일" className="moment-thumbnail" />
                     <div className="moment-meta">
                       <span className="moment-author">작성자: {post.author}</span>
