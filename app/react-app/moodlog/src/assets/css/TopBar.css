@@ -1,45 +1,36 @@
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 24px 100px 20px 0;
-  background-color: transparent;
-  z-index: 10;
-  position: relative;
-}
-
-/* 로그인 버튼 */
 .login-btn {
-  all: unset; 
-  color: white;        /* 글자색 */
-  font-size: 20px;
-  cursor: pointer;     /* 클릭 가능하게 유지 */
-  padding: 4px 8px;    /* (선택) 클릭 영역 확보 */
-  border-radius: 4px;  /* (선택) hover 시 모양 유지 */
-  white-space: nowrap;
+  all: unset;
+  width: 70px;                  /* ✅ 정사각형 */
+  height: 70px;
+  border-radius: 50%;           /* ✅ 완전한 원 */
+  background-color: #333;
+  color: white;
+  font-size: 16px;
+  display: flex;                /* ✅ 텍스트를 정중앙에 정렬 */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #888;
   transition: background 0.2s, color 0.2s;
-  margin-top: 70px;
-  margin-left:-10px;
+  margin-left: -10px;
 }
 
 .login-btn:hover {
   background-color: #555;
   color: white;
 }
-
-/* 프로필 원 */
 .profile-area {
   position: relative;
 }
 
 .profile-circle {
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   background-color: #555;
   color: white;
+  border: 1px solid #888;
   border-radius: 50%;
-  font-size: 28px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;

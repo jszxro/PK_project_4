@@ -38,4 +38,20 @@ public class MemberService {
         }
         return false;
     }
+
+    // 비밀번호 찾기 서비스
+    public String resetPassword(String userId, String email) {
+        Optional<Member> optionalMember = memberRepository.findByUserIdAndUserEmail(userId, email);
+
+        if (optionalMember.isEmpty())
+            return null;
+
+        Member member = optionalMember.get();
+        String tempPassword = String.valueOf((int) (Math.random() * 9000) + 1000); // 4자리 숫자
+
+        member.setUserPw(passwordEncoder.encode(tempPassword));
+        memberRepository.save(member);
+
+        return tempPassword; // 프론트에 전달
+    }
 }

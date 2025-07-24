@@ -1,18 +1,22 @@
 // src/components/FindIdModal.jsx
 import React, { useState } from 'react';
 import styles from '../assets/css/LoginModal.module.css';
+import axios from 'axios';
 
 function FindIdModal({ onClose }) {
   const [email, setEmail] = useState('');
   const [foundId, setFoundId] = useState('');
 
   const handleFindId = async () => {
-    // 예시 API 요청
-    // 실제로는 백엔드에서 이메일로 아이디를 조회
-    if (email === 'test@example.com') {
-      setFoundId('haribo123'); // 예시 아이디
-    } else {
-      setFoundId('해당 이메일로 가입된 아이디가 없습니다.');
+    try {
+      const res = await axios.post('/api/auth/find-id', { email });  // 백엔드 API 호출
+      setFoundId(`당신의 아이디는: ${res.data.userId}`);  // 응답 받은 아이디
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        setFoundId('해당 이메일로 가입된 아이디가 없습니다.');
+      } else {
+        setFoundId('서버 오류가 발생했습니다.');
+      }
     }
   };
 

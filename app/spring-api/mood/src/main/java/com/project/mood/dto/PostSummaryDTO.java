@@ -5,6 +5,8 @@ public interface PostSummaryDTO {
 
     String getAuthor(); // nickname
 
+    String getUserKey();
+
     String getTitle();
 
     String getContent();

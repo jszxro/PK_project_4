@@ -3,7 +3,7 @@ import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 import styles from '../assets/css/LoginModal.module.css';
 import SignupModal from './SignupModal';
-import ErrorPopup from './ErrorPopup'; // ✅ 상단 import
+import ErrorPopup from './ErrorPopup';
 import FindIdModal from './FindIdModal';
 import FindPwModal from './FindPwModal';
 
@@ -20,7 +20,7 @@ function LoginModal({ onClose, setIsLoggedIn }) {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleLogin(); // ✅ Enter 키 눌렀을 때 로그인 실행
+      handleLogin();
     }
   };
 
@@ -55,7 +55,7 @@ function LoginModal({ onClose, setIsLoggedIn }) {
     } catch (error) {
       // 어떤 오류든 무조건 아래 메시지로
       console.log(error);
-      setErrorMsg('아이디 또는 비밀번호가 틀렸습니다❗');
+      setErrorMsg('아이디 또는 비밀번호가 틀렸습니다.');
       setShowErrorPopup(true);
     }
   };
@@ -74,7 +74,7 @@ function LoginModal({ onClose, setIsLoggedIn }) {
               className={styles.modalInput}
               value={id}
               onChange={(e) => setId(e.target.value)}
-              onKeyDown={handleKeyDown} // ✅ 추가
+              onKeyDown={handleKeyDown}
             />
             <input
               type="password"
@@ -82,7 +82,7 @@ function LoginModal({ onClose, setIsLoggedIn }) {
               className={styles.modalInput}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={handleKeyDown} // ✅ 추가
+              onKeyDown={handleKeyDown}
             />
 
             <div className={styles.modalOptions}>

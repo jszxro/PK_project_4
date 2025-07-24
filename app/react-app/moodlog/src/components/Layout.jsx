@@ -9,42 +9,39 @@ function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
-
-  const { userInfo } = useContext(UserContext) || {};  // ✅ 여기를 안전하게
+  const { userInfo } = useContext(UserContext) || {};
 
   const hideTopBarRoutes = [];
   const hideTopBar = hideTopBarRoutes.includes(location.pathname);
 
   return (
-    <div className="app-layout">
-      {/* <div className="full-width-line"></div> 실선 */}
-      {/* <div className="full-width-line2"></div> */}
+    <div className="app-container">
       <div className="sidebar">  {/*좌측*/}
         <h2 className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Moodlog</h2>
         <p className="subtitle">당신의 감정을 이해하는 첫 번째 플레이리스트</p>
 
         <ul className="nav">
           <li onClick={() => navigate('/')} className={location.pathname === '/' ? 'active' : ''}>Home</li>
-          <li onClick={() => navigate('/playlist')} className={location.pathname === '/playlist' ? 'active' : ''}>Playlist</li>
           <li onClick={() => navigate('/moments')} className={location.pathname === '/moments' ? 'active' : ''}>Moments</li>
 
           {/* 조건부 렌더링 - 안전하게 */}
           {userInfo ? (
             <>
               <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
-              {/* <li onClick={() => navigate('/diary')} className={location.pathname === '/diary' ? 'active' : ''}>Diary</li> */}
             </>
           ) : null}
         </ul>
       </div>
 
-      <div className="page-content"> {/* 중앙 */}
-        <Outlet />
-      </div>
-
-      <div className="right-sidebar"> {/* 우측 */}
+      <div className="main-container">
+        {/* 상단 고정 TopBar */}
         {!hideTopBar && <TopBar onLoginClick={() => setShowModal(true)} />}
         {showModal && <LoginModal onClose={() => setShowModal(false)} />}
+
+        {/* 실제 콘텐츠 영역 (여백 포함) */}
+        <div className="content-area">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

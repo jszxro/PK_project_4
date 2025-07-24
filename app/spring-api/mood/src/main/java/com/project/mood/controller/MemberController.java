@@ -17,8 +17,10 @@ import org.springframework.http.ResponseCookie;
 import java.util.Collections;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -104,11 +106,46 @@ public class MemberController {
                 .secure(false)
                 .path("/")
                 .maxAge(0)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body("로그아웃 성공");
+    }
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    // 프로필 수정
+    @PutMapping("/members/update-profile")
+    public ResponseEntity<?> updateProfile(
+            @CookieValue(name = "signin_info", required = false) String token,
+            @RequestBody MemberDTO dto) {
+
+        if (token == null) {
+            return ResponseEntity.status(401).body("로그인 필요");
+        }
+
+        try {
+            String userId = jwtUtil.getUsername(token);
+            Member member = memberRepository.findOneByUserId(userId);
+            if (member == null)
+                return ResponseEntity.status(404).body("사용자 없음");
+
+            member.setNickname(dto.getNickname());
+            member.setUserEmail(dto.getUserEmail());
+            member.setProfile(dto.getProfile());
+
+            if (dto.getUserPw() != null && !dto.getUserPw().isBlank()) {
+                String encryptedPw = passwordEncoder.encode(dto.getUserPw());
+                member.setUserPw(encryptedPw);
+            }
+
+            memberRepository.save(member);
+            return ResponseEntity.ok("프로필 수정 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("수정 실패");
+        }
     }
 }

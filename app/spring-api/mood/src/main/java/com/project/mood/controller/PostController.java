@@ -3,6 +3,7 @@ package com.project.mood.controller;
 import com.project.mood.dto.PostDTO;
 import com.project.mood.dto.PostSummaryDTO;
 import com.project.mood.service.PostService;
+import com.project.mood.dto.DeleteRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +35,23 @@ public class PostController {
     public ResponseEntity<PostDTO> getPostById(@PathVariable String postId) {
         PostDTO post = postService.getPostById(postId);
         return ResponseEntity.ok(post);
+    }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<String> updatePost(@PathVariable String postId, @RequestBody PostDTO dto) {
+        postService.updatePost(postId, dto);
+        return ResponseEntity.ok("게시글 수정 완료");
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<Void> deletePost(
+            @PathVariable String postId,
+            @RequestBody(required = false) DeleteRequest requestBody) {
+
+        String userKey = requestBody != null ? requestBody.getUserKey() : null;
+
+        postService.deletePost(postId, userKey);
+        return ResponseEntity.noContent().build();
     }
 
 }
