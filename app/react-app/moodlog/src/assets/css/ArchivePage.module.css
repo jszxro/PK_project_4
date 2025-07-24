@@ -213,3 +213,22 @@
   margin: 12px 0;
   width: 100%;
 }
+
+/* 다이어리 이미지 스타일 */
+.diaryImage {
+  max-width: 280px;
+  max-height: 180px;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: opacity 0.3s ease;
+}
+
+.diaryImage.loading {
+  opacity: 0.3;
+}
+
+.diaryImage.error {
+  display: none;
+}

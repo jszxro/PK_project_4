@@ -254,8 +254,8 @@ function ArchivePage() {
         {/* 프로필 요약 */}
         <div className={styles.profileSummary}>
           <div className={styles.profile}>
-            {userInfo?.profileImage ? (
-              <img src={userInfo.profileImage} alt="프로필" />
+            {userInfo?.profile ? (
+              <img src={userInfo.profile} alt="프로필" />
             ) : (
               <div className={styles.profilePlaceholder}>
                 {userInfo?.nickname ? userInfo.nickname.charAt(0).toUpperCase() : '😊'}
@@ -375,7 +375,7 @@ function ArchivePage() {
                           </div>
                         )}
                         <img
-                          className={diaryStyles.diaryImage}
+                          className={`${diaryStyles.diaryImage} ${styles.diaryImage} ${imageLoading ? styles.loading : ''} ${imageError ? styles.error : ''}`}
                           src={(() => {
                             const imageUrl = selectedDiary.imgUrl.startsWith('http')
                               ? selectedDiary.imgUrl
@@ -386,17 +386,6 @@ function ArchivePage() {
                           onLoadStart={handleImageLoadStart}
                           onLoad={handleImageLoad}
                           onError={handleImageError}
-                          style={{
-                            display: imageError ? 'none' : 'block',
-                            opacity: imageLoading ? 0.3 : 1,
-                            transition: 'opacity 0.3s ease',
-                            maxWidth: '280px',
-                            maxHeight: '180px',
-                            width: 'auto',
-                            height: 'auto',
-                            objectFit: 'cover',
-                            borderRadius: '8px'
-                          }}
                         />
                       </div>
                       <hr className={diaryStyles.titleDivider} />
