@@ -244,7 +244,61 @@ function ArchivePage() {
     setImageError(false);
   };
 
-  return (
+  // 다이어리 수정
+  const handleEditDiary = (diary) => {
+    navigate('/diary', {
+      state: {
+        editingDiary: diary,
+        selectedDate: diary.createdAt,
+        fromArchive: true
+      }
+    });
+  };
+
+  // 다이어리 삭제
+  const handleDeleteDiary = async (diaryId) => {
+    // console.log('삭제하려는 다이어리 ID:', diaryId);
+    // console.log('선택된 다이어리 데이터:', selectedDiary);
+
+    if (!window.confirm('정말로 이 일기를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`/api/diaries/${diaryId}`);
+
+      // 삭제 성공 -> 새로고침
+      const userKey = userInfo?.userKey || localStorage.getItem('userKey');
+      if (userKey) {
+        const response = await axios.get(`/api/diaries/user/${userKey}`);
+        const diaries = response.data;
+        setDiaryList(diaries);
+
+        // 날짜별 이모지 데이터 업데이트
+        const emojiData = {};
+        diaries.forEach(diary => {
+          if (diary.createdAt && diary.emoji) {
+            const dateKey = diary.createdAt.split('T')[0];
+            emojiData[dateKey] = diary.emoji;
+          }
+        });
+        setDateEmojis(emojiData);
+
+        // 선택된 다이어리 초기화
+        setSelectedDiary(null);
+      }
+
+      alert('일기가 삭제되었습니다.');
+
+    } catch (error) {
+      console.error('일기 삭제 실패:', error);
+      if (error.response?.status === 404) {
+        alert('삭제하려는 일기를 찾을 수 없습니다.');
+      } else {
+        alert('일기 삭제에 실패했습니다. 다시 시도해주세요.');
+      }
+    }
+  }; return (
     <div className="layout">
       {/* 좌측 사이드바 */}
 
@@ -359,6 +413,20 @@ function ArchivePage() {
                 <div className={diaryStyles.diaryCard}>
                   <div className={diaryStyles.diaryTitle}>
                     {selectedDiary.emoji} {selectedDiary.createdAt?.split('T')[0]}
+                  </div>
+                  <div className={styles.diaryActions}>
+                    <button
+                      className={styles.editBtn}
+                      onClick={() => handleEditDiary(selectedDiary)}
+                    >
+                      ✏️수정하기
+                    </button>
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => handleDeleteDiary(selectedDiary.diaryId)}
+                    >
+                      🗑️삭제하기
+                    </button>
                   </div>
                   <hr className={diaryStyles.titleDivider} />
                   {selectedDiary.imgUrl && (
