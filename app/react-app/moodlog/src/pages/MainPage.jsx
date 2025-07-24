@@ -66,8 +66,6 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
       .catch(err => console.error('최신 게시글 가져오기 실패:', err));
   }, []);
 
-  const [emojiList, setEmojiList] = useState([]);
-  const [songs, setSongs] = useState([]);
 
   useEffect(() => {
     axios.get('/api/emojis')
