@@ -298,3 +298,17 @@
   cursor: not-allowed;
   transform: none;
 }
+
+.tooltip {
+  position: fixed;
+  background-color: #222;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 9999;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  transform: translateY(-50%);
+}

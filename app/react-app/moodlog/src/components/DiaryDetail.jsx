@@ -40,7 +40,6 @@ function DiaryDetail() {
     }
   }, [location.state]);
 
-  // 이모지 목록 로드
   useEffect(() => {
     const loadEmojis = async () => {
       try {
@@ -168,13 +167,10 @@ function DiaryDetail() {
 
       // Archive 페이지에서 왔다면 돌아가기, 아니면 홈
       if (location.state?.fromArchive) {
-        navigate('/archive', {
-          state: { refreshData: true }
-        });
+        navigate('/archive', { state: { refreshData: true } });
       } else {
         navigate('/');
       }
-
     } catch (error) {
       console.error('일기 저장/수정 실패:', error);
       alert(isEditMode ? '일기 수정에 실패했습니다.' : '일기 저장에 실패했습니다.');
@@ -183,13 +179,10 @@ function DiaryDetail() {
     }
   };
 
-  // 이미지 파일 선택 핸들러
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(file);
-
-      // 이미지 미리보기 생성
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
@@ -198,13 +191,11 @@ function DiaryDetail() {
     }
   };
 
-  // 이미지 제거
   const handleRemoveImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
   };
 
-  // 취소
   const handleCancel = () => {
     if (location.state?.fromArchive) {
       navigate('/archive');
@@ -235,9 +226,16 @@ function DiaryDetail() {
             {emojiList.map((emoji) => (
               <button
                 key={emoji.emojiId}
-                className={`${styles.emojiButton} ${selectedEmoji === emoji.emoji ? styles.selected : ''
-                  }`}
+                className={`${styles.emojiButton} ${selectedEmoji === emoji.emoji ? styles.selected : ''}`}
                 onClick={() => setSelectedEmoji(emoji.emoji)}
+                onMouseEnter={(e) => {
+                  setHoveredEmojiDesc(emoji.description || emoji.tag || '감정');
+                  setTooltipPos({ x: e.clientX, y: e.clientY });
+                }}
+                onMouseMove={(e) => {
+                  setTooltipPos({ x: e.clientX, y: e.clientY });
+                }}
+                onMouseLeave={() => setHoveredEmojiDesc('')}
               >
                 {emoji.emoji}
               </button>
@@ -308,6 +306,16 @@ function DiaryDetail() {
           </button>
         </div>
       </div>
+
+      {/* 툴팁 출력 */}
+      {hoveredEmojiDesc && (
+        <div
+          className={styles.tooltip}
+          style={{ top: tooltipPos.y + 15, left: tooltipPos.x + 15 }}
+        >
+          {hoveredEmojiDesc}
+        </div>
+      )}
     </div>
   );
 }
