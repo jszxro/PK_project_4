@@ -122,20 +122,31 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
                 }}
                 onClick={() => navigate('/moments')}
               >
-               ➥더보기
+                ➥더보기
               </button>
-              </div>
-              {currentPosts.length > 0 ? (
-                currentPosts.map(post => (
-                  <div key={post.id} className="moment-card" onClick={() => navigate('/moments')}>
-                    <img src={post.thumbnail} alt="썸네일" className="moment-thumbnail" />
-                    <div className="moment-meta">
-                      <span className="moment-author">작성자: {post.author}</span>
-                      <span className="moment-tag">#{post.tag}</span>
-                      <span className="moment-time">{new Date(post.time).toLocaleDateString()}</span>
-                    </div>
-                    <div className="moment-content">{post.content}</div>
+            </div>
+            {currentPosts.length > 0 ? (
+              currentPosts.map(post => (
+                <div
+                  key={post.id}
+                  className="moment-card"
+                  onClick={() => {
+                    if (!userInfo) {
+                      alert('로그인이 필요한 기능입니다.');
+                      setShowModal(true);
+                    } else {
+                      navigate(`/moments/${post.id}`, { state: { post } });
+                    }
+                  }}
+                >
+                  <img src={post.thumbnail} alt="썸네일" className="moment-thumbnail" />
+                  <div className="moment-meta">
+                    <span className="moment-author">작성자: {post.author}</span>
+                    <span className="moment-tag">#{post.tag}</span>
+                    <span className="moment-time">{new Date(post.time).toLocaleDateString()}</span>
                   </div>
+                  <div className="moment-content">{post.content}</div>
+                </div>
               ))
             ) : (
               <p>게시글이 없습니다.</p>
