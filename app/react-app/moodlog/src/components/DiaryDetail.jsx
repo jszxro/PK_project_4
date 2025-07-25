@@ -22,25 +22,38 @@ function DiaryDetail() {
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (location.state?.selectedDate) {
-      setSelectedDate(new Date(location.state.selectedDate));
-    } else {
-      // 날짜 없으면 오늘 날짜
-      setSelectedDate(new Date());
-    }
+    const rawDate = location.state?.selectedDate;
+    const editingDiary = location.state?.editingDiary;
 
-    // 수정 확인
-    if (location.state?.editingDiary) {
+    if (editingDiary) {
       setIsEditMode(true);
-      setEditingDiary(location.state.editingDiary);
-      setSelectedEmoji(location.state.editingDiary.emoji);
-      setContent(location.state.editingDiary.content);
+      setEditingDiary(editingDiary);
+      setSelectedEmoji(editingDiary.emoji);
+      setContent(editingDiary.content);
 
-      if (location.state.editingDiary.imgUrl) {
-        setImagePreview(location.state.editingDiary.imgUrl);
+      if (editingDiary.createdAt) {
+        const [datePart] = editingDiary.createdAt.split('T');
+        const [year, month, day] = datePart.split('-');
+        setSelectedDate(new Date(Number(year), Number(month) - 1, Number(day)));
       }
+
+      if (editingDiary.imgUrl) {
+        setImagePreview(editingDiary.imgUrl);
+      }
+    } else if (rawDate) {
+      // 문자열인 경우 날짜로 변환
+      if (typeof rawDate === 'string') {
+        const [year, month, day] = rawDate.split('-');
+        setSelectedDate(new Date(Number(year), Number(month) - 1, Number(day)));
+      } else if (rawDate instanceof Date) {
+        setSelectedDate(rawDate);
+      }
+    } else {
+      setSelectedDate(new Date()); // 기본값: 오늘 날짜
     }
   }, [location.state]);
+
+
 
   useEffect(() => {
     const loadEmojis = async () => {
@@ -81,10 +94,10 @@ function DiaryDetail() {
       const userKey = userInfo.userKey || localStorage.getItem('userKey');
 
       if (isEditMode) {
-        // 수정 모드
-        let imgUrl = editingDiary.imgUrl; // 기존 이미지 URL 유지
+        // 수정
+        let imgUrl = editingDiary.imgUrl;
 
-        // 새 이미지가 선택되었다면 업로드
+        // 새 이미지가 선택된 경우
         if (selectedImage) {
           const formData = new FormData();
           formData.append('file', selectedImage);
@@ -98,12 +111,17 @@ function DiaryDetail() {
             imgUrl = uploadResponse.data.url;
           } catch (uploadError) {
             console.error('이미지 업로드 실패:', uploadError);
-            alert('이미지 업로드에 실패했습니다. 기존 이미지로 저장하시겠습니까?');
-            if (!confirm('기존 이미지로 저장하시겠습니까?')) {
+            const proceed = window.confirm('이미지 업로드에 실패했습니다. 기존 이미지로 저장하시겠습니까?');
+            if (!proceed) {
               setIsLoading(false);
               return;
             }
           }
+        }
+
+        // 기존 이미지가 있었는데 제거된 경우
+        if (!imagePreview && !selectedImage) {
+          imgUrl = null;
         }
 
         const updateData = {
@@ -114,11 +132,14 @@ function DiaryDetail() {
 
         await axios.put(`/api/diaries/${editingDiary.diaryId}`, updateData);
         alert('일기가 성공적으로 수정되었습니다!');
-      } else {
-        // 새 일기 작성 모드
-        const dateKey = selectedDate.toISOString().split('T')[0];
 
-        // 해당 날짜에 이미 일기가 있는지 확인
+      } else {
+        // 새 일기 작성
+        const dateKey = selectedDate.toISOString().split('T')[0];
+        // console.log("보내는 selectedDate:", dateKey);
+
+
+        // 같은 날짜에 이미 작성된 일기 있는지 확인
         const existingResponse = await axios.get(`/api/diaries/user/${userKey}`);
         const existingDiary = existingResponse.data.find(diary =>
           diary.createdAt && diary.createdAt.split('T')[0] === dateKey
@@ -130,10 +151,8 @@ function DiaryDetail() {
           return;
         }
 
-        // 새 일기 저장
+        // 새 이미지가 선택된 경우
         let imgUrl = null;
-
-        // 이미지가 선택되었다면 업로드
         if (selectedImage) {
           const formData = new FormData();
           formData.append('file', selectedImage);
@@ -147,8 +166,8 @@ function DiaryDetail() {
             imgUrl = uploadResponse.data.url;
           } catch (uploadError) {
             console.error('이미지 업로드 실패:', uploadError);
-            alert('이미지 업로드에 실패했습니다. 이미지 없이 저장하시겠습니까?');
-            if (!confirm('이미지 없이 저장하시겠습니까?')) {
+            const proceed = window.confirm('이미지 업로드에 실패했습니다. 이미지 없이 저장하시겠습니까?');
+            if (!proceed) {
               setIsLoading(false);
               return;
             }
@@ -159,7 +178,7 @@ function DiaryDetail() {
           userKey: userKey,
           emoji: selectedEmoji,
           content: content,
-          selectedDate: selectedDate.toISOString().split('T')[0], // YYYY-MM-DD 형식
+          selectedDate: dateKey,
           imgUrl: imgUrl
         };
 
@@ -167,12 +186,13 @@ function DiaryDetail() {
         alert('일기가 성공적으로 저장되었습니다!');
       }
 
-      // Archive 페이지에서 왔다면 돌아가기, 아니면 홈
+      // 작성 후 이동
       if (location.state?.fromArchive) {
         navigate('/archive', { state: { refreshData: true } });
       } else {
         navigate('/');
       }
+
     } catch (error) {
       console.error('일기 저장/수정 실패:', error);
       alert(isEditMode ? '일기 수정에 실패했습니다.' : '일기 저장에 실패했습니다.');
@@ -245,6 +265,18 @@ function DiaryDetail() {
           </div>
         </div>
 
+        {/* 내용 작성 */}
+        <div className={styles.contentSection}>
+          <h3>오늘 하루는 어땠나요?</h3>
+          <textarea
+            className={styles.contentTextarea}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="오늘 있었던 일을 작성하세요"
+            rows={10}
+          />
+        </div>
+
         {/* 이미지 업로드 */}
         <div className={styles.imageSection}>
           <h3>사진 추가 (선택사항)</h3>
@@ -268,23 +300,11 @@ function DiaryDetail() {
                   onClick={handleRemoveImage}
                   className={styles.removeImageButton}
                 >
-                  ✕ 제거
+                  ✕
                 </button>
               </div>
             )}
           </div>
-        </div>
-
-        {/* 내용 작성 */}
-        <div className={styles.contentSection}>
-          <h3>오늘 하루는 어땠나요?</h3>
-          <textarea
-            className={styles.contentTextarea}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="오늘 있었던 일을 작성하세요"
-            rows={10}
-          />
         </div>
 
         {/* 버튼 영역 */}
@@ -300,14 +320,19 @@ function DiaryDetail() {
             className={styles.saveButton}
             onClick={handleSave}
             disabled={isLoading}
+
           >
+
             {isLoading ?
               (isEditMode ? '수정 중...' : '저장 중...') :
               (isEditMode ? '수정하기' : '저장하기')
             }
+
+
           </button>
         </div>
       </div>
+
 
       {/* 툴팁 출력 */}
       {hoveredEmojiDesc && (

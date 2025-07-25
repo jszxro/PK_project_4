@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,5 +21,6 @@ public class DiaryDTO {
     private String imgUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate selectedDate; // 선택된 날짜 추가
 }
