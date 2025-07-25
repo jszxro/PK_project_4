@@ -12,10 +12,16 @@ const MomentDetail = () => {
     const postFromState = location.state?.post;
     const [showEditForm, setShowEditForm] = useState(false);
     const [commentContent, setCommentContent] = useState('');
+    const [comments, setComments] = useState([]);
 
 
     const [post, setPost] = useState(postFromState || null);
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleCommentSubmit();
+        }
+    };
     const handleDelete = async () => {
         const confirmed = window.confirm('정말 이 게시글을 삭제하시겠습니까?');
         if (!confirmed) return;
@@ -45,6 +51,13 @@ const MomentDetail = () => {
                 });
         }
     }, [postId]);
+
+    useEffect(() => {
+        axios.get(`/api/comments/${postId}`)
+            .then(res => setComments(res.data))
+            .catch(err => console.error('댓글 불러오기 실패:', err));
+    }, [postId, commentContent]);
+
 
     const isAuthor = userInfo?.userKey === post.userKey;
 
@@ -122,8 +135,20 @@ const MomentDetail = () => {
                     onChange={(e) => setCommentContent(e.target.value)}
                     placeholder="댓글을 입력하세요"
                     style={{ flex: 1 }}
+                    onKeyDown={handleKeyDown}
                 />
                 <button onClick={handleCommentSubmit}>댓글 달기</button>
+            </div>
+            <div style={{ marginTop: '1rem' }}>
+                {comments.map((comment, index) => (
+                    <div key={index} style={{ marginBottom: '0.5rem', borderBottom: '1px solid #ccc', paddingBottom: '0.5rem' }}>
+                        <div><strong>{comment.nickname}</strong></div>
+                        <div>{comment.content}</div>
+                        <div style={{ fontSize: '0.8rem', color: 'gray' }}>
+                            {new Date(comment.createdAt).toLocaleString()}
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );

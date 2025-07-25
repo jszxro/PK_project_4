@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.project.mood.entity.Song;
 
 @Repository
-public interface SongRepository extends JpaRepository<Song, Long> {
+public interface SongRepository extends JpaRepository<Song, String> {
 
     @Query(value = "SELECT * FROM (\r\n" + //
             "    SELECT * FROM SONG WHERE TAG = ? ORDER BY DBMS_RANDOM.VALUE\r\n" + //
