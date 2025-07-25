@@ -14,8 +14,6 @@ const MomentDetail = () => {
     const [showEditForm, setShowEditForm] = useState(false);
     const [commentContent, setCommentContent] = useState('');
     const [comments, setComments] = useState([]);
-
-
     const [post, setPost] = useState(postFromState || null);
 
     const handleKeyDown = (e) => {
