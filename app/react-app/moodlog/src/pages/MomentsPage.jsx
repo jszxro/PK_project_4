@@ -31,7 +31,8 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
     axios.get('/api/quotes')
       .then((res) => {
         if (res.data && res.data.length > 0) {
-          setQuote(res.data[0].content);
+          const randomIndex = Math.floor(Math.random() * res.data.length);
+          setQuote(res.data[randomIndex].content);
         }
       })
       .catch((err) => {
@@ -154,7 +155,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
           <div className={styles.leftSection}>
             <div className={styles.momentHeader}>
               <p className={styles.momentCount}>
-                {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `all Moments (${filteredPosts.length})`}
+                {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `All Moments (${filteredPosts.length})`}
               </p>
               <button
                 className={styles.writeBtn}
