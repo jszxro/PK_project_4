@@ -10,7 +10,7 @@
   margin: 0px 0px 0px 0px;
   color: white;
   box-sizing: border-box;
-  min-height: 100vh;
+  height: auto;
 }
 
 .commentFeeling {
@@ -72,25 +72,35 @@
 
 .momentMeta {
   display: flex;
-  gap: 8px;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  font-size: 16px;
+  position: relative;
+  font-size: 15px;
   color: #bbb;
+  margin-bottom: 10px;
+  height: 24px;
 }
 
 .momentAuthor {
+  flex: 1;
+  text-align: left;
   font-weight: bold;
 }
 
 .momentTag {
-  color: #b5d3b0;
-  gap: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #A8C3A8;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .momentTime {
-  font-style: italic;
-  text-align: center;
+  flex: 1;
+  text-align: right;
+  /* font-style: italic; */
   white-space: nowrap;
 }
 
@@ -219,6 +229,7 @@
 
 .postCard {
   /* width: 48%; */
+  width: 900px;
   background: #1e1e1e;
   padding: 16px;
   border-radius: 12px;

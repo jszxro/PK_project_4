@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 import EditMomentForm from './EditMomentForm'
+import styles from '../assets/css/MomentDetail.module.css';
 
 const MomentDetail = () => {
     const { userInfo } = useContext(UserContext);
@@ -13,8 +14,6 @@ const MomentDetail = () => {
     const [showEditForm, setShowEditForm] = useState(false);
     const [commentContent, setCommentContent] = useState('');
     const [comments, setComments] = useState([]);
-
-
     const [post, setPost] = useState(postFromState || null);
 
     const handleKeyDown = (e) => {
@@ -100,58 +99,92 @@ const MomentDetail = () => {
     // console.log('post:', post);
 
     return (
-        <div style={{ padding: '2rem' }}>
-            <h2>{post.content_title}</h2>
-            <img src={post.imgUrl || post.thumbnail} alt="썸네일" style={{ maxWidth: '400px' }} />
-            <p>{post.content}</p>
-            <p>작성자: {post.author}</p>
-            {post.time && <p>작성일: {new Date(post.time).toLocaleString()}</p>}
-            <p>감정: #{post.emojiId || post.tag}</p>
-            <a href={post.url} target="_blank" rel="noopener noreferrer">🔗 유튜브 링크</a>
-            {isAuthor && !showEditForm && (
-                <>
-                    <button onClick={() => setShowEditForm(true)}>✏️ 수정하기</button>
-                    <button onClick={handleDelete} style={{ marginLeft: '10px', color: 'red' }}>🗑️ 삭제하기</button>
-                </>
-            )}
+    <div className={styles.container}>
+        <div className={styles.postCard}>
+        <div className={styles.postHeaderRow}>
+            <h2 className={styles.title}>{post.content_title}</h2>
+        </div>
 
-            {showEditForm && (
-                <EditMomentForm
-                    post={post}
-                    onSave={(updatedPost) => {
-                        setPost(updatedPost);
-                        setShowEditForm(false);
-                        // window.location.reload();
-                    }}
-                    onCancel={() => setShoswEditForm(false)}
-                />
-            )}
-
-            <p>댓글<hr /></p>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <input
-                    type="text"
-                    value={commentContent}
-                    onChange={(e) => setCommentContent(e.target.value)}
-                    placeholder="댓글을 입력하세요"
-                    style={{ flex: 1 }}
-                    onKeyDown={handleKeyDown}
-                />
-                <button onClick={handleCommentSubmit}>댓글 달기</button>
+        {/* ⬇ 여기: 작성자 + 작성일 추가 */}
+        <div className={styles.metaTop}>
+        <div className={styles.metaLeft}>작성자: {post.author}</div>
+        <div className={styles.metaCenter}>감정: #{post.emojiId || post.tag}</div>
+        {post.time && (
+            <div className={styles.metaRight}>
+            작성일: {new Date(post.time).toLocaleString()}
             </div>
-            <div style={{ marginTop: '1rem' }}>
-                {comments.map((comment, index) => (
-                    <div key={index} style={{ marginBottom: '0.5rem', borderBottom: '1px solid #ccc', paddingBottom: '0.5rem' }}>
-                        <div><strong>{comment.nickname}</strong></div>
-                        <div>{comment.content}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'gray' }}>
-                            {new Date(comment.createdAt).toLocaleString()}
-                        </div>
-                    </div>
-                ))}
+        )}
+        </div>
+
+        <div className={styles.mediaAndContent}>
+        <div className={styles.thumbnailBlock}>
+            <img
+            src={post.imgUrl || post.thumbnail}
+            alt="썸네일"
+            className={styles.thumbnail}
+            />
+            <div className={styles.linkBelowThumbnail}>
+            <a
+                href={post.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+            >
+                🔗 유튜브 링크
+            </a>
             </div>
         </div>
+
+        {/* 본문 내용 */}
+        <p className={styles.content}>{post.content}</p>
+            {isAuthor && !showEditForm && (
+            <div className={styles.buttonGroup}>
+                <button className={styles.editButton} onClick={() => setShowEditForm(true)}>✏️ 수정</button>
+                <button className={styles.deleteButton} onClick={handleDelete}>🗑️ 삭제</button>
+            </div>
+            )}
+        </div>
+
+        {showEditForm && (
+            <EditMomentForm
+            post={post}
+            onSave={(updatedPost) => {
+                setPost(updatedPost);
+                setShowEditForm(false);
+            }}
+            onCancel={() => setShowEditForm(false)}
+            />
+        )}
+        </div>
+
+        {/* 댓글 영역은 그대로 유지 */}
+        <div className={styles.commentSection}>
+        <p className={styles.commentHeader}> 💬댓글 <hr /></p>
+        <div className={styles.commentBox}>
+            <input
+            type="text"
+            value={commentContent}
+            onChange={(e) => setCommentContent(e.target.value)}
+            placeholder="댓글을 입력하세요"
+            onKeyDown={handleKeyDown}
+            className={styles.commentInput}
+            />
+            <button onClick={handleCommentSubmit} className={styles.commentButton}>댓글 달기</button>
+        </div>
+        <div className={styles.commentList}>
+            {comments.map((comment, index) => (
+            <div key={index} className={styles.commentItem}>
+                <div className={styles.commentNickname}><strong>{comment.nickname}</strong></div>
+                <div className={styles.commentContent}>{comment.content}</div>
+                <div className={styles.commentTime}>{new Date(comment.createdAt).toLocaleString()}</div>
+            </div>
+            ))}
+        </div>
+        </div>
+    </div>
     );
+
+
 };
 
 export default MomentDetail;

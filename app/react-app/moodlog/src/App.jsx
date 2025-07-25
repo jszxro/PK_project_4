@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import { UserProvider } from './context/UserContext';
-import { useState } from 'react';
+// import { useState } from 'react';
 import MainPage from './pages/MainPage';
 // import PlaylistPage from './pages/PlaylistPage';
 import ArchivePage from './pages/ArchivePage';
@@ -10,11 +10,20 @@ import MomentsPage from './pages/MomentsPage';
 import DiaryDetail from './components/DiaryDetail';
 import MomentDetail from './components/MomentDetail';
 import ModifyProfile from './pages/ModifyProfile';
+import { useState, useEffect } from 'react';
 
 import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // ✅ localStorage에서 로그인 상태 복원
+  useEffect(() => {
+    const savedUser = localStorage.getItem('userInfo');
+    if (savedUser) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return (
     <UserProvider>

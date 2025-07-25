@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import styles from '../assets/css/EditMomentForm.module.css';
 
 const EditMomentForm = ({ post, onSave, onCancel }) => {
-    const [title, setTitle] = useState(post.title || '');
+    const [title, setTitle] = useState(post.title || post.content_title || '');
     const [content, setContent] = useState(post.content || '');
     const [url, setUrl] = useState(post.url || '');
 
@@ -14,6 +15,7 @@ const EditMomentForm = ({ post, onSave, onCancel }) => {
                 title,
                 content,
                 url,
+                userKey: post.userKey,
             };
 
             await axios.put(`/api/posts/${post.postId || post.id}`, updatedPost);
@@ -27,42 +29,45 @@ const EditMomentForm = ({ post, onSave, onCancel }) => {
     };
 
     return (
-        <div style={{ marginTop: '2rem' }}>
-            <h3>✏️ 게시글 수정</h3>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>제목:</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>내용:</label>
-                    <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        rows={5}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>유튜브 링크:</label>
-                    <input
-                        type="text"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                    />
-                </div>
-                <button type="submit">저장</button>
-                <button type="button" onClick={onCancel} style={{ marginLeft: '1rem' }}>
-                    취소
-                </button>
-            </form>
+      <div className={styles.overlay}>
+        <div className={styles.modalBox}>
+          <h3>✏️ 게시글 수정</h3>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>유튜브 링크</label>
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>제목</label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>내용</label>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={5}
+                required
+              />
+            </div>
+            <div className={styles.buttonGroup}>
+              <button type="submit">저장</button>
+              <button type="button" onClick={onCancel}>취소</button>
+            </div>
+          </form>
         </div>
+      </div>
     );
+
 };
 
 export default EditMomentForm;
