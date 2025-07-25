@@ -44,4 +44,11 @@ public class CommentsController {
         List<Map<String, Object>> comments = commentsService.getCommentsWithMemberInfo(postId);
         return ResponseEntity.ok(comments);
     }
+
+    // 댓글삭제
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable("commentId") String commentId) {
+        commentsService.deleteComment(commentId);
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
+    }
 }
