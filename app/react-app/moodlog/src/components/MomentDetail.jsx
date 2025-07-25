@@ -3,8 +3,11 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 import EditMomentForm from './EditMomentForm'
+import '../assets/css/MomentDetail.css';
 
 const MomentDetail = () => {
+    const [userReaction, setUserReaction] = useState(null); // 현재 사용자의 좋아요 여부
+    const [likeCount, setLikeCount] = useState(0); // 전체 좋아요 수
     const { userInfo } = useContext(UserContext);
     const { postId } = useParams();
     const navigate = useNavigate();
@@ -16,6 +19,45 @@ const MomentDetail = () => {
 
 
     const [post, setPost] = useState(postFromState || null);
+
+
+    // 하트 수 가져오기
+    useEffect(() => {
+        if (!post || !userInfo) return;
+
+        // 좋아요 상태 조회
+        axios.get(`/api/reactions/check?postId=${post.id}&userKey=${userInfo.userKey}`)
+            .then(res => setUserReaction(res.data.reactionType))
+            .catch(err => console.error("좋아요 상태 조회 실패:", err));
+
+        // 총 좋아요 수 조회
+        axios.get(`/api/reactions/count?postId=${post.id}`)
+            .then(res => setLikeCount(res.data.count))
+            .catch(err => console.error("좋아요 수 조회 실패:", err));
+    }, [post, userInfo]);
+
+    // 하트클릭
+    const toggleReaction = () => {
+        axios.post(`/api/reactions/toggle`, {
+            postId: post.id,
+            userKey: userInfo.userKey
+        })
+            .then(res => {
+                const newReactionType = res.data.reactionType;
+                setUserReaction(newReactionType);
+
+                // 좋아요 수 증감 처리
+                if (newReactionType === 1) {
+                    setLikeCount(prev => prev + 1);
+                } else {
+                    setLikeCount(prev => prev - 1);
+                }
+            })
+            .catch(err => {
+                console.error("좋아요 토글 실패:", err);
+            });
+    };
+    if (!post) return null;
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -108,6 +150,9 @@ const MomentDetail = () => {
             {post.time && <p>작성일: {new Date(post.time).toLocaleString()}</p>}
             <p>감정: #{post.emojiId || post.tag}</p>
             <a href={post.url} target="_blank" rel="noopener noreferrer">🔗 유튜브 링크</a>
+            <div className='momentLikes' onClick={toggleReaction} style={{ cursor: 'pointer' }}>
+                {userReaction === 1 ? "💛" : "🤍"} {likeCount}
+            </div>
             {isAuthor && !showEditForm && (
                 <>
                     <button onClick={() => setShowEditForm(true)}>✏️ 수정하기</button>
@@ -128,7 +173,7 @@ const MomentDetail = () => {
             )}
 
             <p>댓글<hr /></p>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div className='comment-top'>
                 <input
                     type="text"
                     value={commentContent}
@@ -139,13 +184,28 @@ const MomentDetail = () => {
                 />
                 <button onClick={handleCommentSubmit}>댓글 달기</button>
             </div>
+            {/* 댓글 조회부분 */}
             <div style={{ marginTop: '1rem' }}>
                 {comments.map((comment, index) => (
-                    <div key={index} style={{ marginBottom: '0.5rem', borderBottom: '1px solid #ccc', paddingBottom: '0.5rem' }}>
-                        <div><strong>{comment.nickname}</strong></div>
-                        <div>{comment.content}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'gray' }}>
-                            {new Date(comment.createdAt).toLocaleString()}
+                    <div key={index} className='comment-search'>
+                        {comment.profile ? (
+                            <img
+                                src={comment.profile}
+                                alt="프로필"
+                                className='comment-img'
+                            />
+                        ) : (
+                            <div className='comment-default'
+                            >{comment.nickname[0] || 'U'}</div>
+                        )}
+
+                        {/* 댓글 본문 */}
+                        <div>
+                            <div><strong>{comment.nickname}</strong></div>
+                            <div>{comment.content}</div>
+                            <div style={{ fontSize: '0.8rem', color: 'gray' }}>
+                                {new Date(comment.createdAt).toLocaleString()}
+                            </div>
                         </div>
                     </div>
                 ))}

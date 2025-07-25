@@ -1,6 +1,6 @@
 package com.project.mood.controller;
 
-import com.project.mood.service.CommentService;
+import com.project.mood.service.CommentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CommentsController {
 
-    private final CommentService commentsService;
+    private final CommentsService commentsService;
 
     @PostMapping
     public ResponseEntity<String> addComment(@RequestBody Map<String, String> body, Principal principal) {
@@ -41,7 +41,7 @@ public class CommentsController {
     // 댓글조회
     @GetMapping("/{postId}")
     public ResponseEntity<?> getComments(@PathVariable("postId") String postId) {
-        List<Map<String, Object>> comments = commentsService.getCommentsWithNickname(postId);
+        List<Map<String, Object>> comments = commentsService.getCommentsWithMemberInfo(postId);
         return ResponseEntity.ok(comments);
     }
 }
