@@ -201,7 +201,8 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  padding-right: 5px;
+  /* padding-right: 5px; */
+  margin-right: 5px;
 }
 
 .commentDefault {
