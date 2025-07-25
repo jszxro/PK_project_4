@@ -25,7 +25,7 @@ public class DiaryService {
 
   public String createDiary(DiaryDTO request) {
     // System.out.println("DiaryService.createDiary 시작");
-    System.out.println("받은 selectedDate: " + request.getSelectedDate());
+    // System.out.println("받은 selectedDate: " + request.getSelectedDate());
     // System.out.println("받은 userKey: " + request.getUserKey());
     // System.out.println("받은 content: " + request.getContent());
 
