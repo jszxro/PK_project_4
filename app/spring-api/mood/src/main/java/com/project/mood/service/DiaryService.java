@@ -55,10 +55,10 @@ public class DiaryService {
       diary.setCreatedAt(selectedDateTime);
     }
 
-    System.out.println("저장 전 diary.getCreatedAt(): " + diary.getCreatedAt());
+    // System.out.println("저장 전 diary.getCreatedAt(): " + diary.getCreatedAt());
     diaryRepository.save(diary);
-    System.out.println("저장 후 diary.getCreatedAt(): " + diary.getCreatedAt());
-    System.out.println("=== DiaryService.createDiary 완료 ===");
+    // System.out.println("저장 후 diary.getCreatedAt(): " + diary.getCreatedAt());
+    // System.out.println("=== DiaryService.createDiary 완료 ===");
     return "저장 완료!";
   }
 

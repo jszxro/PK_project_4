@@ -136,7 +136,7 @@ function DiaryDetail() {
       } else {
         // 새 일기 작성
         const dateKey = selectedDate.toISOString().split('T')[0];
-        console.log("📦 보내는 selectedDate:", dateKey);
+        // console.log("보내는 selectedDate:", dateKey);
 
 
         // 같은 날짜에 이미 작성된 일기 있는지 확인
