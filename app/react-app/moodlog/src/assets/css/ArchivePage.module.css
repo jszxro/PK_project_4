@@ -162,7 +162,7 @@
   padding: 16px;
   border-radius: 8px;
   box-sizing: border-box;
-  height: 430px;
+  height: 480px;
   /* 6주가 있는 달을 위해 높이 증가 */
   overflow: visible;
   /* 스크롤 제거 */
@@ -188,7 +188,7 @@
   padding: 16px;
   border-radius: 8px;
   box-sizing: border-box;
-  height: 430px;
+  height: 480px;
   /* 캘린더와 동일한 높이로 증가 */
   overflow-y: auto;
   display: flex;

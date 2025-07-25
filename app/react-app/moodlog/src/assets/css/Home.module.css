@@ -165,6 +165,7 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 12px;
+  margin-left: 0px;
 }
 
 .moodBtn {
@@ -202,4 +203,5 @@
 .moodSub {
   font-size: 0.95rem;
   color: #aaa;
+  width: 150px;
 }

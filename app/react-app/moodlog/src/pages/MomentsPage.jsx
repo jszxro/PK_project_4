@@ -27,6 +27,9 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5;
 
+  const [hoveredEmojiDesc, setHoveredEmojiDesc] = useState('');
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     axios.get('/api/quotes')
       .then((res) => {
@@ -133,11 +136,19 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
             # all
           </button>
 
-          {emojiList.map(({ emojiId }) => (
+          {emojiList.map(({ emojiId, tag, description }) => (
             <button
               key={emojiId}
               className={`tag-btn ${selectedTag === emojiId ? 'active' : ''}`}
               onClick={() => setSelectedTag(emojiId)}
+              onMouseEnter={(e) => {
+                setHoveredEmojiDesc(description || tag || '감정');
+                setTooltipPos({ x: e.clientX, y: e.clientY });
+              }}
+              onMouseMove={(e) => {
+                setTooltipPos({ x: e.clientX, y: e.clientY });
+              }}
+              onMouseLeave={() => setHoveredEmojiDesc('')}
             >
               # {emojiId}
             </button>
@@ -298,6 +309,25 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
       </div>
 
       {showModal && <LoginModal onClose={() => setShowModal(false)} />}
+      {hoveredEmojiDesc && (
+        <div
+          style={{
+            position: 'fixed',
+            top: tooltipPos.y + 15,
+            left: tooltipPos.x + 15,
+            background: '#1E1E1E', // 추출된 어두운 배경색
+            color: '#fff',
+            padding: '6px 10px',
+            borderRadius: '8px',
+            fontSize: '0.85rem',
+            pointerEvents: 'none',
+            zIndex: 999,
+            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)'
+          }}
+        >
+          {hoveredEmojiDesc}
+        </div>
+      )}
     </div>
   );
 };

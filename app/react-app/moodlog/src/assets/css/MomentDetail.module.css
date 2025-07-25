@@ -1,0 +1,191 @@
+/* ../assets/css/MomentDetail.module.css */
+.container {
+  padding: 2rem;
+  max-width: 820px;
+  margin: 0 auto;
+  margin-top: 80px;
+  font-family: 'Arial', sans-serif;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.thumbnail {
+  max-width: 800px;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0.1rem;
+}
+
+.content {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  margin-top: 0px;
+}
+
+.author,
+.time,
+.tag {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.3rem;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #f0f0f0;
+  padding: 0.3rem 0.7rem;
+  border-radius: 15px;
+}
+
+.link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  margin-bottom: 0.2rem;
+  background-color: #222;
+  color: #A8C3A8;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.editButton,
+.deleteButton {
+  margin-top: 1rem;
+  margin-right: 0.1rem;
+  padding: 0.3rem 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.editButton {
+  background-color: #5fc55f;
+  color: white;
+}
+
+.deleteButton {
+  background-color: #f75145;
+  color: white;
+}
+
+.commentHeader {
+  margin-top: 0rem;
+  font-weight: bold;
+}
+
+.commentBox {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.commentInput {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.commentButton {
+  padding: 0.5rem 1rem;
+  background-color: #5fc55f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.commentList {
+  margin-top: 1rem;
+}
+
+.commentItem {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.commentNickname {
+  font-weight: bold;
+}
+
+.commentTime {
+  font-size: 0.8rem;
+  color: gray;
+  margin-top: 0.2rem;
+}
+
+.postCard {
+  background-color: #222;
+  border-radius: 12px;
+  padding: 0px 20px 2px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.postHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metaSection {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.metaInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.commentSection {
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.metaTop {
+  display: flex;
+  justify-content: space-between; /* 좌우 배치 */
+  align-items: center;
+  margin: 0.5rem 0 1rem;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.author {
+  font-weight: 500;
+}
+
+.time {
+  text-align: right;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+.metaCenter {
+  text-align: center;
+}
+
+.mediaAndContent {
+  margin-bottom: 1.5rem;
+}
+.thumbnailBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}

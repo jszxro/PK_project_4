@@ -22,6 +22,9 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const totalPages = Math.ceil(allPosts.length / postsPerPage);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const [hoveredEmojiDesc, setHoveredEmojiDesc] = useState('');
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     console.log('[🔍 MainPage] isLoggedIn:', isLoggedIn);
     console.log('[🔍 MainPage] userInfo:', userInfo);
@@ -83,6 +86,14 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
                   key={e.emojiId}
                   className={`${styles.moodBtn} ${selectedTag === e.tag ? styles.activeMood : ''}`}
                   onClick={() => setSelectedTag(e.tag)}
+                  onMouseEnter={(event) => {
+                    setHoveredEmojiDesc(e.description || e.tag || '감정');
+                    setTooltipPos({ x: event.clientX, y: event.clientY });
+                  }}
+                  onMouseMove={(event) => {
+                    setTooltipPos({ x: event.clientX, y: event.clientY });
+                  }}
+                  onMouseLeave={() => setHoveredEmojiDesc('')}
                 >
                   {e.emojiId}
                 </button>
@@ -224,6 +235,24 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
           onClose={() => setShowModal(false)}
           setIsLoggedIn={setIsLoggedIn}
         />
+      )}
+      {hoveredEmojiDesc && (
+        <div
+          style={{
+            position: 'fixed',
+            top: tooltipPos.y + 15,
+            left: tooltipPos.x + 15,
+            background: '#2b2b2bff',
+            color: '#fff',
+            padding: '6px 10px',
+            borderRadius: '8px',
+            fontSize: '0.85rem',
+            pointerEvents: 'none',
+            zIndex: 999
+          }}
+        >
+          {hoveredEmojiDesc}
+        </div>
       )}
     </div>
   );
