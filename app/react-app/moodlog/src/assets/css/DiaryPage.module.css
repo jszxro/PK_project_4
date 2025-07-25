@@ -221,7 +221,11 @@
 
 .diaryContent {
   font-size: 1rem;
-  white-space: pre-line;
+  white-space: pre-wrap; /* pre-line을 pre-wrap으로 변경 */
+  word-wrap: break-word; /* 긴 단어 줄바꿈 */
+  overflow-wrap: break-word; /* 추가 줄바꿈 보장 */
+  max-width: 100%; /* 컨테이너 넘지 않도록 */
+  line-height: 1.5; /* 가독성 향상 */
 }
 
 .emojiList {

@@ -25,10 +25,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // /uploads/** 경로로 요청이 오면 실제 파일 경로로 매핑
         String absolutePath = "/workspaces/PK_project_4/app/spring-api/mood/uploads/";
-        System.out.println("=== 파일 경로 설정 ===");
-        System.out.println("Working Directory: " + System.getProperty("user.dir"));
-        System.out.println("Upload Path: " + absolutePath);
-        System.out.println("File exists check: " + new java.io.File(absolutePath).exists());
+        // System.out.println("=== 파일 경로 설정 ===");
+        // System.out.println("Working Directory: " + System.getProperty("user.dir"));
+        // System.out.println("Upload Path: " + absolutePath);
+        // System.out.println("File exists check: " + new
+        // java.io.File(absolutePath).exists());
 
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + absolutePath);

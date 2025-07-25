@@ -2,6 +2,10 @@
   display: flex;
   min-height: 100vh;
   padding: 140px 100px;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .main {
@@ -65,9 +69,14 @@
 
 .momentsLayout {
   display: flex;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: auto;
   overflow: hidden;
+  gap: 40px;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .momentMeta {
@@ -228,8 +237,8 @@
 }
 
 .postCard {
-  /* width: 48%; */
-  width: 900px;
+  width: 100%;
+  /* width: 900px; */
   background: #1e1e1e;
   padding: 16px;
   border-radius: 12px;
@@ -255,7 +264,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* width: 1000px; */
+  max-width: 900px;
 }
 
 .rightSection {
@@ -321,6 +330,7 @@
 .pageButton:hover {
   background-color: #555;
 }
+
 .pageButton:hover:not(:disabled) {
   background-color: #666;
 }

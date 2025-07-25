@@ -1,7 +1,7 @@
 /* ArchivePage.module.css */
 
 .archivePanel {
-  padding: 130px 100px 20px 100px;
+  padding: 120px 220px 20px 170px;
   background-color: #000;
   width: 2000px;
   color: white;
@@ -88,7 +88,6 @@
   color: #ccc;
   font-size: 14px;
   flex: 1;
-  height: 150px;
 }
 
 .emotionBoxWrapper {
@@ -162,7 +161,7 @@
   padding: 16px;
   border-radius: 8px;
   box-sizing: border-box;
-  height: 480px;
+  height: 620px;
   /* 6주가 있는 달을 위해 높이 증가 */
   overflow: visible;
   /* 스크롤 제거 */
@@ -174,9 +173,10 @@
   border-radius: 8px;
   flex: 1;
   box-sizing: border-box;
-  height: 100px;
+  height: 620px;
   /* 캘린더와 동일한 높이로 증가 */
-  overflow-y: auto;
+  overflow-y: scroll; /* auto에서 scroll로 변경하여 스크롤 항상 표시 */
+  overflow-x: hidden; /* 가로 스크롤 방지 */
   /* 다이어리 내용이 많으면 스크롤 */
   display: flex;
   flex-direction: column;
@@ -188,7 +188,7 @@
   padding: 16px;
   border-radius: 8px;
   box-sizing: border-box;
-  height: 480px;
+  height: 620px;
   /* 캘린더와 동일한 높이로 증가 */
   overflow-y: auto;
   display: flex;
@@ -243,6 +243,8 @@
   margin: 8px 0;
   justify-content: flex-end;
 }
+
+
 
 .editBtn {
   background-color: #4CAF50;
