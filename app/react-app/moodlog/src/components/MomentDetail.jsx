@@ -95,10 +95,10 @@ const MomentDetail = () => {
 
     if (!post) return <div>불러오는 중...</div>;
 
-    console.log('현재 로그인 유저:', userInfo?.userKey);
-    console.log('게시글 작성자:', post);
-    console.log('isAuthor:', isAuthor);
-    console.log('post:', post);
+    // console.log('현재 로그인 유저:', userInfo?.userKey);
+    // console.log('게시글 작성자:', post);
+    // console.log('isAuthor:', isAuthor);
+    // console.log('post:', post);
 
     return (
     <div className={styles.container}>

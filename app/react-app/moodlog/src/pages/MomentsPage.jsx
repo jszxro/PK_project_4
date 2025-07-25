@@ -34,7 +34,8 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
     axios.get('/api/quotes')
       .then((res) => {
         if (res.data && res.data.length > 0) {
-          setQuote(res.data[0].content);
+          const randomIndex = Math.floor(Math.random() * res.data.length);
+          setQuote(res.data[randomIndex].content);
         }
       })
       .catch((err) => {
@@ -165,7 +166,7 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
           <div className={styles.leftSection}>
             <div className={styles.momentHeader}>
               <p className={styles.momentCount}>
-                {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `all Moments (${filteredPosts.length})`}
+                {selectedTag ? `#${selectedTag} Moments (${filteredPosts.length})` : `All Moments (${filteredPosts.length})`}
               </p>
               <button
                 className={styles.writeBtn}
@@ -184,33 +185,37 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
             {currentPosts.length > 0 ? (
               <div className={styles.momentGrid}>
                 {currentPosts.map(post => (
-                  <div key={post.id} className={styles.postCard}>
+                  <div
+                    key={post.id}
+                    className={styles.postCard}
+                    onClick={() => {
+                      if (!userInfo) {
+                        setShowModal(true);
+                        return;
+                      }
+                      navigate(`/moments/${post.id}`, { state: { post } });
+                    }}
+                  >
                     <div className={styles.momentMeta}>
                       <span className={styles.momentAuthor}>작성자: {post.author}</span>
                       <span
                         className={styles.momentTag}
                         onClick={(e) => {
-                          e.stopPropagation();
+                          e.stopPropagation(); // 태그 클릭 시 상세 페이지로 안 넘어가게 막음
                           setSelectedTag(post.tag);
                         }}
-                        style={{ cursor: 'pointer', color: '#b5d3b0' }}
                       >
                         #{post.tag}
                       </span>
                       <span className={styles.momentTime}>{post.time}</span>
                     </div>
+
                     <img
                       className={styles.momentThumbnail}
                       src={post.thumbnail}
-                      onClick={() => {
-                        if (!userInfo) {
-                          setShowModal(true);
-                          return;
-                        }
-                        navigate(`/moments/${post.id}`, { state: { post } });
-                      }}
                       alt="썸네일"
                     />
+
                     <div className={styles.momentLink}>
                       🔗 <a href={post.url} target="_blank" rel="noopener noreferrer">{post.url.slice(0, 50)}...</a>
                     </div>
