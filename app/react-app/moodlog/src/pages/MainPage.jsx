@@ -106,7 +106,7 @@ function MainPage({ isLoggedIn, setIsLoggedIn }) {
                 navigate('/diary', {
                   state: {
                     selectedTag: selectedTag,              // 감정 태그 전달 (예: 'happy')
-                    selectedDate: new Date().toISOString(), // 오늘 날짜 전달 (옵션)
+                    selectedDate: new Date().toISOString().split('T')[0], // 오늘 날짜 전달 (옵션)
                     // fromMain: true                          // 구분용 (필요 시)
                   }
                 })
