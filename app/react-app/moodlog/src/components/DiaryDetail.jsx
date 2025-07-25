@@ -16,38 +16,49 @@ function DiaryDetail() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [existingImageUrl, setExistingImageUrl] = useState(null);
-  const [imageRemoved, setImageRemoved] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingDiary, setEditingDiary] = useState(null);
   const [hoveredEmojiDesc, setHoveredEmojiDesc] = useState('');
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (location.state?.selectedDate) {
-      setSelectedDate(new Date(location.state.selectedDate));
-    } else {
-      setSelectedDate(new Date());
-    }
+    const rawDate = location.state?.selectedDate;
+    const editingDiary = location.state?.editingDiary;
 
-    // 수정 모드 확인
-    if (location.state?.editingDiary) {
+    if (editingDiary) {
       setIsEditMode(true);
-      setEditingDiary(location.state.editingDiary);
-      setSelectedEmoji(location.state.editingDiary.emoji);
-      setContent(location.state.editingDiary.content);
+      setEditingDiary(editingDiary);
+      setSelectedEmoji(editingDiary.emoji);
+      setContent(editingDiary.content);
 
-      if (location.state.editingDiary.imgUrl) {
-        setExistingImageUrl(location.state.editingDiary.imgUrl);
-        // 기존 이미지를 미리보기로 표시하지 않음 (새 선택과 구분)
+      if (editingDiary.createdAt) {
+        const [datePart] = editingDiary.createdAt.split('T');
+        const [year, month, day] = datePart.split('-');
+        setSelectedDate(new Date(Number(year), Number(month) - 1, Number(day)));
       }
+
+      if (editingDiary.imgUrl) {
+        setImagePreview(editingDiary.imgUrl);
+      }
+    } else if (rawDate) {
+      // 문자열인 경우 날짜로 변환
+      if (typeof rawDate === 'string') {
+        const [year, month, day] = rawDate.split('-');
+        setSelectedDate(new Date(Number(year), Number(month) - 1, Number(day)));
+      } else if (rawDate instanceof Date) {
+        setSelectedDate(rawDate);
+      }
+    } else {
+      setSelectedDate(new Date()); // 기본값: 오늘 날짜
     }
   }, [location.state]);
+
+
 
   useEffect(() => {
     const loadEmojis = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/emojis');
+        const response = await axios.get('/api/emojis');
         setEmojiList(response.data);
       } catch (error) {
         console.error('이모지 목록 불러오기 실패:', error);
@@ -65,6 +76,7 @@ function DiaryDetail() {
     }
   }, [location.state, emojiList, isEditMode]);
 
+  // 일기 저장/수정
   const handleSave = async () => {
     if (!selectedEmoji || !content.trim()) {
       alert('감정과 내용을 모두 입력해주세요.');
@@ -80,59 +92,55 @@ function DiaryDetail() {
 
     try {
       const userKey = userInfo.userKey || localStorage.getItem('userKey');
-      let finalImageUrl = null;
 
       if (isEditMode) {
-        console.log('=== 수정 모드 ===');
-        console.log('새 이미지 선택됨:', !!selectedImage);
-        console.log('기존 이미지 URL:', existingImageUrl);
-        console.log('이미지 제거됨:', imageRemoved);
+        // 수정
+        let imgUrl = editingDiary.imgUrl;
 
-        // 이미지 처리 로직
+        // 새 이미지가 선택된 경우
         if (selectedImage) {
-          // 새 이미지가 선택된 경우 업로드
+          const formData = new FormData();
+          formData.append('file', selectedImage);
+
           try {
-            const formData = new FormData();
-            formData.append('image', selectedImage);
-            formData.append('userKey', userKey);
-
-            console.log('이미지 업로드 시작...');
-            const uploadResponse = await axios.post('http://localhost:8080/api/image/upload', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' }
+            const uploadResponse = await axios.post('/api/upload', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
             });
-
-            finalImageUrl = uploadResponse.data.imgUrl;
-            console.log('새 이미지 업로드 성공:', finalImageUrl);
+            imgUrl = uploadResponse.data.url;
           } catch (uploadError) {
             console.error('이미지 업로드 실패:', uploadError);
-            alert('이미지 업로드에 실패했습니다.');
-            setIsLoading(false);
-            return;
+            const proceed = window.confirm('이미지 업로드에 실패했습니다. 기존 이미지로 저장하시겠습니까?');
+            if (!proceed) {
+              setIsLoading(false);
+              return;
+            }
           }
-        } else if (!imageRemoved && existingImageUrl) {
-          // 기존 이미지 유지
-          finalImageUrl = existingImageUrl;
-          console.log('기존 이미지 유지:', finalImageUrl);
-        } else {
-          // 이미지 삭제 (null로 설정)
-          finalImageUrl = null;
-          console.log('이미지 삭제 (null로 설정)');
+        }
+
+        // 기존 이미지가 있었는데 제거된 경우
+        if (!imagePreview && !selectedImage) {
+          imgUrl = null;
         }
 
         const updateData = {
           emoji: selectedEmoji,
           content: content,
-          imgUrl: finalImageUrl // null일 수도 있음 (이미지 삭제)
+          imgUrl: imgUrl
         };
 
-        console.log('수정 데이터:', updateData);
-        await axios.put(`http://localhost:8080/api/diaries/${editingDiary.diaryId}`, updateData);
+        await axios.put(`/api/diaries/${editingDiary.diaryId}`, updateData);
         alert('일기가 성공적으로 수정되었습니다!');
-      } else {
-        // 새 일기 작성 모드
-        const dateKey = selectedDate.toISOString().split('T')[0];
 
-        const existingResponse = await axios.get(`http://localhost:8080/api/diaries/user/${userKey}`);
+      } else {
+        // 새 일기 작성
+        const dateKey = selectedDate.toISOString().split('T')[0];
+        console.log("📦 보내는 selectedDate:", dateKey);
+
+
+        // 같은 날짜에 이미 작성된 일기 있는지 확인
+        const existingResponse = await axios.get(`/api/diaries/user/${userKey}`);
         const existingDiary = existingResponse.data.find(diary =>
           diary.createdAt && diary.createdAt.split('T')[0] === dateKey
         );
@@ -143,21 +151,23 @@ function DiaryDetail() {
           return;
         }
 
-        // 새 이미지 업로드
+        // 새 이미지가 선택된 경우
+        let imgUrl = null;
         if (selectedImage) {
-          try {
-            const formData = new FormData();
-            formData.append('image', selectedImage);
-            formData.append('userKey', userKey);
+          const formData = new FormData();
+          formData.append('file', selectedImage);
 
-            const uploadResponse = await axios.post('http://localhost:8080/api/image/upload', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' }
+          try {
+            const uploadResponse = await axios.post('/api/upload', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
             });
-            finalImageUrl = uploadResponse.data.imgUrl;
+            imgUrl = uploadResponse.data.url;
           } catch (uploadError) {
             console.error('이미지 업로드 실패:', uploadError);
-            alert('이미지 업로드에 실패했습니다. 이미지 없이 저장하시겠습니까?');
-            if (!confirm('이미지 없이 저장하시겠습니까?')) {
+            const proceed = window.confirm('이미지 업로드에 실패했습니다. 이미지 없이 저장하시겠습니까?');
+            if (!proceed) {
               setIsLoading(false);
               return;
             }
@@ -168,19 +178,21 @@ function DiaryDetail() {
           userKey: userKey,
           emoji: selectedEmoji,
           content: content,
-          selectedDate: selectedDate.toISOString().split('T')[0],
-          imgUrl: finalImageUrl
+          selectedDate: dateKey,
+          imgUrl: imgUrl
         };
 
-        await axios.post('http://localhost:8080/api/diaries', diaryData);
+        await axios.post('/api/diaries', diaryData);
         alert('일기가 성공적으로 저장되었습니다!');
       }
 
+      // 작성 후 이동
       if (location.state?.fromArchive) {
         navigate('/archive', { state: { refreshData: true } });
       } else {
         navigate('/');
       }
+
     } catch (error) {
       console.error('일기 저장/수정 실패:', error);
       alert(isEditMode ? '일기 수정에 실패했습니다.' : '일기 저장에 실패했습니다.');
@@ -193,7 +205,6 @@ function DiaryDetail() {
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(file);
-      setImageRemoved(false);
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
@@ -205,10 +216,6 @@ function DiaryDetail() {
   const handleRemoveImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
-    if (isEditMode && existingImageUrl) {
-      setExistingImageUrl(null);
-      setImageRemoved(true);
-    }
   };
 
   const handleCancel = () => {
@@ -285,10 +292,9 @@ function DiaryDetail() {
               📷 사진 선택
             </label>
 
-            {/* 새로 선택한 이미지 미리보기 */}
             {imagePreview && (
               <div className={styles.imagePreview}>
-                <img src={imagePreview} alt="새 이미지 미리보기" className={styles.previewImage} />
+                <img src={imagePreview} alt="미리보기" className={styles.previewImage} />
                 <button
                   type="button"
                   onClick={handleRemoveImage}
@@ -296,31 +302,7 @@ function DiaryDetail() {
                 >
                   ✕
                 </button>
-                <p className={styles.imageLabel}>새 이미지</p>
               </div>
-            )}
-
-            {/* 기존 이미지 표시 (수정 모드에서만) */}
-            {!imagePreview && existingImageUrl && !imageRemoved && (
-              <div className={styles.imageInfo}>
-                <div className={styles.existingImageBox}>
-                  <span className={styles.imageIcon}>🖼️</span>
-                  <span className={styles.imageText}>기존 사진</span>
-                  <button
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className={styles.removeImageButton}
-                  >
-                    ✕
-                  </button>
-                </div>
-                <small className={styles.imageHint}>새 사진을 선택하면 기존 사진이 교체됩니다</small>
-              </div>
-            )}
-
-            {/* 이미지가 없을 때 */}
-            {!imagePreview && (!existingImageUrl || imageRemoved) && (
-              <p className={styles.noImageText}>선택된 사진이 없습니다</p>
             )}
           </div>
         </div>
@@ -338,16 +320,21 @@ function DiaryDetail() {
             className={styles.saveButton}
             onClick={handleSave}
             disabled={isLoading}
+
           >
+
             {isLoading ?
               (isEditMode ? '수정 중...' : '저장 중...') :
               (isEditMode ? '수정하기' : '저장하기')
             }
+
+
           </button>
         </div>
       </div>
 
-      {/* 툴팁 */}
+
+      {/* 툴팁 출력 */}
       {hoveredEmojiDesc && (
         <div
           className={styles.tooltip}

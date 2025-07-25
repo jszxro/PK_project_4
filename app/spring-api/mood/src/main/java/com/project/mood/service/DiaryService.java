@@ -25,7 +25,7 @@ public class DiaryService {
 
   public String createDiary(DiaryDTO request) {
     // System.out.println("DiaryService.createDiary 시작");
-    // System.out.println("받은 selectedDate: " + request.getSelectedDate());
+    System.out.println("받은 selectedDate: " + request.getSelectedDate());
     // System.out.println("받은 userKey: " + request.getUserKey());
     // System.out.println("받은 content: " + request.getContent());
 
@@ -51,11 +51,8 @@ public class DiaryService {
 
     // selectedDate가 있으면 해당 날짜로 설정, 없으면 현재 날짜
     if (request.getSelectedDate() != null) {
-      LocalDateTime selectedDateTime = request.getSelectedDate().atTime(LocalTime.now());
+      LocalDateTime selectedDateTime = request.getSelectedDate().atStartOfDay();
       diary.setCreatedAt(selectedDateTime);
-      System.out.println("선택된 날짜로 설정: " + selectedDateTime);
-    } else {
-      System.out.println("selectedDate가 null이므로 현재 날짜 사용");
     }
 
     System.out.println("저장 전 diary.getCreatedAt(): " + diary.getCreatedAt());
@@ -103,9 +100,7 @@ public class DiaryService {
     }
 
     // 이미지 URL 업데이트
-    if (request.getImgUrl() != null) {
-      diary.setImgUrl(request.getImgUrl());
-    }
+    diary.setImgUrl(request.getImgUrl());
 
     // 수정 시간 업데이트
     diary.setUpdatedAt(LocalDateTime.now());
