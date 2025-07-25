@@ -112,6 +112,8 @@
 
 .commentNickname {
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .commentTime {
@@ -161,7 +163,8 @@
 
 .metaTop {
   display: flex;
-  justify-content: space-between; /* 좌우 배치 */
+  justify-content: space-between;
+  /* 좌우 배치 */
   align-items: center;
   margin: 0.5rem 0 1rem;
   font-size: 0.9rem;
@@ -177,6 +180,7 @@
   white-space: nowrap;
   font-size: 0.9rem;
 }
+
 .metaCenter {
   text-align: center;
 }
@@ -184,8 +188,35 @@
 .mediaAndContent {
   margin-bottom: 1.5rem;
 }
+
 .thumbnailBlock {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+}
+
+
+.commentProfile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 5px;
+}
+
+.commentDefault {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #555;
+  display: flex;
+  object-fit: cover;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.momentLikes {
+  color: #e6b800;
+  font-weight: bold;
 }

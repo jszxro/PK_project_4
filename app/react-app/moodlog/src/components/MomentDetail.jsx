@@ -6,6 +6,8 @@ import EditMomentForm from './EditMomentForm'
 import styles from '../assets/css/MomentDetail.module.css';
 
 const MomentDetail = () => {
+    const [userReaction, setUserReaction] = useState(null); // 현재 사용자의 좋아요 여부
+    const [likeCount, setLikeCount] = useState(0); // 전체 좋아요 수
     const { userInfo } = useContext(UserContext);
     const { postId } = useParams();
     const navigate = useNavigate();
@@ -15,6 +17,45 @@ const MomentDetail = () => {
     const [commentContent, setCommentContent] = useState('');
     const [comments, setComments] = useState([]);
     const [post, setPost] = useState(postFromState || null);
+
+
+    // 하트 수 가져오기
+    useEffect(() => {
+        if (!post || !userInfo) return;
+
+        // 좋아요 상태 조회
+        axios.get(`/api/reactions/check?postId=${post.id}&userKey=${userInfo.userKey}`)
+            .then(res => setUserReaction(res.data.reactionType))
+            .catch(err => console.error("좋아요 상태 조회 실패:", err));
+
+        // 총 좋아요 수 조회
+        axios.get(`/api/reactions/count?postId=${post.id}`)
+            .then(res => setLikeCount(res.data.count))
+            .catch(err => console.error("좋아요 수 조회 실패:", err));
+    }, [post, userInfo]);
+
+    // 하트클릭
+    const toggleReaction = () => {
+        axios.post(`/api/reactions/toggle`, {
+            postId: post.id,
+            userKey: userInfo.userKey
+        })
+            .then(res => {
+                const newReactionType = res.data.reactionType;
+                setUserReaction(newReactionType);
+
+                // 좋아요 수 증감 처리
+                if (newReactionType === 1) {
+                    setLikeCount(prev => prev + 1);
+                } else {
+                    setLikeCount(prev => prev - 1);
+                }
+            })
+            .catch(err => {
+                console.error("좋아요 토글 실패:", err);
+            });
+    };
+    if (!post) return null;
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -93,95 +134,104 @@ const MomentDetail = () => {
 
     if (!post) return <div>불러오는 중...</div>;
 
-    // console.log('현재 로그인 유저:', userInfo?.userKey);
-    // console.log('게시글 작성자:', post);
-    // console.log('isAuthor:', isAuthor);
-    // console.log('post:', post);
 
     return (
-    <div className={styles.container}>
-        <div className={styles.postCard}>
-        <div className={styles.postHeaderRow}>
-            <h2 className={styles.title}>{post.content_title}</h2>
-        </div>
+        <div className={styles.container}>
+            <div className={styles.postCard}>
+                <div className={styles.postHeaderRow}>
+                    <h2 className={styles.title}>{post.content_title}</h2>
+                </div>
 
-        {/* ⬇ 여기: 작성자 + 작성일 추가 */}
-        <div className={styles.metaTop}>
-        <div className={styles.metaLeft}>작성자: {post.author}</div>
-        <div className={styles.metaCenter}>감정: #{post.emojiId || post.tag}</div>
-        {post.time && (
-            <div className={styles.metaRight}>
-            작성일: {new Date(post.time).toLocaleString()}
+                {/* ⬇ 여기: 작성자 + 작성일 추가 */}
+                <div className={styles.metaTop}>
+                    <div className={styles.metaLeft}>작성자: {post.author}</div>
+                    <div className={styles.metaCenter}>감정: #{post.emojiId || post.tag}</div>
+                    {post.time && (
+                        <div className={styles.metaRight}>
+                            작성일: {new Date(post.time).toLocaleString()}
+                        </div>
+                    )}
+                </div>
+
+                <div className={styles.mediaAndContent}>
+                    <div className={styles.thumbnailBlock}>
+                        <img
+                            src={post.imgUrl || post.thumbnail}
+                            alt="썸네일"
+                            className={styles.thumbnail}
+                        />
+                        <div className={styles.linkBelowThumbnail}>
+                            <a
+                                href={post.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.link}
+                            >
+                                🔗 유튜브 링크
+                            </a>
+                        </div>
+                        <div className={styles.momentLikes} onClick={toggleReaction} style={{ cursor: 'pointer' }}>
+                            {userReaction === 1 ? "💛" : "🤍"} {likeCount}
+                        </div>
+                    </div>
+
+                    {/* 본문 내용 */}
+                    <p className={styles.content}>{post.content}</p>
+                    {isAuthor && !showEditForm && (
+                        <div className={styles.buttonGroup}>
+                            <button className={styles.editButton} onClick={() => setShowEditForm(true)}>✏️ 수정</button>
+                            <button className={styles.deleteButton} onClick={handleDelete}>🗑️ 삭제</button>
+                        </div>
+                    )}
+                </div>
+
+                {showEditForm && (
+                    <EditMomentForm
+                        post={post}
+                        onSave={(updatedPost) => {
+                            setPost(updatedPost);
+                            setShowEditForm(false);
+                        }}
+                        onCancel={() => setShowEditForm(false)}
+                    />
+                )}
             </div>
-        )}
-        </div>
 
-        <div className={styles.mediaAndContent}>
-        <div className={styles.thumbnailBlock}>
-            <img
-            src={post.imgUrl || post.thumbnail}
-            alt="썸네일"
-            className={styles.thumbnail}
-            />
-            <div className={styles.linkBelowThumbnail}>
-            <a
-                href={post.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-            >
-                🔗 유튜브 링크
-            </a>
+            {/* 댓글 영역은 그대로 유지 */}
+            <div className={styles.commentSection}>
+                <p className={styles.commentHeader}> 💬댓글 <hr /></p>
+                <div className={styles.commentBox}>
+                    <input
+                        type="text"
+                        value={commentContent}
+                        onChange={(e) => setCommentContent(e.target.value)}
+                        placeholder="댓글을 입력하세요"
+                        onKeyDown={handleKeyDown}
+                        className={styles.commentInput}
+                    />
+                    <button onClick={handleCommentSubmit} className={styles.commentButton}>댓글 달기</button>
+                </div>
+                <div className={styles.commentList}>
+                    {comments.map((comment, index) => (
+                        <div key={index} className={styles.commentItem}>
+                            <div className={styles.commentNickname}>{comment.profile ? (
+                                <img
+                                    src={comment.profile}
+                                    alt="프로필"
+                                    className={styles.commentProfile}
+                                />
+                            ) : (
+                                <div className={styles.commentDefault}
+                                >{comment.nickname[0] || 'U'}</div>
+                            )}
+                                <strong>{comment.nickname}</strong></div>
+                            <div className={styles.commentContent}>{comment.content}</div>
+                            <div className={styles.commentTime}>{new Date(comment.createdAt).toLocaleString()}</div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
-
-        {/* 본문 내용 */}
-        <p className={styles.content}>{post.content}</p>
-            {isAuthor && !showEditForm && (
-            <div className={styles.buttonGroup}>
-                <button className={styles.editButton} onClick={() => setShowEditForm(true)}>✏️ 수정</button>
-                <button className={styles.deleteButton} onClick={handleDelete}>🗑️ 삭제</button>
-            </div>
-            )}
-        </div>
-
-        {showEditForm && (
-            <EditMomentForm
-            post={post}
-            onSave={(updatedPost) => {
-                setPost(updatedPost);
-                setShowEditForm(false);
-            }}
-            onCancel={() => setShowEditForm(false)}
-            />
-        )}
-        </div>
-
-        {/* 댓글 영역은 그대로 유지 */}
-        <div className={styles.commentSection}>
-        <p className={styles.commentHeader}> 💬댓글 <hr /></p>
-        <div className={styles.commentBox}>
-            <input
-            type="text"
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-            placeholder="댓글을 입력하세요"
-            onKeyDown={handleKeyDown}
-            className={styles.commentInput}
-            />
-            <button onClick={handleCommentSubmit} className={styles.commentButton}>댓글 달기</button>
-        </div>
-        <div className={styles.commentList}>
-            {comments.map((comment, index) => (
-            <div key={index} className={styles.commentItem}>
-                <div className={styles.commentNickname}><strong>{comment.nickname}</strong></div>
-                <div className={styles.commentContent}>{comment.content}</div>
-                <div className={styles.commentTime}>{new Date(comment.createdAt).toLocaleString()}</div>
-            </div>
-            ))}
-        </div>
-        </div>
-    </div>
     );
 
 

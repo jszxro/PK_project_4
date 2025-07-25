@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class CommentsService {
 
     @Autowired
     private final CommentsRepository commentsRepository;
@@ -36,16 +36,19 @@ public class CommentService {
     }
 
     // 댓글조회
-    public List<Map<String, Object>> getCommentsWithNickname(String postId) {
-        List<Object[]> results = commentsRepository.findCommentsWithNicknameByPostId(postId);
+    public List<Map<String, Object>> getCommentsWithMemberInfo(String postId) {
+        List<Object[]> results = commentsRepository.findCommentsWithMemberInfoByPostId(postId);
 
         return results.stream().map(obj -> {
             Comments c = (Comments) obj[0];
             String nickname = (String) obj[1];
+            String profile = (String) obj[2];
+
             Map<String, Object> map = new HashMap<>();
             map.put("content", c.getContent());
             map.put("createdAt", c.getCreatedAt());
             map.put("nickname", nickname);
+            map.put("profile", profile);
             return map;
         }).collect(Collectors.toList());
     }
