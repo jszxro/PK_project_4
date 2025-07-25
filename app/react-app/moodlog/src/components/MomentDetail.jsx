@@ -83,18 +83,25 @@ const MomentDetail = () => {
         // state에 데이터가 있으면 API 요청 안 함
         if (!postFromState) {
             axios.get(`/api/posts/${postId}`)
-                .then(res => setPost(res.data))
+                .then(res => {
+                    setPost(res.data);
+                    console.log("게시글정보", res.data);
+
+                })
                 .catch(err => {
                     console.error('상세 게시글 로딩 실패:', err);
                     alert('게시글을 불러오지 못했습니다.');
                     navigate('/moments');
                 });
         }
-    }, [postId]);
+    }, []);
 
     useEffect(() => {
         axios.get(`/api/comments/${postId}`)
-            .then(res => setComments(res.data))
+            .then(res => {
+                setComments(res.data);
+                console.log("📌 댓글 목록:", res.data);
+            })
             .catch(err => console.error('댓글 불러오기 실패:', err));
     }, [postId, commentContent]);
 
@@ -129,6 +136,25 @@ const MomentDetail = () => {
                 console.log("postId", postId)
                 console.error('댓글 작성 실패:', err);
                 alert('댓글 등록에 실패했습니다.');
+            });
+    };
+
+    // 댓글 삭제버튼
+    const handleDeleteComment = (commentId) => {
+        const confirmed = window.confirm("댓글을 삭제하시겠습니까?");
+        if (!confirmed) return;
+
+        axios.delete(`/api/comments/${commentId}`, {
+            data: { userKey: userInfo.userKey }, // 백엔드에서 유저 확인
+            withCredentials: true
+        })
+            .then(() => {
+                setComments(prev => prev.filter(c => c.commentId !== commentId)); // 삭제 후 UI 업데이트
+                alert("댓글이 삭제되었습니다.");
+            })
+            .catch(err => {
+                console.error("댓글 삭제 실패:", err);
+                alert("댓글 삭제에 실패했습니다.");
             });
     };
 
@@ -224,9 +250,20 @@ const MomentDetail = () => {
                                 <div className={styles.commentDefault}
                                 >{comment.nickname[0] || 'U'}</div>
                             )}
-                                <strong>{comment.nickname}</strong></div>
+                                <strong>
+                                    {comment.nickname}
+                                    {comment.nickname === post.author && ' (작성자)'}
+                                </strong></div>
                             <div className={styles.commentContent}>{comment.content}</div>
-                            <div className={styles.commentTime}>{new Date(comment.createdAt).toLocaleString()}</div>
+                            <div className={styles.commentTime}>{new Date(comment.createdAt).toLocaleString()}{comment.nickname === userInfo.nickname && (
+                                <button
+                                    className={styles.commentDeleteButton}
+                                    onClick={() => handleDeleteComment(comment.commentId)}
+                                >
+                                    삭제
+                                </button>
+                            )}</div>
+
                         </div>
                     ))}
                 </div>
