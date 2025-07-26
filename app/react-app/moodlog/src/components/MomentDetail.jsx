@@ -1,240 +1,313 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
+import { useState, useContext, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import EditMomentForm from './EditMomentForm'
-import styles from '../assets/css/MomentDetail.module.css';
+import { UserContext } from '../context/UserContext';
+import styles from '../assets/css/DiaryPage.module.css';
 
-const MomentDetail = () => {
-    const [userReaction, setUserReaction] = useState(null); // 현재 사용자의 좋아요 여부
-    const [likeCount, setLikeCount] = useState(0); // 전체 좋아요 수
-    const { userInfo } = useContext(UserContext);
-    const { postId } = useParams();
+function DiaryDetail() {
     const navigate = useNavigate();
     const location = useLocation();
-    const postFromState = location.state?.post;
-    const [showEditForm, setShowEditForm] = useState(false);
-    const [commentContent, setCommentContent] = useState('');
-    const [comments, setComments] = useState([]);
-    const [post, setPost] = useState(postFromState || null);
+    const { userInfo } = useContext(UserContext);
 
-
-    // 하트 수 가져오기
-    useEffect(() => {
-        if (!post || !userInfo) return;
-
-        // 좋아요 상태 조회
-        axios.get(`/api/reactions/check?postId=${post.id}&userKey=${userInfo.userKey}`)
-            .then(res => setUserReaction(res.data.reactionType))
-            .catch(err => console.error("좋아요 상태 조회 실패:", err));
-
-        // 총 좋아요 수 조회
-        axios.get(`/api/reactions/count?postId=${post.id}`)
-            .then(res => setLikeCount(res.data.count))
-            .catch(err => console.error("좋아요 수 조회 실패:", err));
-    }, [post, userInfo]);
-
-    // 하트클릭
-    const toggleReaction = () => {
-        axios.post(`/api/reactions/toggle`, {
-            postId: post.id,
-            userKey: userInfo.userKey
-        })
-            .then(res => {
-                const newReactionType = res.data.reactionType;
-                setUserReaction(newReactionType);
-
-                // 좋아요 수 증감 처리
-                if (newReactionType === 1) {
-                    setLikeCount(prev => prev + 1);
-                } else {
-                    setLikeCount(prev => prev - 1);
-                }
-            })
-            .catch(err => {
-                console.error("좋아요 토글 실패:", err);
-            });
-    };
-    if (!post) return null;
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            handleCommentSubmit();
-        }
-    };
-    const handleDelete = async () => {
-        const confirmed = window.confirm('정말 이 게시글을 삭제하시겠습니까?');
-        if (!confirmed) return;
-
-        try {
-            await axios.delete(`/api/posts/${postId}`, {
-                data: { userKey: userInfo.userKey },  // axios delete에서 body 보내는 법
-                withCredentials: true
-            });
-            alert('게시글이 삭제되었습니다.');
-            navigate('/moments');
-        } catch (error) {
-            console.error('게시글 삭제 실패:', error);
-            alert('삭제에 실패했습니다.');
-        }
-    };
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedEmoji, setSelectedEmoji] = useState('');
+    const [content, setContent] = useState('');
+    const [emojiList, setEmojiList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [editingDiary, setEditingDiary] = useState(null);
+    const [hoveredEmojiDesc, setHoveredEmojiDesc] = useState('');
+    const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
-        // state에 데이터가 있으면 API 요청 안 함
-        if (!postFromState) {
-            axios.get(`/api/posts/${postId}`)
-                .then(res => setPost(res.data))
-                .catch(err => {
-                    console.error('상세 게시글 로딩 실패:', err);
-                    alert('게시글을 불러오지 못했습니다.');
-                    navigate('/moments');
-                });
+        const rawDate = location.state?.selectedDate;
+        const editingDiary = location.state?.editingDiary;
+
+        if (editingDiary) {
+            setIsEditMode(true);
+            setEditingDiary(editingDiary);
+            setSelectedEmoji(editingDiary.emoji);
+            setContent(editingDiary.content);
+
+            if (editingDiary.createdAt) {
+                const [datePart] = editingDiary.createdAt.split('T');
+                setSelectedDate(datePart); // 수정: 문자열 그대로 사용
+            }
+
+            if (editingDiary.imgUrl) {
+                setImagePreview(editingDiary.imgUrl);
+            }
+        } else if (rawDate) {
+            if (typeof rawDate === 'string') {
+                setSelectedDate(rawDate);
+            } else if (rawDate instanceof Date) {
+                const yyyy = rawDate.getFullYear();
+                const mm = String(rawDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(rawDate.getDate()).padStart(2, '0');
+                setSelectedDate(`${yyyy}-${mm}-${dd}`);
+            }
+        } else {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            setSelectedDate(`${yyyy}-${mm}-${dd}`);
         }
-    }, [postId]);
+    }, [location.state]);
 
     useEffect(() => {
-        axios.get(`/api/comments/${postId}`)
-            .then(res => setComments(res.data))
-            .catch(err => console.error('댓글 불러오기 실패:', err));
-    }, [postId, commentContent]);
+        const loadEmojis = async () => {
+            try {
+                const response = await axios.get('/api/emojis');
+                setEmojiList(response.data);
+            } catch (error) {
+                console.error('이모지 목록 불러오기 실패:', error);
+            }
+        };
+        loadEmojis();
+    }, []);
 
+    useEffect(() => {
+        if (location.state?.selectedTag && emojiList.length > 0 && !isEditMode) {
+            const matchedEmoji = emojiList.find(e => e.tag === location.state.selectedTag);
+            if (matchedEmoji) {
+                setSelectedEmoji(matchedEmoji.emoji);
+            }
+        }
+    }, [location.state, emojiList, isEditMode]);
 
-    const isAuthor = userInfo?.userKey === post.userKey;
-
-    // 댓글작성버튼
-    const handleCommentSubmit = () => {
-        if (!commentContent.trim()) {
-            alert('댓글 내용을 입력하세요.');
+    const handleSave = async () => {
+        if (!selectedEmoji || !content.trim()) {
+            alert('감정과 내용을 모두 입력해주세요.');
             return;
         }
 
-        axios.post('/api/comments',
-            {
-                postId: postId,
-                content: commentContent
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${document.cookie.replace("signin_info=", "")}`
-                },
-                withCredentials: true
+        if (!userInfo) {
+            alert('로그인이 필요합니다.');
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const userKey = userInfo.userKey || localStorage.getItem('userKey');
+
+            if (isEditMode) {
+                let imgUrl = editingDiary.imgUrl;
+
+                if (selectedImage) {
+                    const formData = new FormData();
+                    formData.append('file', selectedImage);
+                    try {
+                        const uploadResponse = await axios.post('/api/upload', formData, {
+                            headers: { 'Content-Type': 'multipart/form-data' },
+                        });
+                        imgUrl = uploadResponse.data.url;
+                    } catch (uploadError) {
+                        console.error('이미지 업로드 실패:', uploadError);
+                        const proceed = window.confirm('이미지 업로드에 실패했습니다. 기존 이미지로 저장하시겠습니까?');
+                        if (!proceed) {
+                            setIsLoading(false);
+                            return;
+                        }
+                    }
+                }
+
+                if (!imagePreview && !selectedImage) {
+                    imgUrl = null;
+                }
+
+                const updateData = {
+                    emoji: selectedEmoji,
+                    content: content,
+                    imgUrl: imgUrl,
+                };
+
+                await axios.put(`/api/diaries/${editingDiary.diaryId}`, updateData);
+                alert('일기가 성공적으로 수정되었습니다!');
+            } else {
+                const dateKey = selectedDate;
+
+                const existingResponse = await axios.get(`/api/diaries/user/${userKey}`);
+                const existingDiary = existingResponse.data.find(diary =>
+                    diary.createdAt && diary.createdAt.split('T')[0] === dateKey
+                );
+
+                if (existingDiary) {
+                    alert('해당 날짜에 이미 일기가 작성되어 있습니다.');
+                    setIsLoading(false);
+                    return;
+                }
+
+                let imgUrl = null;
+                if (selectedImage) {
+                    const formData = new FormData();
+                    formData.append('file', selectedImage);
+                    try {
+                        const uploadResponse = await axios.post('/api/upload', formData, {
+                            headers: { 'Content-Type': 'multipart/form-data' },
+                        });
+                        imgUrl = uploadResponse.data.url;
+                    } catch (uploadError) {
+                        console.error('이미지 업로드 실패:', uploadError);
+                        const proceed = window.confirm('이미지 업로드에 실패했습니다. 이미지 없이 저장하시겠습니까?');
+                        if (!proceed) {
+                            setIsLoading(false);
+                            return;
+                        }
+                    }
+                }
+
+                const diaryData = {
+                    userKey: userKey,
+                    emoji: selectedEmoji,
+                    content: content,
+                    selectedDate: dateKey,
+                    imgUrl: imgUrl,
+                };
+
+                await axios.post('/api/diaries', diaryData);
+                alert('일기가 성공적으로 저장되었습니다!');
             }
-        )
-            .then(() => {
-                alert('댓글이 등록되었습니다!');
-                setCommentContent('');
-                // 여기에 댓글 목록 새로고침 함수 호출해도 됨
-            })
-            .catch(err => {
-                console.log("postId", postId)
-                console.error('댓글 작성 실패:', err);
-                alert('댓글 등록에 실패했습니다.');
-            });
+
+            if (location.state?.fromArchive) {
+                navigate('/archive', { state: { refreshData: true } });
+            } else {
+                navigate('/');
+            }
+
+        } catch (error) {
+            console.error('일기 저장/수정 실패:', error);
+            alert(isEditMode ? '일기 수정에 실패했습니다.' : '일기 저장에 실패했습니다.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    if (!post) return <div>불러오는 중...</div>;
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedImage(file);
+            const reader = new FileReader();
+            reader.onload = (e) => setImagePreview(e.target.result);
+            reader.readAsDataURL(file);
+        }
+    };
 
+    const handleRemoveImage = () => {
+        setSelectedImage(null);
+        setImagePreview(null);
+    };
+
+    const handleCancel = () => {
+        if (location.state?.fromArchive) {
+            navigate('/archive');
+        } else {
+            navigate('/');
+        }
+    };
+
+    const formatDate = (date) => {
+        if (!date) return '';
+        if (typeof date === 'string') return date;
+        return date.toISOString().split('T')[0];
+    };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.postCard}>
-                <div className={styles.postHeaderRow}>
-                    <h2 className={styles.title}>{post.content_title}</h2>
+        <div className={styles.diaryContainer}>
+            <div className={styles.diaryHeader}>
+                <h2>{isEditMode ? 'Diary 수정' : 'Diary'}</h2>
+                <div className={styles.dateDisplay}>
+                    {formatDate(selectedDate)}
                 </div>
+            </div>
 
-                {/* ⬇ 여기: 작성자 + 작성일 추가 */}
-                <div className={styles.metaTop}>
-                    <div className={styles.metaLeft}>작성자: {post.author}</div>
-                    <div className={styles.metaCenter}>감정: #{post.emojiId || post.tag}</div>
-                    {post.time && (
-                        <div className={styles.metaRight}>
-                            작성일: {new Date(post.time).toLocaleString()}
-                        </div>
-                    )}
-                </div>
-
-                <div className={styles.mediaAndContent}>
-                    <div className={styles.thumbnailBlock}>
-                        <img
-                            src={post.imgUrl || post.thumbnail}
-                            alt="썸네일"
-                            className={styles.thumbnail}
-                        />
-                        <div className={styles.linkBelowThumbnail}>
-                            <a
-                                href={post.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.link}
+            <div className={styles.diaryForm}>
+                <div className={styles.emojiSection}>
+                    <h3>오늘의 감정을 선택해주세요</h3>
+                    <div className={styles.emojiGrid}>
+                        {emojiList.map((emoji) => (
+                            <button
+                                key={emoji.emojiId}
+                                className={`${styles.emojiButton} ${selectedEmoji === emoji.emoji ? styles.selected : ''}`}
+                                onClick={() => setSelectedEmoji(emoji.emoji)}
+                                onMouseEnter={(e) => {
+                                    setHoveredEmojiDesc(emoji.description || emoji.tag || '감정');
+                                    setTooltipPos({ x: e.clientX, y: e.clientY });
+                                }}
+                                onMouseMove={(e) => {
+                                    setTooltipPos({ x: e.clientX, y: e.clientY });
+                                }}
+                                onMouseLeave={() => setHoveredEmojiDesc('')}
                             >
-                                🔗 유튜브 링크
-                            </a>
-                        </div>
-                        <div className={styles.momentLikes} onClick={toggleReaction} style={{ cursor: 'pointer' }}>
-                            {userReaction === 1 ? "💛" : "🤍"} {likeCount}
-                        </div>
+                                {emoji.emoji}
+                            </button>
+                        ))}
                     </div>
-
-                    {/* 본문 내용 */}
-                    <p className={styles.content}>{post.content}</p>
-                    {isAuthor && !showEditForm && (
-                        <div className={styles.buttonGroup}>
-                            <button className={styles.editButton} onClick={() => setShowEditForm(true)}>✏️ 수정</button>
-                            <button className={styles.deleteButton} onClick={handleDelete}>🗑️ 삭제</button>
-                        </div>
-                    )}
                 </div>
 
-                {showEditForm && (
-                    <EditMomentForm
-                        post={post}
-                        onSave={(updatedPost) => {
-                            setPost(updatedPost);
-                            setShowEditForm(false);
-                        }}
-                        onCancel={() => setShowEditForm(false)}
+                <div className={styles.contentSection}>
+                    <h3>오늘 하루는 어땠나요?</h3>
+                    <textarea
+                        className={styles.contentTextarea}
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="오늘 있었던 일을 작성하세요"
+                        rows={10}
                     />
-                )}
+                </div>
+
+                <div className={styles.imageSection}>
+                    <h3>사진 추가 (선택사항)</h3>
+                    <div className={styles.imageUpload}>
+                        <input
+                            type="file"
+                            id="imageInput"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            style={{ display: 'none' }}
+                        />
+                        <label htmlFor="imageInput" className={styles.imageUploadButton}>
+                            📷 사진 선택
+                        </label>
+
+                        {imagePreview && (
+                            <div className={styles.imagePreview}>
+                                <img src={imagePreview} alt="미리보기" className={styles.previewImage} />
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    className={styles.removeImageButton}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className={styles.buttonSection}>
+                    <button className={styles.cancelButton} onClick={handleCancel} disabled={isLoading}>
+                        취소
+                    </button>
+                    <button className={styles.saveButton} onClick={handleSave} disabled={isLoading}>
+                        {isLoading ? (isEditMode ? '수정 중...' : '저장 중...') : (isEditMode ? '수정하기' : '저장하기')}
+                    </button>
+                </div>
             </div>
 
-            {/* 댓글 영역은 그대로 유지 */}
-            <div className={styles.commentSection}>
-                <p className={styles.commentHeader}> 💬댓글 <hr /></p>
-                <div className={styles.commentBox}>
-                    <input
-                        type="text"
-                        value={commentContent}
-                        onChange={(e) => setCommentContent(e.target.value)}
-                        placeholder="댓글을 입력하세요"
-                        onKeyDown={handleKeyDown}
-                        className={styles.commentInput}
-                    />
-                    <button onClick={handleCommentSubmit} className={styles.commentButton}>댓글 달기</button>
+            {hoveredEmojiDesc && (
+                <div
+                    className={styles.tooltip}
+                    style={{ top: tooltipPos.y + 15, left: tooltipPos.x + 15 }}
+                >
+                    {hoveredEmojiDesc}
                 </div>
-                <div className={styles.commentList}>
-                    {comments.map((comment, index) => (
-                        <div key={index} className={styles.commentItem}>
-                            <div className={styles.commentNickname}>{comment.profile ? (
-                                <img
-                                    src={comment.profile}
-                                    alt="프로필"
-                                    className={styles.commentProfile}
-                                />
-                            ) : (
-                                <div className={styles.commentDefault}
-                                >{comment.nickname[0] || 'U'}</div>
-                            )}
-                                <strong>{comment.nickname}</strong></div>
-                            <div className={styles.commentContent}>{comment.content}</div>
-                            <div className={styles.commentTime}>{new Date(comment.createdAt).toLocaleString()}</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            )}
         </div>
     );
+}
 
-
-};
-
-export default MomentDetail;
+export default DiaryDetail;

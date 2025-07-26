@@ -302,189 +302,190 @@ function ArchivePage() {
     <div className="layout">
       {/* 좌측 사이드바 */}
 
-
-      {/* 우측 메인 콘텐츠 */}
-      <div className={styles.archivePanel}>
-        {/* 프로필 요약 */}
-        <div className={styles.profileSummary}>
-          <div className={styles.profile}>
-            {userInfo?.profile ? (
-              <img src={userInfo.profile} alt="프로필" />
-            ) : (
-              <div className={styles.profilePlaceholder}>
-                {userInfo?.nickname ? userInfo.nickname.charAt(0).toUpperCase() : '😊'}
-              </div>
-            )}
-          </div>
-          <div className={styles.profileText}>
-            <h3>{userInfo?.nickname || '사용자'}님!</h3>
-            <p>Post 작성: {postList.length}개, 댓글 작성: 0개</p>
-          </div>
-        </div>
-
-        {/* 감정 통계 */}
-        <div className={styles.emotionContainer}>
-          <div className={styles.emotionBoxWrapper}>
-            {/* 감정 통계 제목 */}
-            <div className={styles.emotionHeader}>
-              <h4>최근 감정 통계</h4>
-              <span>기간 7일</span>
-            </div>
-            <div className={styles.emotionBox}>
-              <p>
-                {Object.entries(emotionStats.emotionCount).length > 0 ? (
-                  Object.entries(emotionStats.emotionCount)
-                    .sort((a, b) => b[1] - a[1]) // 많이 사용한 순서로 정렬
-                    .slice(0, 5) // 상위 5개만 표시
-                    .map(([emoji, count], index) => (
-                      <span key={emoji}>
-                        {emoji}: {count}회
-                        {index < Math.min(4, Object.entries(emotionStats.emotionCount).length - 1) ? '  ' : ''}
-                      </span>
-                    ))
-                ) : (
-                  '아직 기록된 감정이 없습니다.'
-                )}
-              </p>
-              <p>
-                ✨ 가장 자주 느낀 감정: {emotionStats.topEmotions.length > 0 ? emotionStats.topEmotions.join(', ') : '없음'}
-                {emotionStats.mostFrequentCount > 0 && ` (${emotionStats.mostFrequentCount}회)`}
-                <br />
-                📅 총 기록한 날: {emotionStats.totalDays}일 / {emotionStats.daysInCurrentMonth}일
-              </p>
-            </div>
-          </div>
-          <div className={styles.emotionBoxWrapper}>
-            {/* My Archive Summary 제목 */}
-            <div className={styles.emotionHeader}>
-              <h4>My Archive Summary</h4>
-              <span></span>
-            </div>
-            <div className={styles.emotionBox}>
-              <p>📌 Post 작성: {postList.length}개</p>
-              <p>💬 남긴 댓글: 0개</p>
-              <p>📂 기록한 감정: {Object.keys(emotionStats.emotionCount).length}종류</p>
-
-            </div>
-          </div>
-        </div>
-
-        {/* 달력 + 감정 타임라인 */}
-        <div className={styles.calendarRow}>
-          <div className={styles.emotionBoxWrapper}>
-            {/* 캘린더 제목 */}
-            <div className={styles.emotionHeader}>
-              <h4>Calendar</h4>
-              <span></span>
-            </div>
-            <div className={styles.calendarBox}>
-              <CalendarBox
-                onDateClick={(date) => {
-                  const dateKey = date.toISOString().split('T')[0];
-                  const existingDiary = diaryList.find(diary =>
-                    diary.createdAt && diary.createdAt.split('T')[0] === dateKey
-                  );
-
-                  if (existingDiary) {
-                    // 일기가 있으면 선택해서 표시
-                    setSelectedDiary(existingDiary);
-                  } else {
-                    // 일기가 없으면 일기 작성 페이지로 이동
-                    navigate('/diary', {
-                      state: {
-                        selectedDate: date,
-                        fromArchive: true
-                      }
-                    });
-                  }
-                }}
-                dateEmojis={dateEmojis}
-              />
-            </div>
-          </div>
-          <div className={styles.emotionBoxWrapper}>
-            {/* 다이어리 제목 */}
-            <div className={styles.emotionHeader}>
-              <h4>Diary</h4>
-              <span>{selectedDiary ? selectedDiary.createdAt?.split('T')[0] : '날짜를 선택하세요'}</span>
-            </div>
-            <div className={styles.timelineBox}>
-              {selectedDiary ? (
-                <div className={diaryStyles.diaryCard}>
-                  <div className={diaryStyles.diaryTitle}>
-                    {selectedDiary.emoji} {selectedDiary.createdAt?.split('T')[0]}
-                  </div>
-                  <div className={styles.diaryActions}>
-                    <button
-                      className={styles.editBtn}
-                      onClick={() => handleEditDiary(selectedDiary)}
-                    >
-                      ✏️수정하기
-                    </button>
-                    <button
-                      className={styles.deleteBtn}
-                      onClick={() => handleDeleteDiary(selectedDiary.diaryId)}
-                    >
-                      🗑️삭제하기
-                    </button>
-                  </div>
-                  <hr className={diaryStyles.titleDivider} />
-                  {selectedDiary.imgUrl && (
-                    <>
-                      <div className={`${diaryStyles.imageContainer} ${styles.imageContainer}`}>
-                        {imageLoading && (
-                          <div className={styles.imageLoading}>
-                            이미지 로딩 중...
-                          </div>
-                        )}
-                        {imageError && (
-                          <div className={styles.imageError}>
-                            이미지를 불러올 수 없습니다.
-                          </div>
-                        )}
-                        <img
-                          className={`${styles.diaryImage} ${imageLoading ? styles.loading : ''} ${imageError ? styles.error : ''}`}
-                          src={(() => {
-                            const imageUrl = selectedDiary.imgUrl.startsWith('http')
-                              ? selectedDiary.imgUrl
-                              : `http://localhost:8080${selectedDiary.imgUrl}`;
-                            return imageUrl;
-                          })()}
-                          alt="일기 이미지"
-                          onLoadStart={handleImageLoadStart}
-                          onLoad={handleImageLoad}
-                          onError={handleImageError}
-                        />
-                      </div>
-                      <hr className={diaryStyles.titleDivider} />
-                    </>
-                  )}
-                  <div className={diaryStyles.diaryContent}>
-                    {selectedDiary.content}
-                  </div>
-                </div>
+      <div className="main">
+        {/* 우측 메인 콘텐츠 */}
+        <div className={styles.archivePanel}>
+          {/* 프로필 요약 */}
+          <div className={styles.profileSummary}>
+            <div className={styles.profile}>
+              {userInfo?.profile ? (
+                <img src={userInfo.profile} alt="프로필" />
               ) : (
-                <p>캘린더에서 날짜를 선택하면 해당 날짜의 일기를 볼 수 있습니다.</p>
+                <div className={styles.profilePlaceholder}>
+                  {userInfo?.nickname ? userInfo.nickname.charAt(0).toUpperCase() : '😊'}
+                </div>
               )}
             </div>
+            <div className={styles.profileText}>
+              <h3>{userInfo?.nickname || '사용자'}님!</h3>
+              <p>Post 작성: {postList.length}개, 댓글 작성: 0개</p>
+            </div>
           </div>
+
+          {/* 감정 통계 */}
+          <div className={styles.emotionContainer}>
+            <div className={styles.emotionBoxWrapper}>
+              {/* 감정 통계 제목 */}
+              <div className={styles.emotionHeader}>
+                <h4>최근 감정 통계</h4>
+                <span>기간 7일</span>
+              </div>
+              <div className={styles.emotionBox}>
+                <p>
+                  {Object.entries(emotionStats.emotionCount).length > 0 ? (
+                    Object.entries(emotionStats.emotionCount)
+                      .sort((a, b) => b[1] - a[1]) // 많이 사용한 순서로 정렬
+                      .slice(0, 5) // 상위 5개만 표시
+                      .map(([emoji, count], index) => (
+                        <span key={emoji}>
+                          {emoji}: {count}회
+                          {index < Math.min(4, Object.entries(emotionStats.emotionCount).length - 1) ? '  ' : ''}
+                        </span>
+                      ))
+                  ) : (
+                    '아직 기록된 감정이 없습니다.'
+                  )}
+                </p>
+                <p>
+                  ✨ 가장 자주 느낀 감정: {emotionStats.topEmotions.length > 0 ? emotionStats.topEmotions.join(', ') : '없음'}
+                  {emotionStats.mostFrequentCount > 0 && ` (${emotionStats.mostFrequentCount}회)`}
+                  <br />
+                  📅 총 기록한 날: {emotionStats.totalDays}일 / {emotionStats.daysInCurrentMonth}일
+                </p>
+              </div>
+            </div>
+            <div className={styles.emotionBoxWrapper}>
+              {/* My Archive Summary 제목 */}
+              <div className={styles.emotionHeader}>
+                <h4>My Archive Summary</h4>
+                <span></span>
+              </div>
+              <div className={styles.emotionBox}>
+                <p>📌 Post 작성: {postList.length}개</p>
+                <p>💬 남긴 댓글: 0개</p>
+                <p>📂 기록한 감정: {Object.keys(emotionStats.emotionCount).length}종류</p>
+
+              </div>
+            </div>
+          </div>
+
+          {/* 달력 + 감정 타임라인 */}
+          <div className={styles.calendarRow}>
+            <div className={styles.emotionBoxWrapper}>
+              {/* 캘린더 제목 */}
+              <div className={styles.emotionHeader}>
+                <h4>Calendar</h4>
+                <span></span>
+              </div>
+              <div className={styles.calendarBox}>
+                <CalendarBox
+                  onDateClick={(date) => {
+                    const dateKey = date.toISOString().split('T')[0];
+                    const existingDiary = diaryList.find(diary =>
+                      diary.createdAt && diary.createdAt.split('T')[0] === dateKey
+                    );
+
+                    if (existingDiary) {
+                      // 일기가 있으면 선택해서 표시
+                      setSelectedDiary(existingDiary);
+                    } else {
+                      // 일기가 없으면 일기 작성 페이지로 이동
+                      navigate('/diary', {
+                        state: {
+                          selectedDate: date,
+                          fromArchive: true
+                        }
+                      });
+                    }
+                  }}
+                  dateEmojis={dateEmojis}
+                />
+              </div>
+            </div>
+            <div className={styles.emotionBoxWrapper}>
+              {/* 다이어리 제목 */}
+              <div className={styles.emotionHeader}>
+                <h4>Diary</h4>
+                <span>{selectedDiary ? selectedDiary.createdAt?.split('T')[0] : '날짜를 선택하세요'}</span>
+              </div>
+              <div className={styles.timelineBox}>
+                {selectedDiary ? (
+                  <div className={diaryStyles.diaryCard}>
+                    <div className={diaryStyles.diaryTitle}>
+                      {selectedDiary.emoji} {selectedDiary.createdAt?.split('T')[0]}
+                    </div>
+                    <div className={styles.diaryActions}>
+                      <button
+                        className={styles.editBtn}
+                        onClick={() => handleEditDiary(selectedDiary)}
+                      >
+                        ✏️수정하기
+                      </button>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => handleDeleteDiary(selectedDiary.diaryId)}
+                      >
+                        🗑️삭제하기
+                      </button>
+                    </div>
+                    <hr className={diaryStyles.titleDivider} />
+                    {selectedDiary.imgUrl && (
+                      <>
+                        <div className={`${diaryStyles.imageContainer} ${styles.imageContainer}`}>
+                          {imageLoading && (
+                            <div className={styles.imageLoading}>
+                              이미지 로딩 중...
+                            </div>
+                          )}
+                          {imageError && (
+                            <div className={styles.imageError}>
+                              이미지를 불러올 수 없습니다.
+                            </div>
+                          )}
+                          <img
+                            className={`${styles.diaryImage} ${imageLoading ? styles.loading : ''} ${imageError ? styles.error : ''}`}
+                            src={(() => {
+                              const imageUrl = selectedDiary.imgUrl.startsWith('http')
+                                ? selectedDiary.imgUrl
+                                : `http://localhost:8080${selectedDiary.imgUrl}`;
+                              return imageUrl;
+                            })()}
+                            alt="일기 이미지"
+                            onLoadStart={handleImageLoadStart}
+                            onLoad={handleImageLoad}
+                            onError={handleImageError}
+                          />
+                        </div>
+                        <hr className={diaryStyles.titleDivider} />
+                      </>
+                    )}
+                    <div className={diaryStyles.diaryContent}>
+                      {selectedDiary.content}
+                    </div>
+                  </div>
+                ) : (
+                  <p>캘린더에서 날짜를 선택하면 해당 날짜의 일기를 볼 수 있습니다.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 감정 흐름 */}
+          <div className={styles.emotionBoxWrapper}>
+            <div className={styles.emotionHeader}>
+              <h4>감정 흐름 타임라인</h4>
+              <span></span>
+            </div>
+            <div className={styles.timelineBox}>
+              <p>(추후 그래프 예정)</p>
+            </div>
+          </div>
+
         </div>
 
-        {/* 감정 흐름 */}
-        <div className={styles.emotionBoxWrapper}>
-          <div className={styles.emotionHeader}>
-            <h4>감정 흐름 타임라인</h4>
-            <span></span>
-          </div>
-          <div className={styles.timelineBox}>
-            <p>(추후 그래프 예정)</p>
-          </div>
-        </div>
-
+        {/* 모달 */}
+        {showModal && <LoginModal onClose={() => setShowModal(false)} />}
       </div>
-
-      {/* 모달 */}
-      {showModal && <LoginModal onClose={() => setShowModal(false)} />}
     </div>
   );
 }

@@ -1,9 +1,9 @@
 /* ArchivePage.module.css */
 
 .archivePanel {
-  padding: 120px 220px 20px 170px;
+  padding: 80px 80px 20px 80px;
   background-color: #000;
-  width: 2000px;
+  width: 100%;
   color: white;
 }
 
@@ -112,29 +112,7 @@
   font-size: 12px;
 }
 
-/* Archive + Summary */
-.archiveRow {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
 
-.archiveBox {
-  background-color: #1d1d1d;
-  padding: 16px 20px;
-  border-radius: 8px;
-  color: #ccc;
-  font-size: 14px;
-  flex: 1;
-  min-width: 300px;
-  box-sizing: border-box;
-}
-
-.archiveBox h4 {
-  color: white;
-  margin-bottom: 10px;
-}
 
 /* 캘린더와 감정 타임라인 */
 .calendarRow {
@@ -175,8 +153,7 @@
   box-sizing: border-box;
   height: 620px;
   /* 캘린더와 동일한 높이로 증가 */
-  overflow-y: scroll; /* auto에서 scroll로 변경하여 스크롤 항상 표시 */
-  overflow-x: hidden; /* 가로 스크롤 방지 */
+  overflow-y: auto;
   /* 다이어리 내용이 많으면 스크롤 */
   display: flex;
   flex-direction: column;

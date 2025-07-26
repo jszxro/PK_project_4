@@ -27,21 +27,6 @@
   margin-top: 0px;
 }
 
-.author,
-.time,
-.tag {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 0.3rem;
-}
-
-.tag {
-  display: inline-block;
-  background-color: #f0f0f0;
-  padding: 0.3rem 0.7rem;
-  border-radius: 15px;
-}
-
 .link {
   display: inline-block;
   margin-top: 0.5rem;
@@ -161,30 +146,6 @@
   border-radius: 8px;
 }
 
-.metaTop {
-  display: flex;
-  justify-content: space-between;
-  /* 좌우 배치 */
-  align-items: center;
-  margin: 0.5rem 0 1rem;
-  font-size: 0.9rem;
-  color: #fff;
-}
-
-.author {
-  font-weight: 500;
-}
-
-.time {
-  text-align: right;
-  white-space: nowrap;
-  font-size: 0.9rem;
-}
-
-.metaCenter {
-  text-align: center;
-}
-
 .mediaAndContent {
   margin-bottom: 1.5rem;
 }
@@ -219,4 +180,41 @@
 .momentLikes {
   color: #e6b800;
   font-weight: bold;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.metaLeft {
+  color: #A8C3A8;
+  font-weight: 500;
+  flex: 1;
+  text-align: left;
+}
+
+.metaSpacer {
+  flex: 1;
+}
+
+.metaRight {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  /* 간격 조정 */
+  font-size: 0.85rem;
+  color: #ccc;
+  flex-wrap: wrap;
+}
+
+.metaAuthor,
+.metaTime {
+  white-space: nowrap;
 }
