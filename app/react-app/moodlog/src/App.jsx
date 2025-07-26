@@ -6,6 +6,7 @@ import MainPage from './pages/MainPage';
 // import PlaylistPage from './pages/PlaylistPage';
 import ArchivePage from './pages/ArchivePage';
 import MomentsPage from './pages/MomentsPage';
+import ChatPage from './pages/ChatPage';
 // import DiaryPage from './pages/DiaryPage';
 import DiaryDetail from './components/DiaryDetail';
 import MomentDetail from './components/MomentDetail';
@@ -37,6 +38,7 @@ function App() {
             <Route path="/moments/:postId" element={<MomentDetail />} />
             <Route path="/diary" element={<DiaryDetail />} />
             <Route path="/modifyprofile" element={<ModifyProfile />} />
+            <Route path="/chat" element={<ChatPage />} />
             {/* <Route path="/diary" element={<DiaryPage />} /> */}
           </Route>
         </Routes>

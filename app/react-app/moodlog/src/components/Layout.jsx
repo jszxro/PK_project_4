@@ -30,6 +30,11 @@ function Layout() {
               <li onClick={() => navigate('/archive')} className={location.pathname === '/archive' ? 'active' : ''}>Archive</li>
             </>
           ) : null}
+          {userInfo ? (
+            <>
+              <li onClick={() => navigate('/chat')} className={location.pathname === '/chat' ? 'chat' : ''}>Chat</li>
+            </>
+          ) : null}
         </ul>
       </div>
 
