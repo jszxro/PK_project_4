@@ -1,6 +1,7 @@
 package com.project.mood.controller;
 
 import com.project.mood.dto.DiaryDTO;
+import com.project.mood.entity.Diary;
 import com.project.mood.service.DiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,11 @@ public class DiaryController {
         // System.out.println("일기 삭제 요청, diaryId = " + diaryId);
         String result = diaryService.deleteDiary(diaryId);
         return ResponseEntity.ok(result);
+    }
+
+    // 오늘 감정 조회
+    @GetMapping("/today-with-emoji")
+    public List<Diary> getTodayDiaryWithEmoji(@RequestParam("userKey") String userKey) {
+        return diaryService.getTodayDiariesWithEmoji(userKey);
     }
 }
