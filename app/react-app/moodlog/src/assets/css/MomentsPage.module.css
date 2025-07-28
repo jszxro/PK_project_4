@@ -168,25 +168,48 @@
   color: #ffffff;
   padding: 10px;
   background-color: #2a2a2a;
+  line-height: 1.8;
   border-radius: 8px;
   margin-bottom: 30px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
   min-height: 60px;
 }
 
-.textButton {
-  all: unset;
-  /* 모든 기본 버튼 스타일 제거 */
-  color: #ffffff;
-  padding: 2px;
+/* 감정 태그 랭킹 구역 전체 줄 스타일 */
+.tagRanking div {
+  font-size: 16px;
+  color: #d6d6d6;
+  line-height: 1.4;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.tagRanking div:hover {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+/* 많이 공유된 감정 → 전체보기 버튼 */
+.textButton {
+  all: unset; /* 기본 버튼 스타일 제거 */
+  color: #b5d3b0;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
   display: inline-block;
-  margin-top: 8px;
+  margin-top: 0px;
 }
 
 .textButton:hover {
+  background-color: #2a2a2a;
   text-decoration: underline;
+  color: #d5f5d5;
 }
+
 
 .highlightContainer {
 
@@ -357,4 +380,10 @@
   padding: 4px 8px;
   font-size: 0.9rem;
   width: 32px;
+}
+
+.quoteText {
+  color: #b5d3b0;  /* 예시 색상 (연녹색) */
+  font-size: 16px;
+  font-weight: 500;
 }
