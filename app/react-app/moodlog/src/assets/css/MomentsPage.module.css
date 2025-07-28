@@ -188,6 +188,7 @@
 
 .tagRanking div:hover {
   background-color: #2a2a2a;
+  text-decoration: underline;
   color: #ffffff;
 }
 
