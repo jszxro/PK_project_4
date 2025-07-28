@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import '../assets/css/Layout.css';
 import TopBar from './TopBar';
@@ -10,6 +10,15 @@ function Layout() {
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const { userInfo } = useContext(UserContext) || {};
+
+  useEffect(() => {
+    const mainContainer = document.querySelector('.main-container');
+    if (mainContainer) {
+      mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [location.pathname]);
 
   const hideTopBarRoutes = [];
   const hideTopBar = hideTopBarRoutes.includes(location.pathname);
