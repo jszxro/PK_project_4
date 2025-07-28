@@ -297,3 +297,90 @@
 .deleteBtn:hover {
   background-color: #d32f2f;
 }
+
+/* 활동 목록 스타일 */
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityItem {
+  background-color: #2a2a2a;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 3px solid #A8C3A8;
+  transition: all 0.2s ease;
+}
+
+.activityItem:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.activityTitle {
+  font-weight: bold;
+  color: #A8C3A8;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.activityContent {
+  color: #ccc;
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.activityMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #888;
+}
+
+.moreItems {
+  text-align: center;
+  color: #A8C3A8;
+  font-size: 12px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.moreItems:hover {
+  text-decoration: underline;
+}
+
+/* 활동 상세 목록 스타일 */
+.activityDetails {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.activityRow {
+  display: flex;
+  gap: 20px;
+}
+
+.activityColumn {
+  flex: 1;
+  min-width: 0;
+}
+
+.activitySection {
+  margin-bottom: 20px;
+}
+
+.activitySection:last-child {
+  margin-bottom: 0;
+}
