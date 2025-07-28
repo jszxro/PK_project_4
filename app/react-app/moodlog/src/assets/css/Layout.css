@@ -21,14 +21,15 @@
   flex-direction: column;
   flex: 1;
   height: 100vh;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .top-bar {
   position: fixed;
   top: 0;
   left: 280px;
-  width: calc(100vw - 280px - 16px);  /* ✅ 스크롤바 고려 */
+  width: calc(100% - 280px - 16px);  /* ✅ 스크롤바 고려 */
+  box-sizing: border-box;
   
   display: flex;
   justify-content: flex-end;
