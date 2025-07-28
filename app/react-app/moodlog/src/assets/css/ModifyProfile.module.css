@@ -38,6 +38,8 @@
 .inputFile {
     margin-bottom: 10px;
     color: #ccc;
+    /* padding-left: 10px; */
+    width: 170px;
 }
 
 .defaultBtn {

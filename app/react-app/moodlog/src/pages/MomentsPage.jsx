@@ -107,7 +107,15 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
 
   const sortedTags = Object.entries(tagCounts)
     .sort((a, b) => b[1] - a[1])
-    .map(([tag, count]) => ({ tag, count }));
+    .map(([tag, count]) => {
+      const emojiObj = emojiList.find(e => e.emojiId === tag);
+      return {
+        tag,
+        count,
+        emoji: emojiObj?.emoji || '', // 🟢 없으면 빈 문자열 처리
+        description: emojiObj?.description || '',
+      };
+    });
 
   const topTag = sortedTags.length > 0 ? sortedTags[0].tag : null;
 
@@ -303,21 +311,43 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
               ))}
             </div>
 
-            <h3>오늘 많이 공유된 감정</h3>
-            <div className={styles.tagRanking}>
-              {sortedTags.map(({ tag, count }) => (
-                <div key={tag}>#{tag} ({count})건</div>
-              ))}
-              {topTag && (
-                <button className={styles.textButton} onClick={() => setSelectedTag(topTag)}>
-                  ➡️ #{topTag} Moments [전체 보기]
-                </button>
-              )}
-            </div>
+          <h3>많이 공유된 감정</h3>
+          <div className={styles.tagRanking}>
+            {sortedTags.map(({ tag, count }) => {
+              const emoji = emojiList.find(e => e.emojiId === tag)?.emoji || '';
+              return (
+                <div
+                  key={tag}
+                  className={styles.tagRow}
+                  onClick={() => {
+                    setSelectedTag(tag);
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); // 상단으로 부드럽게 이동
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  # {emoji} {tag} ({count})건
+                </div>
+              );
+            })}
+
+            {topTag && (
+              <button
+                className={styles.textButton}
+                onClick={() => {
+                  setSelectedTag(topTag);
+                  window.scrollTo({ top: 0, behavior: 'smooth' }); // 버튼도 동일하게 적용
+                }}
+              >
+                ➡️ # {emojiList.find(e => e.emojiId === topTag)?.emoji} {topTag} Moments [전체 보기]
+              </button>
+            )}
+          </div>
 
             <h3>오늘의 한 줄</h3>
             <div className={styles.momentCard}>
-              <p>{quote ? quote : '오늘의 한 줄 준비 중...'}</p>
+              <p className={styles.quoteText}>
+                {quote ? quote : '오늘의 한 줄 준비 중...'}
+              </p>
             </div>
           </div>
         </div>
