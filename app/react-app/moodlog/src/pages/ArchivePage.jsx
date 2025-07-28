@@ -402,7 +402,7 @@ function ArchivePage() {
               <h4>My Archive Summary</h4>
               <span
                 onClick={() => navigate('/my-activities')}
-                style={{ cursor: 'pointer', color: '#A8C3A8', fontSize: '14px' }}
+                style={{ cursor: 'pointer', color: '#ffffffff', fontSize: '14px' }}
                 title="내 활동 상세보기"
               >
                 상세보기 →
