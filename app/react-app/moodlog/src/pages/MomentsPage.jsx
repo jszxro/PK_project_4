@@ -67,11 +67,21 @@ const MomentsPage = ({ isLoggedIn, setIsLoggedIn }) => {
     axios.get('/api/emojis')
       .then(response => setEmojiList(response.data))
       .catch(error => console.error('이모지 목록 불러오기 실패:', error));
+      window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
     setCurrentPage(1); // 💡 태그 바뀔 때 1페이지로 리셋
   }, [selectedTag]);
+
+  useEffect(() => {
+    const mainContainer = document.querySelector('.main-container');
+    if (mainContainer) {
+      mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // fallback
+    }
+  }, [currentPage]);
 
   const filteredPosts = selectedTag
     ? posts.filter(post => {
