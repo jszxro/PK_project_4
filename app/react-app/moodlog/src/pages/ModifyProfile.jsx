@@ -10,7 +10,7 @@ const ProfileEditPage = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         userId: '',
-        // userPw: '',
+        userPw: '',
         nickname: '',
         userEmail: '',
         profile: '',
@@ -62,22 +62,15 @@ const ProfileEditPage = () => {
 
     const handleSubmit = () => {
         const { userId, nickname, userEmail } = formData;
-        // if (!userId || !userPw || !nickname || !userEmail) {
-        if (!userId || !nickname || !userEmail) {
-            alert("프로필 이미지와 비밀번호는 선택사항");
+        if (!userId || !userPw || !nickname || !userEmail) {
+            alert("모든 항목을 입력해주세요 (프로필 이미지는 선택사항)");
             return;
         }
 
-        const updatedData = {
-            ...formData
-        };
-
-        // 비밀번호를 입력한 경우에만 추가
-        if (userPw.trim() !== '') {
-            updatedData.userPw = userPw;
-        }
-
-        axios.put('/api/members/update-profile', updatedData, { withCredentials: true })
+        axios.put('/api/members/update-profile', {
+            ...formData,
+            userPw: userPw
+        }, { withCredentials: true })
             .then(() => {
                 alert("수정 완료");
                 navigate('/');

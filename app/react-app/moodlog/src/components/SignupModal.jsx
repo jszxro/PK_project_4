@@ -63,11 +63,8 @@ function SignupModal({ onClose, onSwitchToLogin }) {
       .then(res => {
         if (res.status === 200) {
           alert("회원가입 완료");
-          //   console.log(res.data);
-          //   setShowSuccessPopup(true);
-          // }
-          onClose();
-          onSwitchToLogin();
+          console.log(res.data);
+          setShowSuccessPopup(true);
         }
       })
       .catch(err => {
