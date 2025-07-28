@@ -1,0 +1,261 @@
+/* MyActivitiesPage.module.css */
+
+.activitiesPanel {
+  padding: 120px 220px 20px 170px;
+  background-color: #000;
+  width: 100%;
+  max-width: 2000px;
+  color: white;
+  margin: 0 auto;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.backButton {
+  padding: 10px 16px;
+  background: rgba(168, 195, 168, 0.1);
+  color: #A8C3A8;
+  border: 1px solid #A8C3A8;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background: rgba(168, 195, 168, 0.2);
+  transform: translateX(-2px);
+}
+
+.header h2 {
+  margin: 0;
+  color: #A8C3A8;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.userInfo {
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* 탭 메뉴 */
+.tabMenu {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.tabButton {
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ccc;
+  border: 1px solid #444;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.tabButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.tabButton.active {
+  background: linear-gradient(135deg, #A8C3A8 0%, #8fb88f 100%);
+  color: #1e1e1e;
+  border-color: #A8C3A8;
+  font-weight: bold;
+}
+
+/* 컨텐츠 */
+.content {
+  width: 100%;
+}
+
+.content h3 {
+  color: #A8C3A8;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 포스트 아이템 */
+.postItem {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 4px solid #A8C3A8;
+}
+
+.postItem:hover {
+  background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(168, 195, 168, 0.1);
+  border-left-color: #A8C3A8;
+}
+
+/* 댓글 아이템 */
+.commentItem {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 4px solid #9d88d3;
+}
+
+.commentItem:hover {
+  background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(157, 136, 211, 0.1);
+  border-left-color: #9d88d3;
+}
+
+/* 아이템 헤더 */
+.itemHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.emoji {
+  background: rgba(168, 195, 168, 0.2);
+  color: #A8C3A8;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.commentIcon {
+  background: rgba(157, 136, 211, 0.2);
+  color: #9d88d3;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.title {
+  color: white;
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  flex: 1;
+}
+
+.postId {
+  color: #9d88d3;
+  font-size: 14px;
+  flex: 1;
+}
+
+.date {
+  color: #888;
+  font-size: 12px;
+}
+
+/* 컨텐츠 */
+.content {
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* 아이템 푸터 */
+.itemFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.likes {
+  color: #f4c430;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.clickHint {
+  color: #A8C3A8;
+  font-size: 12px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.postItem:hover .clickHint,
+.commentItem:hover .clickHint {
+  opacity: 1;
+}
+
+/* 빈 상태 */
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.emptyState p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.createButton {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #A8C3A8 0%, #8fb88f 100%);
+  color: #1e1e1e;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.createButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(168, 195, 168, 0.3);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .activitiesPanel {
+    padding: 100px 20px 20px 20px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .tabMenu {
+    flex-direction: column;
+  }
+
+  .itemHeader {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

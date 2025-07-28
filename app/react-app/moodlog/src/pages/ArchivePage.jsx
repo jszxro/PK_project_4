@@ -391,6 +391,7 @@ function ArchivePage() {
                 ✨ 가장 자주 느낀 감정: {emotionStats.topEmotions.length > 0 ? emotionStats.topEmotions.join(', ') : '없음'}
                 {emotionStats.mostFrequentCount > 0 && ` (${emotionStats.mostFrequentCount}회)`}
                 <br />
+                <p></p>
                 📅 총 기록한 날: {emotionStats.totalDays}일 / {emotionStats.daysInCurrentMonth}일
               </p>
             </div>
@@ -399,13 +400,18 @@ function ArchivePage() {
             {/* My Archive Summary 제목 */}
             <div className={styles.emotionHeader}>
               <h4>My Archive Summary</h4>
-              <span></span>
+              <span
+                onClick={() => navigate('/my-activities')}
+                style={{ cursor: 'pointer', color: '#ffffffff', fontSize: '14px' }}
+                title="내 활동 상세보기"
+              >
+                상세보기 →
+              </span>
             </div>
             <div className={styles.emotionBox}>
               <p>📌 Post 작성: {postList.length}개</p>
               <p>💬 남긴 댓글: {commentList.length}개</p>
               <p>📂 기록한 감정: {Object.keys(emotionStats.emotionCount).length}종류</p>
-
             </div>
           </div>
         </div>
