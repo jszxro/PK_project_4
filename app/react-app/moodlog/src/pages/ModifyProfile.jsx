@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styles from '../assets/css/ModifyProfile.module.css';
+import { UserContext } from '../context/UserContext';
 
 const CLOUDINARY_UPLOAD_PRESET = 'mood_profile';
 const CLOUDINARY_CLOUD_NAME = 'dxfehoslo';
 
 const ProfileEditPage = () => {
+    const { setUserInfo } = useContext(UserContext);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         userId: '',
@@ -80,7 +82,14 @@ const ProfileEditPage = () => {
         axios.put('/api/members/update-profile', updatedData, { withCredentials: true })
             .then(() => {
                 alert("수정 완료");
-                navigate('/');
+
+                // 최신 정보 다시 가져와 context에 반영
+                axios.get('/api/user-info', { withCredentials: true })
+                    .then(res => {
+                        setUserInfo(res.data);                    // ← 여기가 핵심
+                        localStorage.setItem("userInfo", JSON.stringify(res.data)); // (선택) 보존용
+                        navigate('/');
+                    });
             })
             .catch(() => alert("수정 실패"));
     };

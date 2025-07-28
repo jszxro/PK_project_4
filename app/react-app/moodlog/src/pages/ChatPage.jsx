@@ -29,11 +29,11 @@ function ChatPage() {
                     const emoji = res.data[0].emoji.emojiId;
                     setEmojiId(emoji);
 
-                    // ✅ 로컬 저장된 메시지 불러오기
+                    // 로컬 저장된 메시지 불러오기
                     const saved = localStorage.getItem(`chat-${emoji}`);
                     if (saved) setMessages(JSON.parse(saved));
 
-                    // ✅ WebSocket 연결은 한 번만
+                    // WebSocket 연결
                     if (!ws.current) {
                         ws.current = new WebSocket(`ws://localhost:8080/ws/chat/${emoji}`);
                         ws.current.onmessage = (event) => {
@@ -54,6 +54,7 @@ function ChatPage() {
     const sendMessage = () => {
         if (ws.current && message.trim() !== "") {
             const msgObj = {
+                userkey: userInfo.userKey,
                 sender: userInfo.nickname,
                 profile: userInfo.profile,
                 message: message,
@@ -70,7 +71,7 @@ function ChatPage() {
 
             <div className={styles.messageList}>
                 {messages.map((msg, i) => {
-                    const isMine = msg.sender === userInfo.nickname;
+                    const isMine = msg.userkey === userInfo.userKey;
                     return (
                         <div
                             key={i}
