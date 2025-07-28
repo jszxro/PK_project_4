@@ -51,4 +51,11 @@ public class CommentsController {
         commentsService.deleteComment(commentId);
         return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
+
+    // 사용자별 댓글 조회
+    @GetMapping("/user/{userKey}")
+    public ResponseEntity<?> getUserComments(@PathVariable("userKey") String userKey) {
+        List<Map<String, Object>> userComments = commentsService.getCommentsByUserKey(userKey);
+        return ResponseEntity.ok(userComments);
+    }
 }
