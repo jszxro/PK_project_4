@@ -51,4 +51,18 @@ public class CommentsService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
         commentsRepository.delete(comment);
     }
+
+    // 사용자별 댓글 조회
+    public List<Map<String, Object>> getCommentsByUserKey(String userKey) {
+        List<Comments> userComments = commentsRepository.findByUserKey(userKey);
+        return userComments.stream().map(comment -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("commentId", comment.getCommentId());
+            map.put("postId", comment.getPostId());
+            map.put("content", comment.getContent());
+            map.put("createdAt", comment.getCreatedAt());
+            map.put("userKey", comment.getUserKey());
+            return map;
+        }).collect(Collectors.toList());
+    }
 }

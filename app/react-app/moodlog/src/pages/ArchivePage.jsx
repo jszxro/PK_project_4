@@ -16,6 +16,7 @@ function ArchivePage() {
   const [dateEmojis, setDateEmojis] = useState({});
   const [diaryList, setDiaryList] = useState([]);
   const [postList, setPostList] = useState([]);
+  const [commentList, setCommentList] = useState([]);
   const [emojiList, setEmojiList] = useState([]);
   const [selectedDiary, setSelectedDiary] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -71,8 +72,22 @@ function ArchivePage() {
       }
     };
 
+    const loadCommentData = async () => {
+      const userKey = userInfo?.userKey || localStorage.getItem('userKey');
+      if (!userKey) return;
+
+      try {
+        const response = await axios.get(`/api/comments/user/${userKey}`);
+        setCommentList(response.data);
+      } catch (error) {
+        console.error('댓글 데이터 로드 실패:', error);
+        setCommentList([]); // 실패 시 빈 배열로 설정
+      }
+    };
+
     loadDiaryData();
     loadPostData();
+    loadCommentData();
   }, [userInfo]);
 
   // 페이지가 포커스될 때마다 데이터 새로고침
@@ -110,6 +125,19 @@ function ArchivePage() {
           }
         })
         .catch(error => console.error('POST 데이터 새로고침 실패:', error));
+
+      // 댓글 데이터 다시 로드
+      const currentUserKey = userInfo?.userKey || localStorage.getItem('userKey');
+      if (currentUserKey) {
+        axios.get(`/api/comments/user/${currentUserKey}`)
+          .then(response => {
+            setCommentList(response.data);
+          })
+          .catch(error => {
+            console.error('댓글 데이터 새로고침 실패:', error);
+            setCommentList([]);
+          });
+      }
     };
 
     window.addEventListener('focus', handleFocus);
@@ -152,6 +180,19 @@ function ArchivePage() {
             }
           })
           .catch(error => console.error('POST 데이터 새로고침 실패:', error));
+
+        // 댓글 새로고침
+        const refreshUserKey = userInfo?.userKey || localStorage.getItem('userKey');
+        if (refreshUserKey) {
+          axios.get(`/api/comments/user/${refreshUserKey}`)
+            .then(response => {
+              setCommentList(response.data);
+            })
+            .catch(error => {
+              console.error('댓글 데이터 새로고침 실패:', error);
+              setCommentList([]);
+            });
+        }
       }
 
       // 상태 초기화
@@ -318,7 +359,7 @@ function ArchivePage() {
           </div>
           <div className={styles.profileText}>
             <h3>{userInfo?.nickname || '사용자'}님!</h3>
-            <p>Post 작성: {postList.length}개, 댓글 작성: 0개</p>
+            <p>Post 작성: {postList.length}개, 댓글 작성: {commentList.length}개</p>
           </div>
         </div>
 
@@ -362,7 +403,7 @@ function ArchivePage() {
             </div>
             <div className={styles.emotionBox}>
               <p>📌 Post 작성: {postList.length}개</p>
-              <p>💬 남긴 댓글: 0개</p>
+              <p>💬 남긴 댓글: {commentList.length}개</p>
               <p>📂 기록한 감정: {Object.keys(emotionStats.emotionCount).length}종류</p>
 
             </div>
@@ -471,7 +512,7 @@ function ArchivePage() {
         </div>
 
         {/* 감정 흐름 */}
-        <div className={styles.emotionBoxWrapper}>
+        {/* <div className={styles.emotionBoxWrapper}>
           <div className={styles.emotionHeader}>
             <h4>감정 흐름 타임라인</h4>
             <span></span>
@@ -479,7 +520,7 @@ function ArchivePage() {
           <div className={styles.timelineBox}>
             <p>(추후 그래프 예정)</p>
           </div>
-        </div>
+        </div> */}
 
       </div>
 

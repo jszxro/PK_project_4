@@ -43,7 +43,7 @@ function TopBar({ onLoginClick }) {
         <div className="profile-area" ref={dropdownRef}>
           <div className="profile-circle" onClick={toggleDropdown}>
             {userInfo.profile ?
-              <img src={userInfo.profile} alt="프로필" className="profile-circle" /> : userInfo.nickname[0] || 'U'
+              <img src={userInfo.profile} alt="프로필" /> : userInfo.nickname[0] || 'U'
             }
           </div>
 
