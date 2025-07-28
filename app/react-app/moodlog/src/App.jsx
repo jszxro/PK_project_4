@@ -7,6 +7,7 @@ import MainPage from './pages/MainPage';
 import ArchivePage from './pages/ArchivePage';
 import MomentsPage from './pages/MomentsPage';
 import ChatPage from './pages/ChatPage';
+import MyActivitiesPage from './components/MyActivitiesPage';
 // import DiaryPage from './pages/DiaryPage';
 import DiaryDetail from './components/DiaryDetail';
 import MomentDetail from './components/MomentDetail';
@@ -18,7 +19,7 @@ import './App.css';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // ✅ localStorage에서 로그인 상태 복원
+
   useEffect(() => {
     const savedUser = localStorage.getItem('userInfo');
     if (savedUser) {
@@ -34,6 +35,7 @@ function App() {
             <Route path="/" element={<MainPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
             {/* <Route path="/playlist" element={<PlaylistPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} /> */}
             <Route path="/archive" element={<ArchivePage />} />
+            <Route path="/my-activities" element={<MyActivitiesPage />} />
             <Route path="/moments" element={<MomentsPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="/moments/:postId" element={<MomentDetail />} />
             <Route path="/diary" element={<DiaryDetail />} />
