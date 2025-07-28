@@ -1,12 +1,12 @@
 .login-btn {
   all: unset;
-  width: 70px;                  /* ✅ 정사각형 */
+  width: 70px;
   height: 70px;
-  border-radius: 50%;           /* ✅ 완전한 원 */
+  border-radius: 50%;
   background-color: #333;
   color: white;
   font-size: 16px;
-  display: flex;                /* ✅ 텍스트를 정중앙에 정렬 */
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -19,13 +19,14 @@
   background-color: #555;
   color: white;
 }
+
 .profile-area {
   position: relative;
 }
 
 .profile-circle {
-  width: 72px;
-  height: 72px;
+  width: 80px;
+  height: 80px;
   background-color: #555;
   color: white;
   border: 1px solid #888;
@@ -36,6 +37,14 @@
   justify-content: center;
   cursor: pointer;
   user-select: none;
+  overflow: hidden;
+}
+
+.profile-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 /* 드롭다운 메뉴 */

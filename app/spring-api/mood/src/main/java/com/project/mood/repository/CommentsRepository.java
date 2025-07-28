@@ -13,4 +13,7 @@ public interface CommentsRepository extends JpaRepository<Comments, String> {
     @Query("SELECT c, m.nickname, m.profile FROM Comments c JOIN Member m ON c.userKey = m.userKey WHERE c.postId = :postId ORDER BY c.createdAt DESC")
     List<Object[]> findCommentsWithMemberInfoByPostId(@Param("postId") String postId);
 
+    // 사용자별 댓글 조회
+    List<Comments> findByUserKey(String userKey);
+
 }
