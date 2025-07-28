@@ -13,7 +13,7 @@ import com.project.mood.entity.Song;
 import com.project.mood.repository.SongRepository;
 
 @RestController
-@RequestMapping("/songs")
+@RequestMapping("/api/songs")
 public class SongController {
 
     @Autowired

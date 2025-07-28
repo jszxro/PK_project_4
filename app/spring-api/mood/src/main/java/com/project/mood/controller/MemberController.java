@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class MemberController {
 

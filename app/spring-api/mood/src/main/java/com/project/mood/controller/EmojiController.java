@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/emojis")
+@RequestMapping("/api/emojis")
 public class EmojiController {
 
     @Autowired
