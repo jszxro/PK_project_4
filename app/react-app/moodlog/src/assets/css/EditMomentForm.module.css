@@ -18,36 +18,87 @@
   width: 500px;
   height: 600px;
   max-width: 600px;
-  color: #fff;
+  color: #A8C3A8;
   font-size: 15px;
+}
+
+.modalBox h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 30px;
+  font-size: 25px;
 }
 
 .modalBox label {
   margin-top: 12px;
+  margin-left: 12px;
   display: block;
   color: #fff;
 }
 
-.modalBox input {
-  height: 30px;
-  width: 100%;
-  border: none;
-  border-radius: 6px;
-}
+.modalBox input,
 .modalBox textarea {
-  width: 100%;
-  margin-top: 4px;
-  padding: 8px;
-  height: 200px;
-  background: #fff;
+  display: block;           /* 중앙 정렬을 위한 block */
+  margin: 8px auto;         /* 가로 중앙 정렬 */
+  width: 95%;               /* 부모 기준으로 적절한 너비 */
+  max-width: 500px;         /* 최대 너비 제한 */
   border: none;
   border-radius: 6px;
+  padding: 8px;
+  font-size: 15px;
+}
+
+.modalBox input {
+  height: 36px;
+}
+
+.modalBox textarea {
+  height: 200px;
+  resize: none;             /* textarea 크기 조절 비활성화 (옵션) */
+  background: #fff;
   color: #000;
+  font-family: inherit;
 }
 
 .buttonRow {
-  margin-top: 20px;
+  margin-top: 15px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center; /* 🔥 가운데 정렬 */
   gap: 12px;
 }
+
+.saveButton {
+  background-color: #A8C3A8;
+  color: #000;
+  padding: 10px 40px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  min-width: 100px;
+  transition: background-color 0.2s ease;
+}
+
+.saveButton:hover {
+  background-color: #a1cc9b;
+}
+
+/* 닫기 버튼 - 회색 */
+.cancelButton {
+  background-color: #444;
+  color: #fff;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  min-width: 100px;
+  transition: background-color 0.2s ease;
+}
+
+.cancelButton:hover {
+  background-color: #333;
+}
+

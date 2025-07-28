@@ -59,9 +59,9 @@ const EditMomentForm = ({ post, onSave, onCancel }) => {
                 required
               />
             </div>
-            <div className={styles.buttonGroup}>
-              <button type="submit">저장</button>
-              <button type="button" onClick={onCancel}>취소</button>
+            <div className={styles.buttonRow}>
+              <button type="submit" className={styles.saveButton}>수정</button>
+              <button type="button" onClick={onCancel} className={styles.cancelButton}>닫기</button>
             </div>
           </form>
         </div>

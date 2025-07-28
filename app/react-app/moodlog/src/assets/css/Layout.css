@@ -21,7 +21,7 @@
   flex-direction: column;
   flex: 1;
   height: 100vh;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 
@@ -52,13 +52,14 @@
 }
 
 
-/* 실제 콘텐츠 (양쪽 여백 포함.logo {
+/* 실제 콘텐츠 (양쪽 여백 포함) */
+.logo {
   color: #A8C3A8;
   margin: 10px 0 2px 0;
   text-align: center;
   font-size: 40px;
   /* margin-top: 10px; */
-}
+
 
 .subtitle {
   text-align: center;
