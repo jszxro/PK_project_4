@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/upload")
+@RequestMapping("/api/upload")
 public class FileUploadController {
 
   // 업로드 디렉토리 경로 (application.properties에서 설정 가능)

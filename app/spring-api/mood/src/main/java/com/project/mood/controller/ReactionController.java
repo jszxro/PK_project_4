@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/reactions")
+@RequestMapping("/api/reactions")
 @RequiredArgsConstructor
 public class ReactionController {
 
