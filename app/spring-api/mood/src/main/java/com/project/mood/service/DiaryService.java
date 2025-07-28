@@ -8,6 +8,7 @@ import com.project.mood.repository.EmojiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -120,5 +121,12 @@ public class DiaryService {
     diaryRepository.deleteById(diaryId);
     // System.out.println("일기 삭제 완료, diaryId = " + diaryId);
     return "삭제 완료!";
+  }
+
+  // 오늘 기준 다이어리 조회
+  public List<Diary> getTodayDiariesWithEmoji(String userKey) {
+    LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+    LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+    return diaryRepository.findTodayDiariesWithEmoji(userKey, startOfDay, endOfDay);
   }
 }
