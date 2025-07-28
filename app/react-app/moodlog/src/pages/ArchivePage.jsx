@@ -391,6 +391,7 @@ function ArchivePage() {
                 ✨ 가장 자주 느낀 감정: {emotionStats.topEmotions.length > 0 ? emotionStats.topEmotions.join(', ') : '없음'}
                 {emotionStats.mostFrequentCount > 0 && ` (${emotionStats.mostFrequentCount}회)`}
                 <br />
+                <p></p>
                 📅 총 기록한 날: {emotionStats.totalDays}일 / {emotionStats.daysInCurrentMonth}일
               </p>
             </div>
