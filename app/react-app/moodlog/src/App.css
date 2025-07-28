@@ -417,7 +417,7 @@ body {
   font-size: 18px;
   cursor: pointer;
   transition: all 0.2s;
-  margin: 4px;
+  margin: 6px;
 }
 
 .tag-btn.active {
