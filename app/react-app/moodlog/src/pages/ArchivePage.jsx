@@ -369,7 +369,7 @@ function ArchivePage() {
             {/* 감정 통계 제목 */}
             <div className={styles.emotionHeader}>
               <h4>최근 감정 통계</h4>
-              <span>기간 7일</span>
+              {/* <span>기간 7일</span> */}
             </div>
             <div className={styles.emotionBox}>
               <p>
