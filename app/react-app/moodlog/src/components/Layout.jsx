@@ -32,7 +32,7 @@ function Layout() {
           ) : null}
           {userInfo ? (
             <>
-              <li onClick={() => navigate('/chat')} className={location.pathname === '/chat' ? 'chat' : ''}>Chat</li>
+              <li onClick={() => navigate('/chat')} className={location.pathname === '/chat' ? 'active' : ''}>Chat</li>
             </>
           ) : null}
         </ul>
