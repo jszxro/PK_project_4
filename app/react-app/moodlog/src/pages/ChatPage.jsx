@@ -35,7 +35,7 @@ function ChatPage() {
 
                     // WebSocket 연결
                     if (!ws.current) {
-                        ws.current = new WebSocket(`ws://localhost:8080/ws/chat/${emoji}`);
+                        ws.current = new WebSocket(`ws://bjava.iptime.org:8894/ws/chat/${emoji}`);
                         ws.current.onmessage = (event) => {
                             const msg = JSON.parse(event.data);
                             console.log("📩 메시지 수신:", msg); // 로그로 확인
