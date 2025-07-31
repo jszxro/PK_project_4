@@ -208,7 +208,7 @@ function ArchivePage() {
       const img = new Image();
       const imageUrl = selectedDiary.imgUrl.startsWith('http')
         ? selectedDiary.imgUrl
-        : `http://localhost:8080${selectedDiary.imgUrl}`;
+        : `http://bjava.iptime.org:8340${selectedDiary.imgUrl}`;
 
       setImageLoading(true);
 
@@ -494,7 +494,7 @@ function ArchivePage() {
                           src={(() => {
                             const imageUrl = selectedDiary.imgUrl.startsWith('http')
                               ? selectedDiary.imgUrl
-                              : `http://localhost:8080${selectedDiary.imgUrl}`;
+                              : `http://bjava.iptime.org:8340${selectedDiary.imgUrl}`;
                             return imageUrl;
                           })()}
                           alt="일기 이미지"
