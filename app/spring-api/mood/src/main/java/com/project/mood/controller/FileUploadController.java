@@ -21,7 +21,8 @@ import java.util.UUID;
 public class FileUploadController {
 
   // 업로드 디렉토리 경로 (application.properties에서 설정 가능)
-  @Value("${file.upload.path:/workspaces/PK_project_4/app/spring-api/mood/uploads}")
+  // @Value("${file.upload.path:/workspaces/PK_project_4/app/spring-api/mood/uploads}")
+  @Value("${file.upload.path:/home/pkteam/libs/uploads}")
   private String uploadPath;
 
   @PostMapping
