@@ -104,7 +104,11 @@ Moodlog는 아래와 같은 흐름으로 작동합니다.
 
 ## 🎬 시연 영상
 
-※ 삽입 예정
+<p align="center">
+  <img src="img/IMG_6415.GIF" alt="Moodlog 시연 영상" width="720"/>
+</p>
+
+
 
 ## 🌟 주요 기능 요약
 
